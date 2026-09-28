@@ -11,8 +11,26 @@
   const FRONT = ['peonia', 'girasol', 'ranunculo', 'rosa-roja', 'diente-de-leon', 'gerbera', 'hortensia', 'dalia', 'anemona', 'loto', 'camelia'];
   const DRIFT = ['#f8cbd8', '#fbe3ea', '#fff4f7', '#f3d27a', '#f2e8df', '#e9a3b8', '#d9d0ef'];
 
-  const mouse = (G.mouse = { px: -1e4, py: -1e4, nx: 0, ny: 0, sx: 0, sy: 0, active: false });
+  const mouse = (G.mouse = { px: -1e4, py: -1e4, nx: 0, ny: 0, sx: 0, sy: 0, cx: 0, cy: 0, active: false });
   let root, back, lastW = 0, lastH = 0, io, spawnT = 0;
+
+  /*
+   * Las cabezas del jardín son imágenes (FL.headImage), no SVG en línea: más de diez mil nodos menos que
+   * el navegador tendría que recorrer y pintar cada vez que algo se mueve. El diente de león queda en línea:
+   * sus semillas se sueltan una a una al pasar el cursor.
+   */
+  const LIVE = new Set(['dandelion']);
+  const PAD = 0.25;
+  const drawnCache = {};
+
+  // Al cambiar entre tema claro y oscuro, las imágenes se rehacen con la luz nueva.
+  G.refreshHeads = function () {
+    G.plants.forEach((p) => { if (p.img) p.img.src = FL.headImage(p.fl, { drawn: drawnCache[p.fl.id], pad: PAD }); });
+  };
+  if (window.matchMedia) {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', () => G.refreshHeads());
+  }
 
   // Reparte las flores en filas. extra suma filas cuando la composición no deja ver bien cada flor.
   function bandsFor(W, VH, extra) {
@@ -118,8 +136,9 @@
     lastW = W; lastH = VH;
     root.querySelectorAll('.plant, .bandfront, .layout-debug').forEach((n) => n.remove());
     G.plants = [];
-    const drawn = {};
-    FL.flowers.forEach((fl) => { drawn[fl.id] = FL.drawHead(fl); });
+    // El dibujo de cada flor no depende del tamaño de la ventana: se hace una sola vez.
+    const drawn = drawnCache;
+    FL.flowers.forEach((fl) => { if (!drawn[fl.id]) drawn[fl.id] = FL.drawHead(fl); });
     const avoid = reservedZones();
     G.avoid = avoid;
     let best = null;
@@ -154,13 +173,16 @@
     el.className = 'plant sp-' + fl.art + (!G.tall && band === 0 ? ' far' : '');
     el.dataset.id = fl.id;
     el.style.cssText = 'left:' + f(x - Wp / 2) + 'px;top:' + f(ground - Hp) + 'px;width:' + f(Wp) + 'px;height:' + f(Hp) + 'px;z-index:' + z;
+    const art = LIVE.has(fl.art) ? drawn.svg : FL.headImg(fl, { drawn, pad: PAD });
     el.innerHTML = '<div class="sway" style="--amp:' + f(amp) + 'deg;--dur:' + f(dur) + 's;--sd:' + f(-r() * dur) + 's;--gd:' + f(gd) + 's">' + stem +
       '<button type="button" class="head" style="left:' + f(tx - hw * ax) + 'px;top:' + f(ty - hh * ay) + 'px;width:' + f(hw) + 'px;height:' + f(hh) +
       'px;--ax:' + f(ax * 100) + '%;--ay:' + f(ay * 100) + '%;--nd:' + f(4 + r() * 3) + 's" aria-label="' + fl.name + '">' +
-      '<span class="bloom"><span class="turn">' + drawn.svg + '</span></span><span class="tag">' + fl.name + '</span></button></div>';
+      '<span class="bloom"><span class="turn">' + art + '</span></span><span class="tag">' + fl.name + '</span></button></div>';
     root.appendChild(el);
     const btn = el.querySelector('.head');
-    const p = { fl, el, btn, turn: el.querySelector('.turn'), svg: el.querySelector('.fh'), depth, lean: 0, rx: 0, ry: 0, tx: 0, ty: 0, box: { x, ground, Hp, hh, Wp, hx: it.node.x } };
+    const p = { fl, el, btn, turn: el.querySelector('.turn'), svg: el.querySelector('.fh'), img: el.querySelector('.fhimg'), depth, lean: 0, rx: 0, ry: 0, tx: 0, ty: 0, box: { x, ground, Hp, hh, Wp, hx: it.node.x } };
+    // Terminado el crecimiento, sus animaciones se retiran: con «fill: both» dejaban dos capas de GPU vivas por planta.
+    el.addEventListener('animationend', (e) => { if (e.animationName === 'bloomin') el.classList.add('grown'); });
     btn.addEventListener('click', () => FL.focus.open(fl, btn));
     btn.addEventListener('pointerenter', () => hover(p));
     btn.addEventListener('focus', () => hover(p));
@@ -280,6 +302,52 @@
     return all.length;
   };
 
+  /*
+   * El jardín visible, desenfocado, pintado una sola vez en un lienzo: el fondo de la flor en primer plano.
+   * Un backdrop-filter se ve igual, pero se recalcula entero en cada cuadro en que algo se mueve encima
+   * (la flor al abrirse, sus partículas) y en GPU integradas eso dejaba la vista a la mitad de cuadros.
+   * Se pinta a baja resolución: es más barato y, desenfocado, no se nota.
+   */
+  G.impression = function (cv) {
+    const W = window.innerWidth, H = window.innerHeight;
+    const x = cv.getContext('2d', { alpha: false });
+    const blur = 'filter' in x, k = blur ? 0.25 : 0.08; // sin filtros de lienzo, la baja resolución hace de desenfoque
+    cv.width = Math.max(1, Math.round(W * k));
+    cv.height = Math.max(1, Math.round(H * k));
+    const css = getComputedStyle(document.documentElement);
+    x.fillStyle = getComputedStyle(document.body).backgroundColor;
+    x.fillRect(0, 0, cv.width, cv.height);
+    if (blur) x.filter = 'blur(' + f(9 * k) + 'px) saturate(0.85)';
+    x.setTransform(k, 0, 0, k, 0, 0);
+    // La luz del cielo, arriba a la derecha (como .sky::after).
+    const vm = Math.max(W, H) / 100, sun = x.createRadialGradient(W - 17 * vm, vm, 0, W - 17 * vm, vm, 25 * vm);
+    const light = css.getPropertyValue('--sun').trim() || 'rgba(255, 226, 164, 0.62)';
+    sun.addColorStop(0, light);
+    sun.addColorStop(1, light.replace(/[\d.]+\s*\)$/, '0)')); // el mismo color, transparente: hacia negro se ensucia
+    x.fillStyle = sun;
+    x.fillRect(0, 0, W, H);
+    // Tallos como trazos: desenfocados no hace falta más.
+    x.strokeStyle = css.getPropertyValue('--grass').trim() || '#8fa27f';
+    x.lineWidth = 4;
+    const heads = [];
+    for (const p of G.plants) {
+      if (p.el.classList.contains('away')) continue;
+      const pr = p.el.getBoundingClientRect();
+      if (pr.bottom < 0 || pr.top > H || pr.right < 0 || pr.left > W) continue;
+      const hr = p.btn.getBoundingClientRect();
+      x.globalAlpha = 0.7;
+      x.beginPath();
+      x.moveTo(hr.left + hr.width / 2, hr.top + hr.height / 2);
+      x.lineTo(pr.left + pr.width / 2, pr.bottom);
+      x.stroke();
+      if (p.img && p.img.complete) heads.push([p, p.img.getBoundingClientRect()]);
+    }
+    for (const [p, rc] of heads) {
+      x.globalAlpha = p.el.classList.contains('far') ? 0.86 : 1;
+      try { x.drawImage(p.img, rc.left, rc.top, rc.width, rc.height); } catch (e) { /* imagen aún sin decodificar */ }
+    }
+  };
+
   G.headOf = (id) => {
     const p = G.plants.find((q) => q.fl.id === id);
     return p ? p.btn : null;
@@ -298,12 +366,19 @@
   G.onPointer = function (e) {
     if (e.pointerType === 'touch') { mouse.active = false; return; }
     mouse.active = true;
+    mouse.cx = e.clientX;
+    mouse.cy = e.clientY;
     mouse.px = e.clientX + window.scrollX;
     mouse.py = e.clientY + window.scrollY;
     mouse.nx = (e.clientX / window.innerWidth) * 2 - 1;
     mouse.ny = (e.clientY / window.innerHeight) * 2 - 1;
   };
   G.onLeave = () => { mouse.active = false; mouse.nx = 0; mouse.ny = 0; };
+  // Las plantas no cambian de lugar en la página al desplazarse; solo el cursor, que queda sobre otro punto.
+  G.onScroll = () => {
+    mouse.px = mouse.cx + window.scrollX;
+    mouse.py = mouse.cy + window.scrollY;
+  };
 
   G.resize = function () {
     const W = Math.max(320, document.documentElement.clientWidth), VH = Math.max(480, window.innerHeight);
@@ -316,7 +391,7 @@
     const k = Math.min(1, dt * 2.2);
     mouse.sx += (mouse.nx - mouse.sx) * k;
     mouse.sy += (mouse.ny - mouse.sy) * k;
-    const sy = window.scrollY;
+    const sy = G.tall ? window.scrollY : 0; // leer scrollY obliga a recalcular estilos en medio del cuadro
     for (const p of G.plants) {
       const par = p.depth - 0.45;
       const tx = mouse.sx * par * 14;
@@ -327,13 +402,10 @@
         if (d < R) target = -Math.sign(dx || 1) * 5 * Math.pow(1 - d / R, 1.4);
       }
       p.lean += (target - p.lean) * Math.min(1, dt * 2.6);
-      if (Math.abs(tx - p.tx) > 0.05 || Math.abs(ty - p.ty) > 0.05) {
-        p.tx = tx; p.ty = ty;
-        p.el.style.translate = f(tx) + 'px ' + f(ty) + 'px';
-      }
-      if (Math.abs(p.lean - (p.lastLean || 0)) > 0.02) {
-        p.lastLean = p.lean;
-        p.el.style.rotate = p.lean.toFixed(2) + 'deg';
+      // Una sola escritura de transform por planta, y solo si algo cambió.
+      if (Math.abs(tx - p.tx) > 0.05 || Math.abs(ty - p.ty) > 0.05 || Math.abs(p.lean - (p.lastLean || 0)) > 0.02) {
+        p.tx = tx; p.ty = ty; p.lastLean = p.lean;
+        p.el.style.transform = 'translate(' + f(tx) + 'px,' + f(ty) + 'px) rotate(' + p.lean.toFixed(2) + 'deg)';
       }
       if (p.fl.art === 'sunflower') {
         // Gira hacia el cursor; sin cursor, hacia un sol imaginario arriba a la derecha.
@@ -344,7 +416,11 @@
         }
         p.ry += (ry - p.ry) * Math.min(1, dt * 1.6);
         p.rx += (rx - p.rx) * Math.min(1, dt * 1.6);
-        p.turn.style.transform = 'perspective(520px) rotateX(' + p.rx.toFixed(2) + 'deg) rotateY(' + p.ry.toFixed(2) + 'deg)';
+        // Solo se escribe cuando el giro cambia de verdad: cada escritura obliga a recalcular estilos y pintar.
+        if (Math.abs(p.rx - (p.lastRx || 0)) > 0.05 || Math.abs(p.ry - (p.lastRy || 0)) > 0.05) {
+          p.lastRx = p.rx; p.lastRy = p.ry;
+          p.turn.style.transform = 'perspective(520px) rotateX(' + p.rx.toFixed(2) + 'deg) rotateY(' + p.ry.toFixed(2) + 'deg)';
+        }
       }
     }
     // Pétalos y polen a la deriva

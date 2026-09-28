@@ -42,7 +42,7 @@
       clearTimeout(rt);
       rt = setTimeout(() => { FL.garden.resize(); FL.focus.resize(); FL.days.resize(); FL.gift.resize(); }, 220);
     });
-    window.addEventListener('scroll', () => FL.garden.measure(), { passive: true });
+    window.addEventListener('scroll', FL.garden.onScroll, { passive: true });
     window.addEventListener('hashchange', route);
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {

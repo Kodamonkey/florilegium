@@ -208,5 +208,68 @@
     return { svg, anchor: out.anchor || [0.5, 0.5], aspect: out.aspect || 1 };
   };
 
+  /*
+   * La cabeza de una especie como imagen SVG (URL blob), para el jardín y las listas. Para el navegador una
+   * imagen es un solo elemento; el mismo dibujo en línea son cientos de nodos que recorrer, pintar y repartir
+   * en capas cada vez que algo cambia en la página. La imagen lleva dentro las reglas CSS de su especie y la
+   * luz del tema actual, así se ve igual que en línea.
+   *   opts.drawn: dibujo ya hecho con FL.drawHead (si no, se dibuja aquí).
+   *   opts.open: abierta; las transiciones y animaciones de apertura quedan en su estado final.
+   *   opts.pad: margen alrededor del viewBox, en fracción del ancho y alto: una imagen recorta lo que sobresale.
+   *   opts.seed: variación del dibujo (la misma de FL.drawHead).
+   * FL.headArt devuelve { src, aspect, anchor }; FL.headImage, solo la URL.
+   */
+  let cssByArt = null;
+  const artCache = {};
+  // En las pruebas de Node no hay documento ni imágenes: ahí los dibujos siguen en línea.
+  FL.canImage = typeof document !== 'undefined' && typeof Blob !== 'undefined' && typeof URL !== 'undefined' && !!URL.createObjectURL;
+  function speciesCSS(art) {
+    if (!cssByArt) {
+      cssByArt = { '': '' };
+      for (const sheet of document.styleSheets) {
+        let rules;
+        try { rules = sheet.cssRules; } catch (e) { continue; } // hojas de otro origen (tipografías)
+        for (const rule of rules) {
+          const sel = rule.selectorText;
+          if (!sel || !/\.(fh|sp-)/.test(sel) || /\.(plant|head|bq|stage|slot|days|quick|at-thumb)\b/.test(sel)) continue;
+          const arts = sel.match(/\.sp-[a-z]+/g);
+          (arts ? Array.from(new Set(arts), (a) => a.slice(4)) : ['']).forEach((a) => { cssByArt[a] = (cssByArt[a] || '') + rule.cssText; });
+        }
+      }
+    }
+    return cssByArt[''] + (cssByArt[art] || '');
+  }
+  // La luz del tema se lee una vez (leerla fuerza a recalcular estilos) y se olvida cuando el tema cambia.
+  let lit = null;
+  FL.litLevel = () => lit || (lit = getComputedStyle(document.documentElement).getPropertyValue('--lit-o').trim() || '0.4');
+  if (FL.canImage && window.matchMedia) {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', () => { lit = null; });
+  }
+  FL.headArt = function (fl, opts = {}) {
+    const lit = FL.litLevel(), pad = opts.pad || 0;
+    const key = fl.id + '|' + (opts.open ? 1 : 0) + '|' + pad + '|' + (opts.seed || 0) + '|' + lit;
+    if (artCache[key]) return artCache[key];
+    const drawn = opts.drawn || FL.drawHead(fl, { cls: opts.open ? 'open' : '', seed: opts.seed });
+    const vb = drawn.svg.match(/viewBox="([^"]+)"/)[1].split(/[\s,]+/).map(Number);
+    const box = [vb[0] - vb[2] * pad, vb[1] - vb[3] * pad, vb[2] * (1 + 2 * pad), vb[3] * (1 + 2 * pad)].map(f).join(' ');
+    const still = opts.open
+      ? '*{transition:none!important;animation-duration:0s!important;animation-delay:0s!important;animation-iteration-count:1!important}'
+      : '*{transition:none!important;animation:none!important}';
+    const src = drawn.svg
+      .replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')
+      .replace(/viewBox="[^"]+"/, 'viewBox="' + box + '"')
+      .replace('<defs>', '<style>:root{--lit-o:' + lit + '}' + speciesCSS(fl.art) + still + '</style><defs>');
+    artCache[key] = { src: URL.createObjectURL(new Blob([src], { type: 'image/svg+xml' })), aspect: drawn.aspect, anchor: drawn.anchor };
+    return artCache[key];
+  };
+  FL.headImage = (fl, opts) => FL.headArt(fl, opts).src;
+  // Marcado de la imagen, ya desplazada para que el margen quede fuera de la caja que la contiene.
+  FL.headImg = function (fl, opts = {}) {
+    const pad = opts.pad || 0, off = f(-pad * 100) + '%', size = f((1 + 2 * pad) * 100) + '%';
+    return '<img class="fhimg" alt="" draggable="false" decoding="async" src="' + FL.headImage(fl, opts) +
+      '" style="left:' + off + ';top:' + off + ';width:' + size + ';height:' + size + '">';
+  };
+
   FL.byId = (id) => FL.flowers.find((x) => x.id === id);
 })();

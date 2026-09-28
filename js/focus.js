@@ -4,7 +4,7 @@
   const FL = window.FL, U = FL.u;
   const F = (FL.focus = { cur: null });
   const $ = (id) => document.getElementById(id);
-  let root, slot, hint, card, scroll, backdrop, stage, sys, ctx = null, busy = false, lastFocus = null;
+  let root, slot, hint, card, scroll, backdrop, stage, sys, bg, ctx = null, busy = false, lastFocus = null;
 
   const SEASON = { primavera: 'primavera', verano: 'verano', 'otoño': 'otoño', invierno: 'invierno' };
   const seasonText = (a) => a.map((s) => SEASON[s] || s).join(' · ');
@@ -13,6 +13,11 @@
     root = $('focus'); slot = $('stageSlot'); hint = $('stageHint'); card = $('card');
     scroll = $('focusScroll'); backdrop = $('focusBackdrop'); stage = $('stage');
     sys = F.fx = new FL.Particles($('fx'));
+    // Fondo: el jardín desenfocado, pintado una vez al abrir (FL.garden.impression).
+    bg = document.createElement('canvas');
+    bg.className = 'focus-bg';
+    bg.setAttribute('aria-hidden', 'true');
+    root.insertBefore(bg, root.firstChild);
     $('focusClose').addEventListener('click', () => F.close());
     $('focusPrev').addEventListener('click', () => F.step(-1));
     $('focusNext').addEventListener('click', () => F.step(1));
@@ -131,12 +136,20 @@
       requestAnimationFrame(() => { inner.style.transform = ''; });
       FL.garden.setHidden(fl.id, true);
     }
+    paintBackground();
     requestAnimationFrame(() => root.classList.add('on'));
     try { history.replaceState(null, '', '#' + fl.id); } catch (e) { /* sin historial */ }
     const c = ctx;
     c.timers.push(setTimeout(() => { bloom(c); busy = false; }, FL.reduce ? 30 : 950));
     setTimeout(() => $('focusClose').focus({ preventScroll: true }), 60);
   };
+
+  // Sobre una hoja abierta (el taller) no hay jardín que pintar: ahí se desenfoca lo que haya detrás, con CSS.
+  function paintBackground() {
+    const overSheet = !!document.querySelector('.sheet:not([hidden])');
+    root.classList.toggle('over-sheet', overSheet);
+    if (!overSheet) FL.garden.impression(bg);
+  }
 
   function bloom(c) {
     if (c !== ctx) return;
@@ -170,6 +183,7 @@
       ctx = mount(fl);
       ctx.inner.classList.add('entering');
       FL.garden.setHidden(fl.id, true);
+      paintBackground();
       requestAnimationFrame(() => requestAnimationFrame(() => ctx.inner.classList.remove('entering')));
       try { history.replaceState(null, '', '#' + fl.id); } catch (e) { /* sin historial */ }
       const c = ctx;
@@ -349,6 +363,7 @@
 
   F.resize = function () {
     sys.resize();
+    if (!root.hidden) paintBackground();
     if (ctx) sizeSlot(ctx.svg.viewBox.baseVal.height / ctx.svg.viewBox.baseVal.width);
   };
 })();

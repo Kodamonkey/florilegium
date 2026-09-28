@@ -6,7 +6,7 @@
   const A = (FL.atelier = {});
   const $ = (id) => document.getElementById(id);
   const DRAFT = 'fl.draft';
-  let root, cur = null, role = '', query = '', lastFocus = null, renderT = 0, toastT = 0, busyMsg = '';
+  let root, cur = null, role = '', query = '', lastFocus = null, renderT = 0, toastT = 0, busyMsg = '', itemsDone = false;
 
   const esc = U.esc;
   // Nombres para leer los colores de envoltorio y cinta en voz alta.
@@ -26,7 +26,10 @@
       '<button type="button" class="chip" data-role="' + k + '" aria-pressed="' + (k === '' ? 'true' : 'false') + '">' + v + '</button>').join('');
     $('atWraps').innerHTML = T.wraps.map((w) => '<button type="button" class="chip" data-wrap="' + w.id + '" aria-pressed="false">' + w.name + '</button>').join('');
     $('atRibbons').innerHTML = T.ribbons.map((c) => swatch('ribbon', c)).join('');
-    renderItems();
+    // La paleta se dibuja al abrir el taller por primera vez, no al cargar la página.
+    // Sus miniaturas llevan la luz del tema: al cambiarlo se rehacen.
+    const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq && mq.addEventListener) mq.addEventListener('change', () => { if (itemsDone) renderItems(); });
 
     root.addEventListener('click', onClick);
     $('atSearch').addEventListener('input', (e) => { query = U.norm(e.target.value.trim()); renderItems(); });
@@ -58,6 +61,7 @@
     if (!root.hidden) { sync(true); return; }
     lastFocus = document.activeElement;
     root.hidden = false;
+    if (!itemsDone) renderItems();
     U.syncSheets();
     requestAnimationFrame(() => root.classList.add('on'));
     sync(true);
@@ -115,18 +119,19 @@
   }
 
   /* ---------- Paleta de flores y follajes ---------- */
+  // Cada miniatura es una imagen (FL.headImg): la lista entera se rehace con cada tecla del buscador.
   function renderItems() {
+    itemsDone = true;
     const list = FL.items.filter((it) => {
       if (role && it.bouquet.role !== role) return false;
       if (!query) return true;
       return U.norm([it.name, it.sci.replace(/<[^>]+>/g, ''), it.meanings.join(' '), it.colors.join(' ')].join(' ')).includes(query);
     });
     $('atItems').innerHTML = list.length ? list.map((it) => {
-      const d = FL.drawHead(it, { cls: 'open' });
       const r = FL.role(it.bouquet.role);
       return '<li class="at-item" data-item="' + it.id + '">' +
         '<button type="button" class="at-add" data-inc="' + it.id + '" aria-label="Agregar ' + esc(it.name) + '">' +
-          '<span class="at-thumb">' + d.svg + '</span>' +
+          '<span class="at-thumb">' + FL.headImg(it, { open: true, pad: 0.15 }) + '</span>' +
           '<span class="at-nm">' + it.name + '<small>' + r.name + (it.meanings.length ? ' · ' + it.meanings.join(', ') : '') + '</small></span>' +
         '</button>' +
         '<span class="at-qty"><button type="button" class="qbtn" data-dec="' + it.id + '" aria-label="Quitar un tallo de ' + esc(it.name) + '">−</button>' +

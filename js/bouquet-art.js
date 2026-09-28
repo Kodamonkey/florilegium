@@ -6,6 +6,8 @@
   const { f, P } = U;
   const BA = (FL.bouquetArt = {});
   const W = 400, H = 520, TIE = [200, 396];
+  // Margen de las cabezas dibujadas como imagen (una imagen recorta lo que sobresale de su viewBox).
+  const PAD = 0.2;
   let SEQ = 0;
 
   // z: orden de dibujo; size: ancho base de la cabeza; ring: franja de la cúpula (0 = centro, 1 = borde);
@@ -62,7 +64,9 @@
             ? cfg.arc[0] + (cfg.arc[1] - cfg.arc[0]) * ((j + 0.5 + (r() - 0.5) * 0.4) / m)
             : cfg.arc[0] + ((j * 137.508 + r() * 25) % (cfg.arc[1] - cfg.arc[0]));
         }
-        const drawn = FL.drawHead(u.it, { seed: ((b.layoutSeed || 0) + u.k * 7) >>> 0, cls: 'open' });
+        // Tres variantes por especie: tallos repetidos no se ven calcados y las imágenes son pocas y reutilizables.
+        const seed = (u.k % 3) * 7;
+        const drawn = FL.canImage ? FL.headArt(u.it, { open: true, pad: PAD, seed }) : FL.drawHead(u.it, { seed, cls: 'open' });
         const w = cfg.size * kSize * (u.it.type === 'flower' ? Math.min(1.2, u.it.size || 1) : 1);
         const h = w * drawn.aspect;
         const x = C[0] + Math.cos(U.rad(th)) * rr * R, y = C[1] + Math.sin(U.rad(th)) * rr * Ry - (role === 'spike' ? h * 0.2 : 0);
@@ -140,8 +144,12 @@
       ends += '<path d="M' + P(TIE[0] + (sx - TIE[0]) * 0.05, TIE[1]) + 'L' + P(ex, 500 + (i % 3) * 3) + '" stroke="' + col + '" stroke-width="2.4" stroke-linecap="round"/>' +
         '<ellipse cx="' + f(ex) + '" cy="' + f(500 + (i % 3) * 3) + '" rx="1.3" ry=".8" fill="#dbe6c2"/>';
       const tilt = U.clamp((n.x - TIE[0]) / lay.R, -1, 1) * 14;
-      const svg = n.drawn.svg.replace('<svg ', '<svg x="' + f(-n.w / 2) + '" y="' + f(-n.h / 2) + '" width="' + f(n.w) + '" height="' + f(n.h) +
-        '" style="width:' + f(n.w) + 'px;height:' + f(n.h) + 'px;overflow:visible" ');
+      // En la página cada cabeza es una imagen: un ramo grande en línea serían miles de nodos SVG.
+      const svg = n.drawn.src
+        ? '<image href="' + n.drawn.src + '" x="' + f(-n.w * (0.5 + PAD)) + '" y="' + f(-n.h * (0.5 + PAD)) + '" width="' + f(n.w * (1 + 2 * PAD)) +
+          '" height="' + f(n.h * (1 + 2 * PAD)) + '" preserveAspectRatio="xMidYMid meet"/>'
+        : n.drawn.svg.replace('<svg ', '<svg x="' + f(-n.w / 2) + '" y="' + f(-n.h / 2) + '" width="' + f(n.w) + '" height="' + f(n.h) +
+          '" style="width:' + f(n.w) + 'px;height:' + f(n.h) + 'px;overflow:visible" ');
       heads += '<g transform="translate(' + P(n.x, n.y) + ') rotate(' + f(tilt) + ')"><g class="bqh" style="--d:' + f(i * 45) + 'ms">' + svg + '</g></g>';
     });
     const label = opts.label || 'Ramo: ' + b.stems.map((s) => s.n + ' ' + (FL.item(s.item) || {}).name).join(', ');
