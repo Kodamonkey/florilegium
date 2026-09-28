@@ -27,10 +27,18 @@
         if (t) t.scrollIntoView({ behavior: FL.reduce ? 'auto' : 'smooth', block: 'start' });
         return;
       }
+      const add = e.target.closest('[data-add]');
+      if (add) {
+        F.close();
+        FL.atelier.open({ add: add.dataset.add });
+        return;
+      }
       const chip = e.target.closest('[data-m]');
       if (chip) {
         F.close();
-        FL.explore.only('m', chip.dataset.m);
+        // Desde el taller, el jardín queda tapado: se filtra la paleta del taller en vez del jardín.
+        if (FL.atelier.isOpen()) FL.atelier.search(chip.dataset.m);
+        else FL.explore.only('m', chip.dataset.m);
       }
     });
     root.addEventListener('keydown', trap);
@@ -54,7 +62,7 @@
         '<h2 id="focusName">' + fl.name + '</h2>' +
         '<p class="sci">' + fl.sci + '</p>' +
         '<div class="card-tabs" role="group" aria-label="Ir a una lectura">' +
-          '<button type="button" data-go="c-poe">Poética</button><button type="button" data-go="c-cul">Cultural</button><button type="button" data-go="c-sci">Científica</button>' +
+          '<button type="button" data-go="c-poe">Poética</button><button type="button" data-go="c-cul">Cultural</button><button type="button" data-go="c-sci">Científica</button><button type="button" data-go="c-care">Cuidados</button>' +
         '</div>' +
       '</header>' +
       '<section class="c-poe" id="c-poe"><p class="label">Significado poético</p><blockquote>' + fl.poetic + '</blockquote></section>' +
@@ -68,9 +76,10 @@
         '<div><dt>Cómo crece</dt><dd>' + s.growth + '</dd></div>' +
         '<div><dt>Polinización</dt><dd>' + s.pollination + '</dd></div>' +
       '</dl><div class="curio"><p class="mini">Curiosidad</p><p>' + s.curiosity + '</p></div></section>' +
+      FL.care.section(fl) +
       '<footer class="card-foot"><p class="mini">Buscar otras flores que hablan de</p><div class="chips">' +
         fl.meanings.map((m) => '<button type="button" class="chip" data-m="' + m + '">' + m + '</button>').join('') +
-      '</div></footer>';
+      '</div><button type="button" class="pillbtn" data-add="' + fl.id + '">Agregar a un ramo</button></footer>';
     card.scrollTop = 0;
   }
 
@@ -179,7 +188,8 @@
     busy = true;
     const c = ctx, fl = c.fl;
     leave(c);
-    const target = FL.garden.headOf(fl.id);
+    // Con una hoja abierta encima del jardín, la flor no vuela de vuelta a su lugar: se desvanece.
+    const target = document.querySelector('.sheet:not([hidden])') ? null : FL.garden.headOf(fl.id);
     root.classList.remove('on');
     c.svg.classList.remove('open', 'acid', 'alk', 'gust');
     if (target && !FL.reduce) {
@@ -196,7 +206,8 @@
       FL.garden.setHidden(fl.id, false);
       document.body.classList.remove('focus-open');
       ctx = null; F.cur = null; busy = false;
-      try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* sin historial */ }
+      // Solo se borra el enlace de esta flor: si otra vista ya puso el suyo (#armar, #ramo=…), se respeta.
+      if (location.hash === '#' + fl.id) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* sin historial */ } }
       if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
     }, FL.reduce ? 20 : 950);
   };

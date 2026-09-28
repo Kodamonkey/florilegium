@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Florilegio · galería de dibujos</title>
+<link rel="stylesheet" href="../css/styles.css">
+<style>
+  body { padding: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  figure { margin: 0; padding: 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper-2); }
+  figure div { aspect-ratio: 1; display: grid; place-items: center; }
+  figure .box { width: 100%; }
+  figcaption { font-family: var(--f-ui); font-size: 0.8rem; text-align: center; color: var(--ink-2); }
+  label { font-family: var(--f-ui); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<p><label><input type="checkbox" id="open" checked> Abiertas (<code>.open</code>)</label></p>
+<div class="grid" id="grid"></div>
+<script src="../js/core.js"></script>
+<script src="../js/gen/data.js"></script>
+<script src="../js/catalog.js"></script>
+<script src="../js/art-a.js"></script>
+<script src="../js/art-b.js"></script>
+<script src="../js/art-c.js"></script>
+<script>
+  const FL = window.FL, grid = document.getElementById('grid'), open = document.getElementById('open');
+  // ?only=gerbera,fresia&size=360 para mirar pocas en grande
+  const q = new URLSearchParams(location.search), only = (q.get('only') || '').split(',').filter(Boolean);
+  if (q.get('size')) grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(' + q.get('size') + 'px, 1fr))';
+  grid.innerHTML = FL.items.filter((it) => !only.length || only.includes(it.id)).map((it) => {
+    const d = FL.drawHead(it);
+    return '<figure><div><div class="box" style="aspect-ratio:' + (1 / d.aspect) + '">' + d.svg + '</div></div><figcaption>' + it.name + ' · ' + it.art + '</figcaption></figure>';
+  }).join('');
+  const sync = () => grid.querySelectorAll('.fh').forEach((s) => s.classList.toggle('open', open.checked));
+  open.addEventListener('change', sync);
+  requestAnimationFrame(() => requestAnimationFrame(sync));
+</script>
+</body>
+</html>

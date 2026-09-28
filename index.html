@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&display=swap">
 <link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/atelier.css">
 </head>
 <body>
 <!--BODY-START-->
@@ -17,7 +18,7 @@
 <header class="brand">
   <p class="brand-eyebrow">Un jardín de significados</p>
   <h1 class="brand-title">Florilegio</h1>
-  <p class="brand-sub">Veinticinco flores y todo lo que hemos aprendido a decir con ellas. Toca una para descubrir qué guarda.</p>
+  <p class="brand-sub"><span id="flowerCount">Treinta y una</span> flores y todo lo que hemos aprendido a decir con ellas. Toca una para descubrir qué guarda.</p>
 </header>
 
 <nav class="topnav" aria-label="Secciones">
@@ -25,9 +26,17 @@
     <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5"/></svg>
     <span>Explorar</span>
   </button>
+  <button type="button" id="atelierBtn" class="navbtn">
+    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 18V9M10 9c-3-1-4-4-3-6 2 0 4 2 3 6zM10 9c3-1 4-4 3-6-2 0-4 2-3 6zM6 12l4 6 4-6"/></svg>
+    <span>Armar<span class="navlong"> ramo</span></span>
+  </button>
+  <button type="button" id="showcaseBtn" class="navbtn">
+    <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="11" y="3" width="6" height="6" rx="1.5"/><rect x="3" y="11" width="6" height="6" rx="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5"/></svg>
+    <span>Ramos<span class="navlong"> populares</span></span>
+  </button>
   <button type="button" id="daysBtn" class="navbtn navbtn--days">
     <i class="days-dot" aria-hidden="true"></i>
-    <span>Esos días que no hubo</span>
+    <span><span class="navlong">Esos </span>días<span class="navlong"> que no hubo</span></span>
   </button>
 </nav>
 
@@ -116,17 +125,155 @@
   <button type="button" class="days-back" id="daysBack">Volver al jardín</button>
 </section>
 
+<!-- Taller de ramos -->
+<section id="atelier" class="sheet atelier" role="dialog" aria-modal="true" aria-labelledby="atTitle" hidden>
+  <header class="sheet-head">
+    <div>
+      <p class="eyebrow">Taller</p>
+      <h2 id="atTitle">Arma tu ramo</h2>
+    </div>
+    <div class="sheet-actions">
+      <button type="button" class="pillbtn" id="atNew">Nuevo</button>
+      <button type="button" class="pillbtn" id="atMine">Mis ramos</button>
+      <button type="button" class="iconbtn" id="atClose" aria-label="Cerrar el taller">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+  </header>
+  <div class="at-grid">
+    <div class="at-palette">
+      <section class="at-compose" aria-labelledby="atComposeTitle">
+        <p class="label" id="atComposeTitle">Desde lo que sientes</p>
+        <label class="sr" for="atIntent">Qué quieres decir con el ramo</label>
+        <textarea id="atIntent" rows="3" maxlength="500" placeholder="Ej.: quiero agradecerle a mi abuela todo lo que hace por mí"></textarea>
+        <div class="chips chips--small" id="atFeelings" role="group" aria-label="Sentimientos"></div>
+        <div class="at-row">
+          <label class="sr" for="atOccasion">Ocasión</label>
+          <select id="atOccasion"></select>
+          <label class="check"><input type="checkbox" id="atPetSafe"> Sin tóxicas para mascotas</label>
+        </div>
+        <div class="at-row">
+          <button type="button" class="pillbtn pillbtn--solid" id="atPropose">Proponer un ramo</button>
+          <button type="button" class="pillbtn pillbtn--ai" id="atProposeAI" hidden>Proponer con IA</button>
+        </div>
+        <div class="at-rationale" id="atRationale" aria-live="polite"></div>
+      </section>
+      <section class="at-pick" aria-label="Flores y follajes">
+        <p class="label">O elige tallo por tallo</p>
+        <label class="ex-search">
+          <span class="sr">Buscar flor o follaje</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5"/></svg>
+          <input id="atSearch" type="search" autocomplete="off" placeholder="Nombre, color o sentimiento">
+        </label>
+        <div class="chips chips--small" id="atRoles" role="group" aria-label="Filtrar por papel en el ramo"></div>
+        <ul class="at-items" id="atItems"></ul>
+      </section>
+    </div>
+    <div class="at-stage">
+      <div class="at-canvas" id="atCanvas"></div>
+      <p class="at-count" id="atCount" aria-live="polite"></p>
+      <div class="at-dress">
+        <div><p class="mini">Envoltorio</p><div class="chips chips--small" id="atWraps"></div><div class="swatches" id="atWrapColors"></div></div>
+        <div><p class="mini">Cinta</p><div class="swatches" id="atRibbons"></div></div>
+      </div>
+    </div>
+    <div class="at-side">
+      <section class="at-reading">
+        <p class="label">Qué dice tu ramo <span id="atSource" class="src"></span></p>
+        <div id="atReading"></div>
+        <button type="button" class="pillbtn pillbtn--ai" id="atAI" hidden>Interpretar con IA</button>
+      </section>
+      <section class="at-card" aria-labelledby="atCardTitle">
+        <p class="label" id="atCardTitle">Tarjeta</p>
+        <label class="field"><span>Nombre del ramo</span><input id="atName" maxlength="80" autocomplete="off"></label>
+        <label class="field"><span>Para</span><input id="atTo" maxlength="60" autocomplete="off"></label>
+        <label class="field"><span>Mensaje</span><textarea id="atMsg" maxlength="280" rows="3"></textarea></label>
+        <label class="field"><span>De</span><input id="atFrom" maxlength="60" autocomplete="off"></label>
+      </section>
+      <div class="at-actions">
+        <button type="button" class="pillbtn pillbtn--solid" id="atSave">Guardar</button>
+        <button type="button" class="pillbtn" id="atShare">Compartir enlace</button>
+        <button type="button" class="pillbtn" id="atGift">Ver como regalo</button>
+      </div>
+      <p class="toast" id="atToast" role="status"></p>
+    </div>
+  </div>
+  <div class="at-mine" id="atMineList" hidden>
+    <div class="at-mine-head">
+      <h3>Mis ramos</h3>
+      <button type="button" class="iconbtn" id="atMineClose" aria-label="Cerrar Mis ramos">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+    <ul class="mine-list" id="atMineItems"></ul>
+  </div>
+</section>
+
+<!-- Mostrador de ramos populares -->
+<section id="showcase" class="sheet showcase" role="dialog" aria-modal="true" aria-labelledby="scTitle" hidden>
+  <header class="sheet-head">
+    <div>
+      <p class="eyebrow">Tradición occidental</p>
+      <h2 id="scTitle">Ramos que se regalan</h2>
+    </div>
+    <div class="sheet-actions">
+      <button type="button" class="iconbtn" id="scClose" aria-label="Cerrar el mostrador">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+  </header>
+  <div class="sc-filters">
+    <div class="chips chips--small" id="scHemi" role="group" aria-label="Hemisferio"></div>
+    <div class="chips chips--small" id="scSeasons" role="group" aria-label="Temporada"></div>
+    <div class="chips chips--small" id="scThemes" role="group" aria-label="Temática"></div>
+    <p class="sc-upcoming" id="scUpcoming"></p>
+    <p class="ex-count" id="scCount" aria-live="polite"></p>
+  </div>
+  <ul class="sc-grid" id="scGrid"></ul>
+</section>
+
+<!-- Un ramo recibido -->
+<section id="gift" class="sheet gift-view" role="dialog" aria-modal="true" aria-labelledby="giftTitle" tabindex="-1" hidden>
+  <canvas id="giftFx" class="days-fx" aria-hidden="true"></canvas>
+  <div class="gift-inner">
+    <p class="eyebrow" id="giftEyebrow"></p>
+    <h2 id="giftTitle"></h2>
+    <div class="gift-bq" id="giftBq"></div>
+    <div class="gift-card" id="giftCard"></div>
+    <section class="gift-reading" id="giftReading"></section>
+    <section class="gift-care">
+      <h3>Cómo cuidarlo</h3>
+      <div id="giftCare"></div>
+      <button type="button" class="pillbtn" id="giftIcs">Recordatorios para cambiar el agua (.ics)</button>
+    </section>
+    <div class="gift-actions">
+      <button type="button" class="pillbtn" id="giftCopy">Armar uno parecido</button>
+      <button type="button" class="pillbtn pillbtn--solid" id="giftBack">Ir al jardín</button>
+    </div>
+  </div>
+</section>
+
 <script src="js/core.js"></script>
-<script src="js/data-a.js"></script>
-<script src="js/data-b.js"></script>
+<script src="js/gen/data.js"></script>
+<script src="js/catalog.js"></script>
 <script src="js/art-a.js"></script>
 <script src="js/art-b.js"></script>
+<script src="js/art-c.js"></script>
 <script src="js/art-stems.js"></script>
 <script src="js/particles.js"></script>
+<script src="js/layout.js"></script>
 <script src="js/garden.js"></script>
+<script src="js/care.js"></script>
 <script src="js/focus.js"></script>
 <script src="js/explore.js"></script>
 <script src="js/days.js"></script>
+<script src="js/bouquet-model.js"></script>
+<script src="js/bouquet-art.js"></script>
+<script src="js/meaning.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/atelier.js"></script>
+<script src="js/showcase.js"></script>
+<script src="js/gift.js"></script>
 <script src="js/main.js"></script>
 <!--BODY-END-->
 </body>

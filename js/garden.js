@@ -6,18 +6,19 @@
   const G = (FL.garden = { plants: [], tall: false });
 
   // Filas de atrás hacia adelante: las espigas atrás, las flores de gran cabeza adelante.
-  const BACK = ['lavanda', 'cerezo', 'jacinto', 'margarita', 'crisantemo', 'nomeolvides', 'clavel', 'iris', 'jazmin'];
-  const MID = ['tulipan', 'rosa-blanca', 'orquidea', 'amapola', 'rosa-amarilla', 'lirio', 'rosa-rosada', 'gardenia'];
-  const FRONT = ['peonia', 'girasol', 'rosa-roja', 'diente-de-leon', 'hortensia', 'dalia', 'loto', 'camelia'];
+  const BACK = ['lavanda', 'cerezo', 'jacinto', 'margarita', 'fresia', 'crisantemo', 'nomeolvides', 'clavel', 'iris', 'jazmin'];
+  const MID = ['tulipan', 'rosa-blanca', 'lisianthus', 'orquidea', 'amapola', 'rosa-amarilla', 'alstroemeria', 'lirio', 'rosa-rosada', 'gardenia'];
+  const FRONT = ['peonia', 'girasol', 'ranunculo', 'rosa-roja', 'diente-de-leon', 'gerbera', 'hortensia', 'dalia', 'anemona', 'loto', 'camelia'];
   const DRIFT = ['#f8cbd8', '#fbe3ea', '#fff4f7', '#f3d27a', '#f2e8df', '#e9a3b8', '#d9d0ef'];
 
   const mouse = (G.mouse = { px: -1e4, py: -1e4, nx: 0, ny: 0, sx: 0, sy: 0, active: false });
   let root, back, lastW = 0, lastH = 0, io, spawnT = 0;
 
-  function bandsFor(W, VH) {
+  // Reparte las flores en filas. extra suma filas cuando la composición no deja ver bien cada flor.
+  function bandsFor(W, VH, extra) {
     const mobile = W < 700;
     let per = Math.max(3, Math.floor(W / (mobile ? 124 : 150)));
-    let bands = Math.ceil(FL.flowers.length / per);
+    const bands = Math.ceil(FL.flowers.length / per) + extra;
     const tall = mobile || bands > 4 || VH < 520;
     let lists;
     if (!tall && bands === 3) lists = [BACK, MID, FRONT];
@@ -28,26 +29,39 @@
       for (let b = 0; b < bands; b++) lists.push(flat.slice(b * per, (b + 1) * per));
     } else {
       const flat = [];
-      for (let i = 0; i < 9; i++) [FRONT[i], BACK[i], MID[i]].forEach((id) => id && flat.push(id));
-      per = Math.max(2, Math.min(per, mobile ? 3 : 5));
+      const n = Math.max(BACK.length, MID.length, FRONT.length);
+      for (let i = 0; i < n; i++) [FRONT[i], BACK[i], MID[i]].forEach((id) => id && flat.push(id));
+      per = Math.max(2, Math.min(per, mobile ? 3 : 5) - extra);
       lists = [];
       for (let b = 0; b * per < flat.length; b++) lists.push(flat.slice(b * per, (b + 1) * per));
     }
     return { tall, lists, mobile };
   }
 
-  G.build = function () {
-    root = document.getElementById('garden');
-    back = document.getElementById('ground');
-    const W = document.documentElement.clientWidth, VH = window.innerHeight;
-    lastW = W; lastH = VH;
-    const { tall, lists, mobile } = bandsFor(W, VH);
-    G.tall = tall;
-    root.querySelectorAll('.plant, .bandfront').forEach((n) => n.remove());
-    G.plants = [];
-    const r = U.rng(20260928);
+  // Zonas que las cabezas no deben invadir: el título y la navegación (cuando está arriba).
+  function reservedZones() {
+    const top = root.getBoundingClientRect().top + window.scrollY;
+    const zones = [];
+    document.querySelectorAll('.brand, .topnav').forEach((el) => {
+      const rc = el.getBoundingClientRect();
+      if (!rc.width || rc.top > window.innerHeight / 2) return;
+      // La navegación es fija: su zona es la de la pantalla sin desplazar, aunque se reconstruya con scroll.
+      const dy = getComputedStyle(el).position === 'fixed' ? 0 : window.scrollY;
+      zones.push({ x0: rc.left - 12, y0: rc.top + dy - top - 8, x1: rc.right + 12, y1: rc.bottom + dy - top + 10 });
+    });
+    return zones;
+  }
+
+  /*
+   * Planifica sin tocar el DOM: tamaño y fila de cada flor, posición inicial escalonada entre filas
+   * y luego FL.layout.relax, para que ninguna cabeza tape a otra más de la cuenta.
+   */
+  function plan(W, VH, extra, avoid, drawn) {
+    const { tall, lists, mobile } = bandsFor(W, VH, extra);
+    const r = U.rng(20260928 + extra);
     const nb = lists.length;
-    let H, grounds = [];
+    let H;
+    const grounds = [];
     if (!tall) {
       H = Math.max(VH, 600);
       for (let b = 0; b < nb; b++) grounds.push(H * (0.56 + (0.42 * b) / Math.max(1, nb - 1)));
@@ -56,42 +70,85 @@
       H = top + nb * gap + 40;
       for (let b = 0; b < nb; b++) grounds.push(top + b * gap + gap * 0.92);
     }
-    root.style.height = H + 'px';
     const base = tall ? (mobile ? 118 : 138) : U.clamp(W * 0.1, 96, 196);
-    let idx = 0;
+    const items = [];
     lists.forEach((ids, b) => {
       const slot = W / ids.length;
       ids.forEach((id, i) => {
         const fl = FL.byId(id);
         if (!fl) return;
+        const dr = drawn[id];
         const depth = tall ? 0.35 + r() * 0.65 : U.clamp((b + 0.5 + (r() - 0.5) * 0.6) / nb, 0, 1);
-        const head = base * (tall ? 0.8 + depth * 0.32 : 0.62 + depth * 0.5) * (fl.size || 1);
-        const stemLen = (tall ? (mobile ? 190 : 220) * (0.45 + depth * 0.45) : H * (0.1 + depth * 0.12)) * (fl.stemK || 1) * (0.72 + r() * 0.56);
-        let x = slot * (i + 0.5) + (r() - 0.5) * slot * 0.6 + (b % 2 ? slot * 0.18 : -slot * 0.12);
-        x = U.clamp(x, head * 0.5 + 4, W - head * 0.5 - 4);
-        const gd = tall ? 0.15 + r() * 0.45 : 0.25 + b * 0.35 + r() * 0.55;
-        const gy = grounds[b] + (r() - 0.5) * 26;
-        G.plants.push(makePlant(fl, x, gy, depth, b, head, stemLen, r, idx++, gd));
+        const hw = Math.max(24, Math.min(base * (tall ? 0.8 + depth * 0.32 : 0.62 + depth * 0.5) * (fl.size || 1), slot * 0.9 - 10));
+        const hh = hw * dr.aspect, ax = dr.anchor[0], ay = dr.anchor[1];
+        const stem0 = (tall ? (mobile ? 190 : 220) * (0.45 + depth * 0.45) : H * (0.1 + depth * 0.12)) * (fl.stemK || 1) * (0.72 + r() * 0.56);
+        const ground = grounds[b] + (r() - 0.5) * 26;
+        const bend = (r() - 0.5) * hw * 0.3;
+        const stag = ((b % 2) - 0.5) * slot * 0.5;
+        const hx = U.clamp(slot * (i + 0.5) + stag + (r() - 0.5) * slot * 0.24, hw * 0.5 + 4, W - hw * 0.5 - 4);
+        // Centro de la cabeza según el largo del tallo, y el rango de alturas que el tallo permite.
+        const cy = (stem) => ground - stem - hh * ay + hh / 2;
+        const minStem = Math.max(36, stem0 * 0.6), maxStem = Math.max(minStem, stem0 * 1.7);
+        const z = 10 + b * 10 + Math.round(depth * 8);
+        items.push({
+          fl, dr, b, depth, hw, hh, ax, ay, ground, bend, z, gd: tall ? 0.15 + r() * 0.45 : 0.25 + b * 0.35 + r() * 0.55,
+          node: {
+            x: hx, y: cy(stem0), rx: hw * 0.44, ry: hh * 0.44, band: b, z,
+            minX: hw * 0.46 + 4, maxX: W - hw * 0.46 - 4, minY: Math.max(cy(maxStem), hh * 0.46 + 8), maxY: cy(minStem)
+          }
+        });
       });
-      addBandFront(W, grounds[b], b, r, tall);
     });
-    drawGround(W, H, grounds, r);
+    const nodes = items.map((it) => it.node);
+    FL.layout.relax(nodes, { gap: 10, allow: 0.1, avoid });
+    const vis = FL.layout.visibility(nodes);
+    items.forEach((it, k) => {
+      it.vis = vis[k];
+      it.stemLen = it.ground - it.node.y - it.hh * it.ay + it.hh / 2;
+      it.x = it.node.x - it.bend - it.hw * (0.5 - it.ax);
+    });
+    return { tall, lists, H, grounds, items, minVis: Math.min(...vis) };
+  }
+
+  G.build = function () {
+    root = document.getElementById('garden');
+    back = document.getElementById('ground');
+    // Con la pestaña oculta el ancho puede llegar en 0; se usa un mínimo y el jardín se rehace al cambiar de tamaño.
+    const W = Math.max(320, document.documentElement.clientWidth), VH = Math.max(480, window.innerHeight);
+    lastW = W; lastH = VH;
+    root.querySelectorAll('.plant, .bandfront, .layout-debug').forEach((n) => n.remove());
+    G.plants = [];
+    const drawn = {};
+    FL.flowers.forEach((fl) => { drawn[fl.id] = FL.drawHead(fl); });
+    const avoid = reservedZones();
+    G.avoid = avoid;
+    let best = null;
+    for (let extra = 0; extra < 3; extra++) {
+      const pl = plan(W, VH, extra, avoid, drawn);
+      if (!best || pl.minVis > best.minVis + 0.02) best = pl;
+      if (pl.minVis >= 0.85) break;
+    }
+    G.tall = best.tall;
+    G._plan = best;
+    G.report = { minVis: best.minVis, bands: best.lists.length, tall: best.tall, vis: best.items.map((it) => ({ id: it.fl.id, v: +it.vis.toFixed(3) })) };
+    root.style.height = best.H + 'px';
+    const r = U.rng(4242);
+    best.items.forEach((it) => G.plants.push(makePlant(it, r)));
+    best.grounds.forEach((y, b) => addBandFront(W, y, b, r, best.tall));
+    drawGround(W, best.H, best.grounds, r);
+    if (/[?&]debug=layout\b/.test(location.search)) debugLayout(best);
     observe();
     measure();
   };
 
-  function makePlant(fl, x, ground, depth, band, head, stemLen, r, idx, gd) {
-    const drawn = FL.drawHead(fl);
-    const ax = drawn.anchor[0], ay = drawn.anchor[1];
-    const hw = head, hh = head * drawn.aspect;
-    const bend = (r() - 0.5) * hw * 0.45;
+  function makePlant(it, r) {
+    const { fl, dr: drawn, hw, hh, ax, ay, bend, stemLen, depth, b: band, gd, z, x, ground } = it;
     const Wp = Math.max(hw * 1.5, 70);
     const Hp = stemLen + hh * ay;
     const tx = Wp / 2 + bend, ty = hh * ay;
     const stem = FL.drawStem(fl, { W: Wp, H: Hp, sx: Wp / 2, tx, ty, head: hw, bend: -bend * 0.5 }, r);
-    const z = 10 + band * 10 + Math.round(depth * 8);
-    const windy = fl.art === 'lavender' || fl.art === 'hyacinth' || fl.art === 'daisy' || fl.art === 'poppy';
-    const amp = (windy ? 2.4 : 1.2) + r() * 1.3;
+    const windy = fl.art === 'lavender' || fl.art === 'hyacinth' || fl.art === 'daisy' || fl.art === 'poppy' || fl.art === 'freesia';
+    const amp = (windy ? 2 : 1) + r() * 1.1;
     const dur = 5.5 + r() * 4.5;
     const el = document.createElement('div');
     el.className = 'plant sp-' + fl.art + (!G.tall && band === 0 ? ' far' : '');
@@ -103,11 +160,25 @@
       '<span class="bloom"><span class="turn">' + drawn.svg + '</span></span><span class="tag">' + fl.name + '</span></button></div>';
     root.appendChild(el);
     const btn = el.querySelector('.head');
-    const p = { fl, el, btn, turn: el.querySelector('.turn'), svg: el.querySelector('.fh'), depth, lean: 0, rx: 0, ry: 0, tx: 0, ty: 0, box: { x, ground, Hp, hh, Wp } };
+    const p = { fl, el, btn, turn: el.querySelector('.turn'), svg: el.querySelector('.fh'), depth, lean: 0, rx: 0, ry: 0, tx: 0, ty: 0, box: { x, ground, Hp, hh, Wp, hx: it.node.x } };
     btn.addEventListener('click', () => FL.focus.open(fl, btn));
     btn.addEventListener('pointerenter', () => hover(p));
     btn.addEventListener('focus', () => hover(p));
     return p;
+  }
+
+  // ?debug=layout: dibuja la elipse de cada cabeza con su porcentaje visible.
+  function debugLayout(pl) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'layout-debug');
+    svg.setAttribute('style', 'position:absolute;inset:0;width:100%;height:100%;z-index:300;pointer-events:none;overflow:visible');
+    svg.innerHTML = pl.items.map((it) => {
+      const n = it.node, col = it.vis < 0.85 ? '#d0302f' : '#2f7d4a';
+      return '<ellipse cx="' + f(n.x) + '" cy="' + f(n.y) + '" rx="' + f(n.rx) + '" ry="' + f(n.ry) + '" fill="none" stroke="' + col + '" stroke-width="1.5" stroke-dasharray="4 3"/>' +
+        '<text x="' + f(n.x) + '" y="' + f(n.y) + '" text-anchor="middle" font-size="12" font-family="monospace" fill="' + col + '">' + it.fl.id.slice(0, 6) + ' ' + Math.round(it.vis * 100) + '%</text>';
+    }).join('');
+    root.appendChild(svg);
+    console.info('[layout] filas:', pl.lists.length, '· modo alto:', pl.tall, '· visibilidad mínima:', pl.minVis.toFixed(3));
   }
 
   // La hierba y una leve bruma delante de cada fila dan profundidad y esconden la base de los tallos.
@@ -165,9 +236,9 @@
     const top = root.getBoundingClientRect().top + window.scrollY;
     G.plants.forEach((p) => {
       const b = p.box;
-      p.cx = b.x;
+      p.cx = b.hx;
       p.cy = top + b.ground - b.Hp * 0.55;
-      p.hx = b.x;
+      p.hx = b.hx;
       p.hy = top + b.ground - b.Hp + b.hh * 0.4;
     });
   }
@@ -235,7 +306,7 @@
   G.onLeave = () => { mouse.active = false; mouse.nx = 0; mouse.ny = 0; };
 
   G.resize = function () {
-    const W = document.documentElement.clientWidth, VH = window.innerHeight;
+    const W = Math.max(320, document.documentElement.clientWidth), VH = Math.max(480, window.innerHeight);
     if (Math.abs(W - lastW) > 2 || (!G.tall && Math.abs(VH - lastH) > 120)) G.build();
     else measure();
     if (G.ambient) G.ambient.resize();
@@ -248,12 +319,12 @@
     const sy = window.scrollY;
     for (const p of G.plants) {
       const par = p.depth - 0.45;
-      const tx = mouse.sx * par * 26;
-      const ty = mouse.sy * par * 10 + (G.tall ? -sy * par * 0.05 : 0);
+      const tx = mouse.sx * par * 14;
+      const ty = mouse.sy * par * 6 + (G.tall ? -sy * par * 0.05 : 0);
       let target = 0;
       if (mouse.active) {
         const dx = mouse.px - p.cx, dy = mouse.py - p.cy, d = Math.hypot(dx, dy), R = 180;
-        if (d < R) target = -Math.sign(dx || 1) * 7 * Math.pow(1 - d / R, 1.4);
+        if (d < R) target = -Math.sign(dx || 1) * 5 * Math.pow(1 - d / R, 1.4);
       }
       p.lean += (target - p.lean) * Math.min(1, dt * 2.6);
       if (Math.abs(tx - p.tx) > 0.05 || Math.abs(ty - p.ty) > 0.05) {

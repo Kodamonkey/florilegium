@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Florilegio · ramos de prueba</title>
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/atelier.css">
+<style>
+  body { padding: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  figure { margin: 0; padding: 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper-2); }
+  figcaption { font-family: var(--f-ui); font-size: 0.8rem; text-align: center; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<div class="grid" id="grid"></div>
+<script src="../js/core.js"></script>
+<script src="../js/gen/data.js"></script>
+<script src="../js/catalog.js"></script>
+<script src="../js/art-a.js"></script>
+<script src="../js/art-b.js"></script>
+<script src="../js/art-c.js"></script>
+<script src="../js/art-stems.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/bouquet-model.js"></script>
+<script src="../js/bouquet-art.js"></script>
+<script>
+  const FL = window.FL, grid = document.getElementById('grid');
+  const only = new URLSearchParams(location.search).get('only');
+  grid.innerHTML = FL.popular.filter((p) => !only || only.split(',').includes(p.id)).map((p) => {
+    const b = FL.bouquet.create(p);
+    return '<figure>' + FL.bouquetArt.render(b).svg + '<figcaption>' + p.name + ' · ' + FL.bouquet.total(b) + ' tallos</figcaption></figure>';
+  }).join('');
+</script>
+</body>
+</html>

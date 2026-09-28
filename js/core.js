@@ -33,6 +33,20 @@
   U.lerp = (a, b, t) => a + (b - a) * t;
   U.rad = (d) => (d * Math.PI) / 180;
   U.norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  // Con una hoja a pantalla completa abierta (taller, mostrador, regalo), el jardín queda inerte para teclado y lectores.
+  U.syncSheets = function () {
+    const on = !!document.querySelector('.sheet:not([hidden])');
+    document.body.classList.toggle('sheet-open', on);
+    document.querySelectorAll('#garden, .brand, .topnav, .colophon, #filterPill').forEach((el) => { el.inert = on; });
+  };
+  // Devuelve el foco a donde estaba, o a un respaldo si aquel control ya no se ve (quedó en una hoja cerrada).
+  U.refocus = function (el, fallback) {
+    const usable = (x) => x && x.focus && document.contains(x) && x.offsetParent !== null && !x.closest('[inert], [hidden]');
+    const target = usable(el) ? el : usable(fallback) ? fallback : null;
+    if (target) target.focus({ preventScroll: true });
+  };
+  // Texto escrito por personas, listo para insertar en HTML.
+  U.esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
   // Curva suave (Catmull-Rom a Bézier) que pasa por todos los puntos.
   U.smooth = function (pts, closed = true, k = 1) {

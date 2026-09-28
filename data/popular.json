@@ -1,0 +1,224 @@
+{
+  "popular": [
+    {
+      "id": "docena-roja",
+      "name": "La docena de rosas rojas",
+      "occasions": ["san-valentin", "aniversario"],
+      "seasons": [],
+      "stems": [{ "item": "rosa-roja", "n": 12 }, { "item": "gypsophila", "n": 3 }, { "item": "eucalipto", "n": 3 }],
+      "wrap": { "style": "seda", "color": "#2f3a2c" },
+      "ribbon": { "color": "#a3182b" },
+      "story": "La declaración clásica del romance occidental. El lenguaje de las flores del siglo XIX consolidó la rosa roja como emblema del amor, y el San Valentín moderno convirtió la docena en su forma más reconocible.",
+      "layoutSeed": 101
+    },
+    {
+      "id": "una-rosa",
+      "name": "Una sola rosa",
+      "occasions": ["san-valentin", "porque-si"],
+      "seasons": [],
+      "stems": [{ "item": "rosa-roja", "n": 1 }, { "item": "eucalipto", "n": 1 }],
+      "wrap": { "style": "kraft", "color": "#c9a77c" },
+      "ribbon": { "color": "#a3182b" },
+      "story": "El gesto mínimo y más directo: una sola flor se lee como algo íntimo. En Cataluña, el 23 de abril (Sant Jordi) se regala así, una rosa, tradicionalmente a cambio de un libro.",
+      "layoutSeed": 102
+    },
+    {
+      "id": "madre-claveles",
+      "name": "Claveles para mamá",
+      "occasions": ["dia-madre", "agradecimiento"],
+      "seasons": [],
+      "stems": [{ "item": "clavel", "n": 7 }, { "item": "rosa-rosada", "n": 4 }, { "item": "gypsophila", "n": 3 }],
+      "wrap": { "style": "seda", "color": "#f3e6ea" },
+      "ribbon": { "color": "#b54470" },
+      "story": "Anna Jarvis eligió el clavel para el primer Día de la Madre en Estados Unidos, a comienzos del siglo XX. Desde entonces, claveles y rosas en tonos rosados dominan los ramos de mayo.",
+      "layoutSeed": 103
+    },
+    {
+      "id": "madre-peonias",
+      "name": "Peonías de mayo",
+      "occasions": ["dia-madre", "aniversario", "boda"],
+      "seasons": ["primavera"],
+      "stems": [{ "item": "peonia", "n": 5 }, { "item": "rosa-rosada", "n": 4 }, { "item": "eucalipto", "n": 3 }],
+      "wrap": { "style": "tela", "color": "#efe7da" },
+      "ribbon": { "color": "#b54470" },
+      "story": "En el hemisferio norte, la temporada de peonías coincide con el Día de la Madre, y se volvió uno de los ramos más pedidos de mayo. En el hemisferio sur, su temporada llega en primavera, de octubre a diciembre.",
+      "layoutSeed": 104
+    },
+    {
+      "id": "novia-blanco",
+      "name": "Ramo de novia blanco",
+      "occasions": ["boda"],
+      "seasons": [],
+      "stems": [{ "item": "rosa-blanca", "n": 9 }, { "item": "gypsophila", "n": 5 }, { "item": "eucalipto", "n": 3 }],
+      "wrap": { "style": "tela", "color": "#efe7da" },
+      "ribbon": { "color": "#f4f0e4" },
+      "story": "El blanco nupcial se popularizó en el siglo XIX y arrastró consigo al ramo. La gypsophila, llamada también velo de novia, le da su nube característica.",
+      "layoutSeed": 105
+    },
+    {
+      "id": "novia-primavera",
+      "name": "Novia de primavera",
+      "occasions": ["boda"],
+      "seasons": ["primavera"],
+      "stems": [{ "item": "peonia", "n": 3 }, { "item": "ranunculo", "n": 5 }, { "item": "fresia", "n": 3 }, { "item": "eucalipto", "n": 3 }],
+      "wrap": { "style": "tela", "color": "#efe7da" },
+      "ribbon": { "color": "#f4f0e4" },
+      "story": "Peonías, ranúnculos y fresias perfumadas: las flores de temporada que hoy prefieren muchas novias de primavera.",
+      "layoutSeed": 106
+    },
+    {
+      "id": "cumple-color",
+      "name": "Cumpleaños en colores",
+      "occasions": ["cumpleanos", "porque-si"],
+      "seasons": [],
+      "stems": [{ "item": "gerbera", "n": 5 }, { "item": "alstroemeria", "n": 5 }, { "item": "margarita", "n": 3 }, { "item": "ruscus", "n": 3 }],
+      "wrap": { "style": "kraft", "color": "#e2cfae" },
+      "ribbon": { "color": "#e7c25c" },
+      "story": "Gerberas y alstroemerias se cultivan todo el año y duran muchos días: por eso son las reinas de los ramos de cumpleaños en las florerías actuales.",
+      "layoutSeed": 107
+    },
+    {
+      "id": "girasoles",
+      "name": "Girasoles de verano",
+      "occasions": ["amistad", "graduacion", "porque-si"],
+      "seasons": ["verano"],
+      "stems": [{ "item": "girasol", "n": 5 }, { "item": "margarita", "n": 6 }, { "item": "eucalipto", "n": 3 }],
+      "wrap": { "style": "kraft", "color": "#c9a77c" },
+      "ribbon": { "color": "#4d6647" },
+      "story": "El girasol dice «me alegras el día» casi en cualquier idioma. Con margaritas de campo, es el ramo de verano por excelencia.",
+      "layoutSeed": 108
+    },
+    {
+      "id": "graduacion",
+      "name": "Para un logro",
+      "occasions": ["graduacion"],
+      "seasons": [],
+      "stems": [{ "item": "girasol", "n": 3 }, { "item": "rosa-amarilla", "n": 6 }, { "item": "ruscus", "n": 3 }],
+      "wrap": { "style": "seda", "color": "#2f3a2c" },
+      "ribbon": { "color": "#e7c25c" },
+      "story": "Amarillos luminosos para decir «te admiro»: girasoles y rosas amarillas son habituales en graduaciones y estrenos.",
+      "layoutSeed": 109
+    },
+    {
+      "id": "condolencias",
+      "name": "Despedida en blanco",
+      "occasions": ["condolencias"],
+      "seasons": [],
+      "stems": [{ "item": "lirio", "n": 5 }, { "item": "rosa-blanca", "n": 6 }, { "item": "helecho", "n": 5 }],
+      "wrap": { "style": "ninguno", "color": "#f1efe6" },
+      "ribbon": { "color": "#f4f0e4" },
+      "story": "Los lirios blancos son una de las flores de despedida más extendidas en Occidente; el blanco habla de respeto y de paz. Si la familia tiene gatos, mejor reemplazarlos por rosas o lisianthus blancos.",
+      "layoutSeed": 110
+    },
+    {
+      "id": "todos-santos",
+      "name": "Crisantemos de noviembre",
+      "occasions": ["todos-santos", "condolencias"],
+      "seasons": ["otoño"],
+      "stems": [{ "item": "crisantemo", "n": 9 }, { "item": "limonium", "n": 3 }, { "item": "helecho", "n": 3 }],
+      "wrap": { "style": "kraft", "color": "#b48a5c" },
+      "ribbon": { "color": "#7d69bb" },
+      "story": "En Francia, España, Italia y buena parte de Latinoamérica, los crisantemos llenan los cementerios el 1 de noviembre: en el hemisferio norte florecen justo en esa época. Por eso allí casi nunca se regalan en fiestas.",
+      "layoutSeed": 111
+    },
+    {
+      "id": "recuperacion",
+      "name": "Pronta recuperación",
+      "occasions": ["recuperacion"],
+      "seasons": [],
+      "stems": [{ "item": "gerbera", "n": 3 }, { "item": "rosa-amarilla", "n": 4 }, { "item": "margarita", "n": 4 }, { "item": "ruscus", "n": 3 }],
+      "wrap": { "style": "seda", "color": "#dfe7ef" },
+      "ribbon": { "color": "#e7c25c" },
+      "story": "Para visitar a alguien enfermo se prefieren flores alegres y de poco perfume. Conviene preguntar antes: algunas unidades de hospital no permiten flores.",
+      "layoutSeed": 112
+    },
+    {
+      "id": "perdon",
+      "name": "Lo siento",
+      "occasions": ["disculpa"],
+      "seasons": ["primavera"],
+      "stems": [{ "item": "jacinto", "n": 5 }, { "item": "rosa-blanca", "n": 4 }, { "item": "eucalipto", "n": 2 }],
+      "wrap": { "style": "seda", "color": "#f1efe6" },
+      "ribbon": { "color": "#7d69bb" },
+      "story": "En los códigos florales modernos, el jacinto morado se asocia a la disculpa; las rosas blancas suman respeto. Las palabras de la tarjeta hacen el resto.",
+      "layoutSeed": 113
+    },
+    {
+      "id": "nacimiento",
+      "name": "Bienvenida",
+      "occasions": ["nacimiento"],
+      "seasons": [],
+      "stems": [{ "item": "rosa-rosada", "n": 3 }, { "item": "margarita", "n": 6 }, { "item": "gypsophila", "n": 5 }],
+      "wrap": { "style": "seda", "color": "#f3e6ea" },
+      "ribbon": { "color": "#f4f0e4" },
+      "story": "Colores suaves y flores sencillas para dar la bienvenida. Si la casa es pequeña o hay recién nacidos, conviene evitar flores muy perfumadas.",
+      "layoutSeed": 114
+    },
+    {
+      "id": "gracias",
+      "name": "Gracias de verdad",
+      "occasions": ["agradecimiento", "dia-profesor", "dia-mujer"],
+      "seasons": [],
+      "stems": [{ "item": "hortensia", "n": 1 }, { "item": "rosa-rosada", "n": 5 }, { "item": "clavel", "n": 5 }, { "item": "eucalipto", "n": 2 }],
+      "wrap": { "style": "kraft", "color": "#e2cfae" },
+      "ribbon": { "color": "#b54470" },
+      "story": "En la floristería actual, la hortensia y la rosa rosada son dos de las flores que más se asocian a la gratitud.",
+      "layoutSeed": 115
+    },
+    {
+      "id": "amarillo-amistad",
+      "name": "Flores amarillas",
+      "occasions": ["flores-amarillas", "amistad"],
+      "seasons": ["primavera"],
+      "stems": [{ "item": "rosa-amarilla", "n": 5 }, { "item": "alstroemeria", "n": 5 }, { "item": "fresia", "n": 3 }, { "item": "ruscus", "n": 2 }],
+      "wrap": { "style": "kraft", "color": "#c9a77c" },
+      "ribbon": { "color": "#e7c25c" },
+      "story": "El amarillo es hoy el color de la amistad. En varios países latinoamericanos se ha vuelto costumbre regalar flores amarillas cada 21 de septiembre, que en el hemisferio sur marca la llegada de la primavera.",
+      "layoutSeed": 116
+    },
+    {
+      "id": "invierno",
+      "name": "Ramo de invierno",
+      "occasions": ["porque-si", "agradecimiento"],
+      "seasons": ["invierno"],
+      "stems": [{ "item": "camelia", "n": 3 }, { "item": "anemona", "n": 6 }, { "item": "eucalipto", "n": 5 }],
+      "wrap": { "style": "tela", "color": "#384454" },
+      "ribbon": { "color": "#f4f0e4" },
+      "story": "Camelias y anémonas florecen cuando casi nada lo hace. Con eucalipto plateado, un ramo de estación de rojos profundos.",
+      "layoutSeed": 117
+    },
+    {
+      "id": "otono",
+      "name": "Otoño cálido",
+      "occasions": ["agradecimiento", "cumpleanos"],
+      "seasons": ["otoño"],
+      "stems": [{ "item": "dalia", "n": 5 }, { "item": "alstroemeria", "n": 4 }, { "item": "limonium", "n": 3 }, { "item": "eucalipto", "n": 3 }],
+      "wrap": { "style": "kraft", "color": "#b48a5c" },
+      "ribbon": { "color": "#a3182b" },
+      "story": "Dalias y alstroemerias en naranjas y cobres: la última gran floración antes del frío.",
+      "layoutSeed": 118
+    },
+    {
+      "id": "primavera-bulbos",
+      "name": "Primavera de bulbos",
+      "occasions": ["porque-si", "nacimiento", "amistad"],
+      "seasons": ["primavera"],
+      "stems": [{ "item": "tulipan", "n": 7 }, { "item": "jacinto", "n": 3 }, { "item": "ranunculo", "n": 3 }],
+      "wrap": { "style": "seda", "color": "#dfe7ef" },
+      "ribbon": { "color": "#6f97e0" },
+      "story": "Tulipanes, jacintos y ranúnculos crecen de bulbos o raíces tuberosas y anuncian el final del invierno.",
+      "layoutSeed": 119
+    },
+    {
+      "id": "silvestre",
+      "name": "Ramo de campo",
+      "occasions": ["porque-si", "amistad"],
+      "seasons": ["verano"],
+      "stems": [{ "item": "margarita", "n": 7 }, { "item": "lavanda", "n": 5 }, { "item": "amapola", "n": 3 }],
+      "wrap": { "style": "kraft", "color": "#c9a77c" },
+      "ribbon": { "color": "#4d6647" },
+      "story": "Margaritas, lavanda y amapolas, como recogidas al borde de un camino: el ramo que no necesita ocasión.",
+      "layoutSeed": 120
+    }
+  ]
+}

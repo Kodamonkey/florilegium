@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "catalog.schema.json",
+  "title": "Catálogo de Florilegio",
+  "description": "Flores (con ficha completa y dibujo propio), rellenos/follajes y ramos populares.",
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]{2,40}$" },
+    "hex": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+    "strings": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "palette": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/hex" }
+    },
+    "level": { "enum": ["ninguna", "baja", "media", "alta", "desconocida"] },
+    "care": {
+      "type": "object",
+      "required": ["form", "vaseLife", "water", "steps", "avoid", "toxicity"],
+      "additionalProperties": false,
+      "properties": {
+        "form": { "enum": ["cut", "potted"] },
+        "vaseLife": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 365 }, "minItems": 2, "maxItems": 2 },
+        "water": { "enum": ["poca", "media", "mucha"] },
+        "steps": { "$ref": "#/$defs/strings" },
+        "avoid": { "$ref": "#/$defs/strings" },
+        "toxicity": {
+          "type": "object",
+          "required": ["cats", "dogs", "note"],
+          "additionalProperties": false,
+          "properties": {
+            "cats": { "$ref": "#/$defs/level" },
+            "dogs": { "$ref": "#/$defs/level" },
+            "note": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "bouquet": {
+      "type": "object",
+      "required": ["role", "florist"],
+      "additionalProperties": false,
+      "properties": {
+        "role": { "enum": ["focal", "secondary", "spike", "filler", "greenery"] },
+        "florist": { "type": "boolean", "description": "false si casi nunca se usa en ramos" },
+        "caution": { "type": "string", "minLength": 1 }
+      }
+    },
+    "flower": {
+      "type": "object",
+      "required": ["id", "type", "name", "sci", "family", "art", "hue", "size", "stemK", "pal", "colors", "seasons", "meanings", "hint", "poetic", "culture", "science", "care", "bouquet"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": { "const": "flower" },
+        "name": { "type": "string", "minLength": 1 },
+        "sci": { "type": "string", "minLength": 1 },
+        "family": { "type": "string", "minLength": 1 },
+        "art": { "type": "string", "pattern": "^[a-z]+$" },
+        "hue": { "$ref": "#/$defs/hex" },
+        "size": { "type": "number", "minimum": 0.4, "maximum": 2 },
+        "stemK": { "type": "number", "minimum": 0.2, "maximum": 2 },
+        "pal": { "$ref": "#/$defs/palette" },
+        "colors": { "$ref": "#/$defs/strings", "minItems": 1 },
+        "seasons": { "$ref": "#/$defs/strings", "minItems": 1 },
+        "meanings": { "$ref": "#/$defs/strings", "minItems": 1 },
+        "hint": { "type": "string", "minLength": 1 },
+        "poetic": { "type": "string", "minLength": 1 },
+        "culture": {
+          "type": "object",
+          "required": ["symbol", "history", "gift"],
+          "additionalProperties": false,
+          "properties": {
+            "symbol": { "type": "string" },
+            "history": { "type": "string" },
+            "note": { "type": "string" },
+            "gift": { "type": "string" }
+          }
+        },
+        "science": {
+          "type": "object",
+          "required": ["origin", "growth", "pollination", "curiosity"],
+          "additionalProperties": false,
+          "properties": {
+            "origin": { "type": "string" },
+            "growth": { "type": "string" },
+            "pollination": { "type": "string" },
+            "curiosity": { "type": "string" }
+          }
+        },
+        "care": { "$ref": "#/$defs/care" },
+        "bouquet": { "$ref": "#/$defs/bouquet" }
+      }
+    },
+    "filler": {
+      "type": "object",
+      "required": ["id", "type", "name", "sci", "family", "art", "hue", "pal", "colors", "seasons", "meanings", "poetic", "symbol", "origin", "care", "bouquet"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": { "const": "filler" },
+        "name": { "type": "string", "minLength": 1 },
+        "sci": { "type": "string", "minLength": 1 },
+        "family": { "type": "string", "minLength": 1 },
+        "art": { "type": "string", "pattern": "^[a-z]+$" },
+        "hue": { "$ref": "#/$defs/hex" },
+        "pal": { "$ref": "#/$defs/palette" },
+        "colors": { "$ref": "#/$defs/strings", "minItems": 1 },
+        "seasons": { "$ref": "#/$defs/strings", "minItems": 1 },
+        "meanings": { "$ref": "#/$defs/strings" },
+        "poetic": { "type": "string", "minLength": 1 },
+        "symbol": { "type": "string", "minLength": 1 },
+        "origin": { "type": "string", "minLength": 1 },
+        "care": { "$ref": "#/$defs/care" },
+        "bouquet": { "$ref": "#/$defs/bouquet" }
+      }
+    },
+    "popular": {
+      "type": "object",
+      "required": ["id", "name", "occasions", "seasons", "stems", "wrap", "ribbon", "story", "layoutSeed"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "occasions": { "$ref": "#/$defs/strings", "minItems": 1 },
+        "seasons": { "$ref": "#/$defs/strings", "description": "vacío = todo el año" },
+        "stems": { "type": "array", "items": { "$ref": "bouquet.schema.json#/$defs/stem" }, "minItems": 1, "maxItems": 12 },
+        "wrap": { "$ref": "bouquet.schema.json#/$defs/wrap" },
+        "ribbon": { "$ref": "bouquet.schema.json#/$defs/ribbon" },
+        "story": { "type": "string", "minLength": 1 },
+        "layoutSeed": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

@@ -26,7 +26,13 @@
     dandelion: { c: '#9aae72', w: 0.025, leaf: 'rosette' },
     poppy: { c: '#6f8b4a', w: 0.022, leaf: 'rosette', lobed: true },
     iris: { c: '#5f7d52', w: 0.045, leaf: 'sword', n: 4, lc: ['#4f6d52', '#95b38f'] },
-    hyacinth: { c: '#6a8d4a', w: 0.06, leaf: 'strap', n: 4 }
+    hyacinth: { c: '#6a8d4a', w: 0.06, leaf: 'strap', n: 4 },
+    gerbera: { c: '#5f7d3f', w: 0.032, leaf: 'rosette' },
+    lisianthus: { c: '#6d8a6a', w: 0.03, leaf: 'lance', n: 4, lc: ['#5e7f6a', '#a6c2b0'] },
+    alstroemeria: { c: '#5f7d3f', w: 0.032, leaf: 'lance', n: 6 },
+    ranunculus: { c: '#6a8a48', w: 0.032, leaf: 'cut', n: 2 },
+    freesia: { c: '#6d8a4a', w: 0.03, leaf: 'sword', n: 3 },
+    anemone: { c: '#5f7d3f', w: 0.03, leaf: 'collar' }
   };
   FL.stemCfg = C;
 
@@ -133,6 +139,18 @@
           back += leafAt(sx, H - 2, a, U.leaf(hd * (i === 2 ? 0.45 : 0.62), hd * 0.19, { r, fill: lf, wpos: 0.55, base: 0.3, gloss: true }));
         });
         break;
+      case 'collar': {
+        // Collar de hojas finamente divididas justo bajo la flor (anémona).
+        const q = at(0.8);
+        [-58, 0, 58].forEach((a2) => {
+          let s = '';
+          [-24, 0, 24].forEach((a3) => {
+            s += '<g transform="rotate(' + a3 + ')">' + U.leaf(hd * 0.2, hd * 0.035, { r, fill: lf, teeth: true, ta: 0.3 }) + '</g>';
+          });
+          back += leafAt(q[0], q[1], ang(0.8) + a2 + (r() - 0.5) * 12, s);
+        });
+        break;
+      }
       case 'rosette':
         for (let i = 0; i < 5; i++) {
           const side = i % 2 ? 1 : -1, a = side * (52 + r() * 30);

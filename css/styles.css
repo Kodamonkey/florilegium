@@ -213,6 +213,8 @@ body.focus-open .ambient, body.days-open .ambient { visibility: hidden; }
 }
 @keyframes nod { from { rotate: -2.2deg; } to { rotate: 2.2deg; } }
 .head:hover, .head:focus-visible { scale: 1.07; }
+/* La flor que miras pasa al frente y se ve entera. */
+.plant:has(.head:hover), .plant:has(.head:focus-visible) { z-index: 58 !important; }
 .head:focus-visible { outline: none; }
 .head:focus-visible .bloom::after {
   content: ""; position: absolute; inset: -6%; border-radius: 50%; border: 1.5px dashed var(--moss);
@@ -236,7 +238,7 @@ body.focus-open .ambient, body.days-open .ambient { visibility: hidden; }
 .fh { display: block; width: 100%; height: 100%; overflow: visible; }
 .fh .lit { opacity: var(--lit-o); }
 .fh .pt, .fh .core, .fh .stm, .fh .lip, .fh .hf, .fh .jf, .fh .jb, .fh .mf, .fh .mfmain,
-.fh .cb, .fh .hc, .fh .tilt, .fh .spk, .fh .tin, .fh .pod, .fh .aroma circle {
+.fh .cb, .fh .hc, .fh .tilt, .fh .spk, .fh .tin, .fh .pod, .fh .aroma circle, .fh .af, .fh .ff {
   transform-origin: 0 0;
 }
 .fh .pt {
@@ -440,6 +442,45 @@ body.focus-open .ambient, body.days-open .ambient { visibility: hidden; }
 /* Jacinto: de abajo hacia arriba */
 .sp-hyacinth .hc { transform: scale(var(--s0)); transition: transform 1.4s cubic-bezier(0.3, 1.4, 0.4, 1); transition-delay: calc(var(--row) * 160ms + 0.2s); }
 .sp-hyacinth.open .hc { transform: scale(1.06); }
+
+/* Gerbera: los rayos se estiran como quien despierta */
+.sp-gerbera .gb, .sp-gerbera .gf { transform: scale(0.9); }
+.sp-gerbera .gt { transform: scale(0.7); }
+.sp-gerbera.open .gf { transform: scale(1.04); transition-delay: calc(var(--i) * 35ms); }
+.sp-gerbera.open .gb { transform: scale(1.06); transition-delay: calc(var(--i) * 35ms + 250ms); }
+.sp-gerbera.open .gt { transform: scale(1); transition-delay: 0.9s; }
+
+/* Lisianthus: los pétalos de seda se desenrollan de afuera hacia adentro */
+.sp-lisianthus .pt { transform: rotate(var(--w, 0deg)) scale(0.84); transition-duration: 2.6s; }
+.sp-lisianthus .ls1-ring { --rd: 0.2s; } .sp-lisianthus .ls2-ring { --rd: 0.4s; } .sp-lisianthus .ls3-ring { --rd: 0.6s; }
+.sp-lisianthus .ls4-ring { --rd: 0.8s; } .sp-lisianthus .ls5-ring { --rd: 1s; }
+.sp-lisianthus.open .pt { transform: rotate(0deg) scale(1.03); }
+
+/* Alstroemeria: las tres flores se abren una tras otra */
+.sp-alstroemeria .af { transform: scale(0.78); transition: transform 1.8s cubic-bezier(0.3, 1.3, 0.4, 1); transition-delay: calc(var(--i) * 380ms + 0.2s); }
+.sp-alstroemeria.open .af { transform: scale(1); }
+.sp-alstroemeria .pt { transform: scale(0.9); }
+.sp-alstroemeria.open .pt { transform: scale(1.03); }
+.sp-alstroemeria .stm { transform: scale(0.75); transition: transform 2s var(--ease-bloom) 1s; }
+.sp-alstroemeria.open .stm { transform: scale(1); }
+
+/* Ranúnculo: las capas se aflojan desde afuera */
+.sp-ranunculus .pt { transform: scale(var(--s0, 0.9)); transition-duration: 2.4s; }
+.sp-ranunculus .rn0-ring { --s0: 0.96; } .sp-ranunculus .rn1-ring { --s0: 0.94; --rd: 0.12s; } .sp-ranunculus .rn2-ring { --s0: 0.92; --rd: 0.26s; }
+.sp-ranunculus .rn3-ring { --s0: 0.89; --rd: 0.4s; } .sp-ranunculus .rn4-ring { --s0: 0.86; --rd: 0.55s; } .sp-ranunculus .rn5-ring { --s0: 0.82; --rd: 0.7s; }
+.sp-ranunculus .rn6-ring { --s0: 0.78; --rd: 0.85s; } .sp-ranunculus .rn7-ring { --s0: 0.74; --rd: 1s; } .sp-ranunculus .rn8-ring { --s0: 0.7; --rd: 1.15s; }
+.sp-ranunculus.open .pt { transform: scale(1.03); }
+
+/* Fresia: de la base a la punta */
+.sp-freesia .ff { transform: scale(var(--s0)); transition: transform 1.4s cubic-bezier(0.3, 1.4, 0.4, 1); transition-delay: calc(var(--i) * 240ms + 0.2s); }
+.sp-freesia.open .ff { transform: scale(1); }
+
+/* Anémona: se recoge como al anochecer y se abre con la luz */
+.sp-anemone .pt { transform: scale(0.74, 0.8); transition-duration: 2.2s; }
+.sp-anemone .an1-ring { --rd: 0.25s; }
+.sp-anemone.open .pt { transform: scale(1.03); }
+.sp-anemone .core { transform: scale(0.85); transition: transform 2s ease 0.6s; }
+.sp-anemone.open .core { transform: scale(1); }
 
 /* ---------- Primer plano ---------- */
 .focus { position: fixed; inset: 0; z-index: 80; }

@@ -1,0 +1,122 @@
+{
+  "fillers": [
+    {
+      "id": "gypsophila",
+      "type": "filler",
+      "name": "Gypsophila",
+      "sci": "<i>Gypsophila paniculata</i>",
+      "family": "Cariofiláceas",
+      "art": "gypsophila",
+      "hue": "#ece8dc",
+      "pal": { "a": "#d9d3c2", "b": "#f6f3ea", "c": "#ffffff", "st": "#98a983" },
+      "colors": ["blanco"],
+      "seasons": ["primavera", "verano"],
+      "meanings": ["Amor", "Nuevos comienzos"],
+      "poetic": "Una nube de flores diminutas que hace de aire alrededor de las demás.",
+      "symbol": "Pureza, inocencia y amor duradero. Por su uso en bodas también se la llama velo de novia, y paniculata por su nombre científico. Es pariente del clavel.",
+      "origin": "Europa central y oriental, y Asia central.",
+      "care": {
+        "form": "cut", "vaseLife": [5, 10], "water": "media",
+        "steps": [
+          "Al final, cuélgala boca abajo en un lugar seco: se conserva seca durante meses.",
+          "A algunas personas les molesta su olor al principio; se atenúa en uno o dos días."
+        ],
+        "avoid": [],
+        "toxicity": { "cats": "baja", "dogs": "baja", "note": "Molestias digestivas leves si se ingiere." }
+      },
+      "bouquet": { "role": "filler", "florist": true }
+    },
+    {
+      "id": "eucalipto",
+      "type": "filler",
+      "name": "Eucalipto",
+      "sci": "<i>Eucalyptus cinerea</i> y afines",
+      "family": "Mirtáceas",
+      "art": "eucalyptus",
+      "hue": "#8fa8a0",
+      "pal": { "a": "#58756f", "b": "#94b0a8", "c": "#cfe0da", "st": "#8a6f5a" },
+      "colors": ["verde"],
+      "seasons": ["primavera", "verano", "otoño", "invierno"],
+      "meanings": ["Calma", "Esperanza"],
+      "poetic": "Hojas redondas como monedas de plata y un aroma que despeja.",
+      "symbol": "Protección, alivio y calma, por el aroma fresco de sus aceites.",
+      "origin": "Australia. En Chile se cultiva extensamente desde el siglo XIX.",
+      "care": {
+        "form": "cut", "vaseLife": [7, 14], "water": "media",
+        "steps": ["Dura mucho y se seca bien conservando su aroma."],
+        "avoid": [],
+        "toxicity": { "cats": "media", "dogs": "media", "note": "Su aceite (eucaliptol) es tóxico para gatos y perros: vómitos, babeo o debilidad." }
+      },
+      "bouquet": { "role": "greenery", "florist": true }
+    },
+    {
+      "id": "helecho",
+      "type": "filler",
+      "name": "Helecho de cuero",
+      "sci": "<i>Rumohra adiantiformis</i>",
+      "family": "Driopteridáceas",
+      "art": "fern",
+      "hue": "#4f7a3a",
+      "pal": { "a": "#34562a", "b": "#5b8844", "c": "#8fb56c", "st": "#5a6f3a" },
+      "colors": ["verde"],
+      "seasons": ["primavera", "verano", "otoño", "invierno"],
+      "meanings": [],
+      "poetic": "Un fondo verde que hace brillar todo lo que tiene delante.",
+      "symbol": "En el lenguaje victoriano, el helecho se leía como fascinación; hoy también se lo asocia a la sinceridad. En los ramos es, sobre todo, marco y sostén.",
+      "origin": "Hemisferio sur, de zonas tropicales a templadas: Sudamérica (incluido Chile), el sur de África, Australia y Nueva Zelanda; también el Caribe.",
+      "care": {
+        "form": "cut", "vaseLife": [10, 21], "water": "media",
+        "steps": ["Rocíalo con agua si el ambiente es seco."],
+        "avoid": ["Calefacción."],
+        "toxicity": { "cats": "desconocida", "dogs": "desconocida", "note": "No figura entre las plantas tóxicas más comunes." }
+      },
+      "bouquet": { "role": "greenery", "florist": true }
+    },
+    {
+      "id": "ruscus",
+      "type": "filler",
+      "name": "Ruscus",
+      "sci": "<i>Ruscus hypophyllum</i> y <i>R. aculeatus</i>",
+      "family": "Asparagáceas",
+      "art": "ruscus",
+      "hue": "#3f6a34",
+      "pal": { "a": "#2f5427", "b": "#4c7a3c", "c": "#86ad62", "st": "#4f6636" },
+      "colors": ["verde"],
+      "seasons": ["primavera", "verano", "otoño", "invierno"],
+      "meanings": [],
+      "poetic": "Parece una rama de hojas, pero cada «hoja» es un tallo aplanado.",
+      "symbol": "No tiene un significado tradicional marcado: aporta estructura y un verde brillante que dura semanas.",
+      "origin": "Cuenca mediterránea.",
+      "care": {
+        "form": "cut", "vaseLife": [14, 21], "water": "media",
+        "steps": ["Es de los follajes más duraderos: puede pasar a otro florero cuando las flores terminen."],
+        "avoid": [],
+        "toxicity": { "cats": "baja", "dogs": "baja", "note": "Sus bayas pueden causar molestias digestivas." }
+      },
+      "bouquet": { "role": "greenery", "florist": true }
+    },
+    {
+      "id": "limonium",
+      "type": "filler",
+      "name": "Limonium",
+      "sci": "<i>Limonium sinuatum</i>",
+      "family": "Plumbagináceas",
+      "art": "limonium",
+      "hue": "#7d6bc2",
+      "pal": { "a": "#5a4a9c", "b": "#8a78cc", "c": "#c9bdf0", "w": "#fbf8ee", "st": "#7f9a62" },
+      "colors": ["morado", "blanco", "rosa", "amarillo", "azul"],
+      "seasons": ["verano", "otoño"],
+      "meanings": ["Recuerdo"],
+      "poetic": "Parece de papel y no se marchita: seco, guarda su color durante meses.",
+      "symbol": "Recuerdo y constancia. Se le llama siempreviva porque conserva su color al secarse; estátice viene de <i>Statice</i>, su antiguo nombre botánico.",
+      "origin": "Cuenca mediterránea.",
+      "care": {
+        "form": "cut", "vaseLife": [10, 14], "water": "poca",
+        "steps": ["Bastan unos centímetros de agua; al secarse queda igual de colorido."],
+        "avoid": [],
+        "toxicity": { "cats": "ninguna", "dogs": "ninguna", "note": "No se considera tóxico para gatos ni perros." }
+      },
+      "bouquet": { "role": "filler", "florist": true }
+    }
+  ]
+}

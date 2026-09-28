@@ -1,0 +1,130 @@
+{
+  "meanings": [
+    {
+      "id": "Amor",
+      "phrase": "amor declarado",
+      "strong": ["te amo", "enamorad", "san valentin", "mi amor"],
+      "lexicon": ["amor", "te amo", "te quiero", "enamor", "romance", "romantic", "pasion", "deseo", "novia", "novio", "pareja", "esposa", "esposo", "san valentin", "corazon", "beso", "cita"]
+    },
+    {
+      "id": "Amistad",
+      "phrase": "amistad",
+      "strong": ["amig", "amistad"],
+      "lexicon": ["amig", "amistad", "companer", "lealtad", "hermana", "hermano", "colega", "vecin", "juntos", "siempre ahi", "apoyo"]
+    },
+    {
+      "id": "Admiración",
+      "phrase": "admiración",
+      "strong": ["felicit", "orgull", "graduac", "logro", "titul"],
+      "lexicon": ["admir", "orgull", "logro", "felicit", "exito", "talento", "graduac", "titul", "inspir", "respeto", "premio", "ascenso", "estreno", "brillante"]
+    },
+    {
+      "id": "Gratitud",
+      "phrase": "gratitud",
+      "strong": ["gracias", "agradec", "gratitud"],
+      "lexicon": ["gracias", "agradec", "gratitud", "reconoc", "maestr", "profesor", "mama", "madre", "abuel", "cuidar", "cuido", "ayuda", "ayudo", "todo lo que"]
+    },
+    {
+      "id": "Recuerdo",
+      "phrase": "recuerdo",
+      "strong": ["fallec", "murio", "muerte", "luto", "duelo", "condolen", "pesame", "funeral", "velorio", "descanse en paz", "partio"],
+      "lexicon": ["recuerd", "memoria", "extran", "echo de menos", "ausencia", "luto", "duelo", "condolen", "pesame", "fallec", "murio", "muerte", "partio", "despedi", "homenaje", "lejos", "distancia", "nunca olvid"]
+    },
+    {
+      "id": "Esperanza",
+      "phrase": "esperanza",
+      "strong": ["mejorate", "recuper", "hospital", "operacion"],
+      "lexicon": ["esperanza", "animo", "mejorat", "recuper", "salud", "hospital", "enferm", "operacion", "fuerza", "optimis", "sueno", "futuro", "saldra", "pronto"]
+    },
+    {
+      "id": "Perdón",
+      "phrase": "un pedido de perdón",
+      "strong": ["perdon", "lo siento", "disculp", "me equivoque", "arrepient"],
+      "lexicon": ["perdon", "perdona", "lo siento", "disculp", "me equivoque", "error", "arrepient", "reconcil", "pelea", "peleamos", "discusion", "discutimos", "falle", "enojad"]
+    },
+    {
+      "id": "Nuevos comienzos",
+      "phrase": "nuevos comienzos",
+      "strong": ["bebe", "nacimiento", "nacio", "boda", "matrimonio", "mudanza", "casa nueva", "trabajo nuevo"],
+      "lexicon": ["nuevo", "nueva", "comienz", "empez", "mudanza", "casa nueva", "trabajo nuevo", "bebe", "nacimiento", "nacio", "boda", "matrimonio", "casamiento", "casan", "jubil", "inaugur", "primer dia"]
+    },
+    {
+      "id": "Alegría",
+      "phrase": "alegría",
+      "strong": ["cumple", "celebr", "feliz"],
+      "lexicon": ["alegr", "feliz", "felicidad", "celebr", "fiesta", "sonri", "cumple", "buen dia", "porque si", "sorpresa", "diverti", "luz", "sol"]
+    },
+    {
+      "id": "Calma",
+      "phrase": "calma",
+      "strong": ["estres", "ansiedad", "descans"],
+      "lexicon": ["calma", "paz", "tranquil", "descans", "estres", "relaj", "serenidad", "dormir", "ansiedad", "respir", "pausa", "cansad", "agotad"]
+    }
+  ],
+  "colors": [
+    { "id": "rojo", "hex": "#b3202f", "meanings": ["Amor"], "text": "El rojo es el color de la pasión y el amor declarado." },
+    { "id": "rosa", "hex": "#e58aa6", "meanings": ["Gratitud", "Admiración"], "text": "El rosa habla de ternura, gratitud y admiración." },
+    { "id": "blanco", "hex": "#f4f0e4", "meanings": ["Nuevos comienzos", "Recuerdo"], "text": "El blanco dice respeto, pureza y comienzo; en parte de Asia oriental también es color de luto." },
+    { "id": "amarillo", "hex": "#f0b429", "meanings": ["Amistad", "Alegría"], "text": "El amarillo es hoy el color de la amistad y la alegría (en el siglo XIX llegó a leerse como celos)." },
+    { "id": "naranja", "hex": "#e46a4a", "meanings": ["Alegría", "Admiración"], "text": "El naranja transmite entusiasmo, energía y celebración." },
+    { "id": "morado", "hex": "#7d69bb", "meanings": ["Admiración", "Calma"], "text": "El morado sugiere admiración, dignidad y serenidad." },
+    { "id": "azul", "hex": "#6f97e0", "meanings": ["Calma", "Esperanza"], "text": "El azul, escaso en las flores, evoca serenidad y confianza." },
+    { "id": "verde", "hex": "#6f8f5a", "meanings": [], "text": "El follaje verde da marco y frescura.", "explorer": false }
+  ],
+  "seasons": ["primavera", "verano", "otoño", "invierno"],
+  "seasonMonths": {
+    "N": { "primavera": [3, 4, 5], "verano": [6, 7, 8], "otoño": [9, 10, 11], "invierno": [12, 1, 2] },
+    "S": { "primavera": [9, 10, 11], "verano": [12, 1, 2], "otoño": [3, 4, 5], "invierno": [6, 7, 8] }
+  },
+  "southTimeZones": ["America/Santiago", "America/Punta_Arenas", "America/Argentina", "America/Buenos_Aires", "America/Montevideo", "America/Asuncion", "America/Sao_Paulo", "America/La_Paz", "America/Lima", "Australia", "Pacific/Auckland", "Africa/Johannesburg", "Pacific/Easter", "Atlantic/Stanley", "America/Cordoba", "America/Mendoza", "America/Catamarca", "America/Jujuy", "America/Bahia", "America/Fortaleza", "America/Recife", "America/Belem", "America/Maceio", "America/Araguaina", "America/Cuiaba", "America/Campo_Grande", "America/Porto_Velho", "America/Santarem", "America/Noronha", "America/Rio_Branco", "Africa/Maputo", "Africa/Harare", "Africa/Lusaka", "Africa/Windhoek", "Africa/Gaborone", "Africa/Maseru", "Africa/Mbabane", "Africa/Lubumbashi", "Indian/Mauritius", "Indian/Reunion", "Indian/Antananarivo", "Pacific/Fiji", "Pacific/Noumea", "Pacific/Tongatapu", "Pacific/Chatham", "Antarctica"],
+  "roles": {
+    "focal": { "name": "Protagonista", "desc": "Flores grandes que llevan la mirada." },
+    "secondary": { "name": "Acompañante", "desc": "Flores medianas que rodean y dan volumen." },
+    "spike": { "name": "Espiga", "desc": "Varas altas que dan altura y movimiento." },
+    "filler": { "name": "Relleno", "desc": "Flores pequeñas que llenan los huecos." },
+    "greenery": { "name": "Follaje", "desc": "Hojas que enmarcan el ramo." }
+  },
+  "numbers": {
+    "single": "Una sola flor concentra el gesto: suele leerse como algo íntimo y directo.",
+    "dozen": "La docena es el ramo clásico de declaración en la tradición occidental.",
+    "abundance": "Un ramo tan abundante se lee como celebración: nada se guarda.",
+    "even": "En Rusia, Ucrania y otros países de Europa del Este, los números pares de flores se reservan para los funerales; allí, para un regalo, se cuenta un número impar."
+  },
+  "occasions": [
+    { "id": "san-valentin", "name": "San Valentín", "date": { "month": 2, "day": 14 }, "meanings": ["Amor"] },
+    { "id": "dia-mujer", "name": "Día Internacional de la Mujer", "date": { "month": 3, "day": 8 }, "meanings": ["Admiración", "Gratitud"] },
+    { "id": "dia-madre", "name": "Día de la Madre", "date": { "month": 5, "weekday": 0, "nth": 2 }, "meanings": ["Gratitud", "Amor"], "note": "Segundo domingo de mayo en Chile, Estados Unidos y muchos otros países; en España es el primer domingo de mayo y en México, el 10 de mayo." },
+    { "id": "dia-padre", "name": "Día del Padre", "date": { "month": 6, "weekday": 0, "nth": 3 }, "meanings": ["Gratitud", "Admiración"], "note": "Tercer domingo de junio en Chile y muchos otros países." },
+    { "id": "flores-amarillas", "name": "Flores amarillas", "date": { "month": 9, "day": 21 }, "meanings": ["Amistad", "Alegría"], "note": "Costumbre reciente, difundida por redes sociales en varios países de Latinoamérica e inspirada en una canción de la teleserie argentina «Floricienta». En el hemisferio sur coincide con la primavera; en México, con el otoño." },
+    { "id": "dia-profesor", "name": "Día del Profesor", "date": { "month": 10, "day": 16 }, "meanings": ["Gratitud", "Admiración"], "note": "16 de octubre en Chile; la fecha cambia según el país." },
+    { "id": "todos-santos", "name": "Todos los Santos", "date": { "month": 11, "day": 1 }, "meanings": ["Recuerdo"] },
+    { "id": "navidad", "name": "Navidad", "date": { "month": 12, "day": 25 }, "meanings": ["Alegría", "Esperanza"] },
+    { "id": "cumpleanos", "name": "Cumpleaños", "meanings": ["Alegría", "Amistad"] },
+    { "id": "aniversario", "name": "Aniversario", "meanings": ["Amor"] },
+    { "id": "boda", "name": "Boda", "meanings": ["Amor", "Nuevos comienzos"] },
+    { "id": "nacimiento", "name": "Nacimiento", "meanings": ["Nuevos comienzos", "Alegría"] },
+    { "id": "graduacion", "name": "Graduación", "meanings": ["Admiración", "Nuevos comienzos"] },
+    { "id": "condolencias", "name": "Condolencias", "meanings": ["Recuerdo", "Calma"] },
+    { "id": "recuperacion", "name": "Pronta recuperación", "meanings": ["Esperanza", "Alegría"] },
+    { "id": "disculpa", "name": "Pedir perdón", "meanings": ["Perdón"] },
+    { "id": "agradecimiento", "name": "Agradecer", "meanings": ["Gratitud"] },
+    { "id": "amistad", "name": "Amistad", "meanings": ["Amistad"] },
+    { "id": "porque-si", "name": "Porque sí", "meanings": ["Alegría"] }
+  ],
+  "wraps": [
+    { "id": "kraft", "name": "Papel kraft", "colors": ["#c9a77c", "#b48a5c", "#e2cfae"] },
+    { "id": "seda", "name": "Papel de seda", "colors": ["#f3e6ea", "#e9dcc6", "#dfe7ef", "#f1efe6", "#2f3a2c"] },
+    { "id": "tela", "name": "Tela", "colors": ["#efe7da", "#c8b8a6", "#7c8a6a", "#384454"] },
+    { "id": "ninguno", "name": "Sin envoltorio", "colors": [] }
+  ],
+  "ribbons": ["#b54470", "#a3182b", "#e7c25c", "#f4f0e4", "#6f97e0", "#4d6647", "#7d69bb", "#2b3127"],
+  "careGeneral": [
+    "Al recibirlo, corta unos 2 cm de cada tallo en diagonal, con tijera o cuchillo limpio.",
+    "Quita las hojas que quedarían bajo el agua: se pudren y enturbian el agua.",
+    "Usa un florero bien lavado y agua fresca; si trae un sobre de alimento floral, disuélvelo en el agua.",
+    "Cambia el agua cada dos días y vuelve a cortar un poco los tallos.",
+    "Ubícalo lejos del sol directo, la calefacción, las corrientes de aire y la fruta madura: el etileno acelera el marchitamiento.",
+    "Retira las flores que se marchiten para que no acorten la vida de las demás."
+  ],
+  "limits": { "items": 12, "stemsPerItem": 24, "stems": 48, "message": 280, "intent": 500 }
+}

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bouquet.schema.json",
+  "title": "Ramo personalizado (v1)",
+  "description": "Receta de un ramo: qué lleva, cómo va envuelto y qué dice. Se guarda en localStorage y viaja codificado en los enlaces #ramo=.",
+  "type": "object",
+  "required": ["v", "stems"],
+  "additionalProperties": false,
+  "properties": {
+    "v": { "const": 1 },
+    "id": { "type": "string", "pattern": "^b_[a-z0-9]{4,24}$" },
+    "name": { "type": "string", "maxLength": 80 },
+    "createdAt": { "type": "string", "maxLength": 40 },
+    "updatedAt": { "type": "string", "maxLength": 40 },
+    "occasion": { "type": "string", "maxLength": 40 },
+    "intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "text": { "type": "string", "maxLength": 500 },
+        "feelings": { "type": "array", "items": { "type": "string", "maxLength": 40 }, "maxItems": 10 }
+      }
+    },
+    "stems": { "type": "array", "items": { "$ref": "#/$defs/stem" }, "minItems": 1, "maxItems": 12 },
+    "wrap": { "$ref": "#/$defs/wrap" },
+    "ribbon": { "$ref": "#/$defs/ribbon" },
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "to": { "type": "string", "maxLength": 60 },
+        "message": { "type": "string", "maxLength": 280 },
+        "from": { "type": "string", "maxLength": 60 }
+      }
+    },
+    "layoutSeed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+    "reading": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["source", "summary"],
+      "properties": {
+        "source": { "enum": ["local", "ai"] },
+        "summary": { "type": "string", "maxLength": 2000 },
+        "at": { "type": "string", "maxLength": 40 }
+      }
+    }
+  },
+  "$defs": {
+    "stem": {
+      "type": "object",
+      "required": ["item", "n"],
+      "additionalProperties": false,
+      "properties": {
+        "item": { "type": "string", "pattern": "^[a-z0-9-]{2,40}$", "description": "id de una flor o relleno del catálogo" },
+        "n": { "type": "integer", "minimum": 1, "maximum": 24 }
+      }
+    },
+    "hex": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+    "wrap": {
+      "type": "object",
+      "required": ["style"],
+      "additionalProperties": false,
+      "properties": {
+        "style": { "enum": ["kraft", "seda", "tela", "ninguno"] },
+        "color": { "$ref": "#/$defs/hex" }
+      }
+    },
+    "ribbon": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "color": { "$ref": "#/$defs/hex" } }
+    }
+  }
+}

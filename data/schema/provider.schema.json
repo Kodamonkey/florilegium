@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "provider.schema.json",
+  "title": "Proveedores (diseño, aún sin implementar)",
+  "description": "Estructura prevista para conectar florerías y proveedores: qué ítems del catálogo ofrecen, a qué precio, dónde entregan y cómo se cotiza un ramo.",
+  "$defs": {
+    "provider": {
+      "type": "object",
+      "required": ["id", "name", "region", "comunas", "delivery", "contact"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]{2,40}$" },
+        "name": { "type": "string" },
+        "region": { "type": "string", "description": "Región administrativa (ej. Metropolitana)" },
+        "comunas": { "type": "array", "items": { "type": "string" } },
+        "delivery": {
+          "type": "object",
+          "required": ["zones", "leadTimeHours"],
+          "properties": {
+            "zones": { "type": "array", "items": { "type": "string" } },
+            "leadTimeHours": { "type": "integer", "minimum": 0 },
+            "feeCLP": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "contact": {
+          "type": "object",
+          "properties": {
+            "web": { "type": "string" },
+            "email": { "type": "string" },
+            "phone": { "type": "string" }
+          }
+        }
+      }
+    },
+    "providerItem": {
+      "type": "object",
+      "required": ["provider", "item", "sku", "unit", "priceCLP", "availability"],
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "type": "string" },
+        "item": { "type": "string", "description": "id del catálogo (flowers.json / fillers.json)" },
+        "sku": { "type": "string" },
+        "unit": { "enum": ["tallo", "vara", "atado", "maceta"] },
+        "stemsPerUnit": { "type": "integer", "minimum": 1 },
+        "priceCLP": { "type": "integer", "minimum": 0 },
+        "availability": {
+          "type": "object",
+          "properties": {
+            "months": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 12 } },
+            "stock": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "quote": {
+      "type": "object",
+      "required": ["bouquet", "provider", "lines", "totalCLP"],
+      "properties": {
+        "bouquet": { "$ref": "bouquet.schema.json" },
+        "provider": { "type": "string" },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["item", "sku", "qty", "subtotalCLP"],
+            "properties": {
+              "item": { "type": "string" },
+              "sku": { "type": "string" },
+              "qty": { "type": "integer", "minimum": 1 },
+              "subtotalCLP": { "type": "integer", "minimum": 0 },
+              "substitute": { "type": "string", "description": "ítem sugerido si no hay stock" }
+            }
+          }
+        },
+        "totalCLP": { "type": "integer", "minimum": 0 },
+        "eta": { "type": "string" }
+      }
+    }
+  }
+}
