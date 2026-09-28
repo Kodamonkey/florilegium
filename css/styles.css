@@ -722,16 +722,23 @@ body:is(.focus-open, .days-open, .sheet-open) .garden * { animation-play-state: 
   .card { margin: 0 16px calc(env(safe-area-inset-bottom, 0px) + 28px); max-height: none; overflow: visible; translate: 0 26px; }
   .c-sci dl div { grid-template-columns: 1fr; gap: 0.15rem; }
 }
-@media (max-width: 700px) {
-  .topnav { top: auto; right: auto; left: 50%; translate: -50% 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); gap: 0.4rem; }
-  .navbtn { font-size: 0.66rem; letter-spacing: 0.1em; padding: 0.62rem 0.85rem; white-space: nowrap; }
+/* Hasta este ancho la navegación de arriba choca con el título: se lleva abajo, como en celulares. */
+@media (max-width: 1200px) {
+  .topnav {
+    top: auto; right: auto; left: 50%; translate: -50% 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+    width: max-content; max-width: calc(100% - 16px); gap: 0.4rem;
+  }
+  .navbtn { white-space: nowrap; }
   .filter-pill { bottom: calc(env(safe-area-inset-bottom, 0px) + 72px); }
+  .colophon { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
+}
+@media (max-width: 700px) {
+  .navbtn { font-size: 0.66rem; letter-spacing: 0.1em; padding: 0.62rem 0.85rem; }
   .explorer {
     top: auto; left: 0; width: 100%; max-height: 84vh; border-left: 0; border-top: 1px solid var(--line);
     border-radius: 22px 22px 0 0; translate: 0 100%;
   }
   .explorer.on { translate: 0 0; }
-  .colophon { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
   .tag { font-size: 1.05rem; }
 }
 

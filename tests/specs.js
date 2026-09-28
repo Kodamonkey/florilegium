@@ -571,6 +571,78 @@
     ok(FL.reading.compose({ text: 'gracias' }).bouquet.stems.length > 0, 'sin hemisferio ni temporada');
   });
 
+  /* ---------- 6b. Lo que pide el texto: tamaño, cantidad, flores, colores ---------- */
+  const parse = (t) => FL.reading.parse(t);
+  const ROSES = ['rosa-roja', 'rosa-blanca', 'rosa-rosada', 'rosa-amarilla'];
+  const inc = (a) => a.include.map((w) => w.ids.join('/'));
+
+  test('pedido: tamaño y cantidad', () => {
+    eq(parse('un ramo grande para mi novia').size, 'grande');
+    eq(parse('algo pequeño y sobrio').size, 'pequeño');
+    eq(parse('solo una rosa roja').size, 'una');
+    eq(parse('una sola flor').size, 'una');
+    eq(parse('para mi hermana grande').size, null, 'la hermana grande es la mayor, no el tamaño');
+    eq(parse('unas 15 flores').count, 15);
+    eq(parse('una docena de rosas rojas').include[0].n, 12);
+    deepEq(parse('tres rosas blancas').include.map((w) => [w.ids.join(), w.n]), [['rosa-blanca', 3]]);
+  });
+
+  test('pedido: flores que sí y flores que no', () => {
+    deepEq(parse('sin rosas porfa').exclude, ROSES);
+    deepEq(parse('sin rosas, lirios ni claveles').exclude, ROSES.concat(['lirio', 'clavel']));
+    const b = parse('nada de lirios, pero sí girasoles');
+    deepEq(b.exclude, ['lirio']);
+    deepEq(inc(b), ['girasol']);
+    deepEq(inc(parse('rosas no, girasoles sí')), ['girasol']);
+    deepEq(inc(parse('mi mamá no está bien y le gustan los girasoles')), ['girasol'], 'la negación no cruza la «y»');
+    deepEq(inc(parse('sin rosas con tulipanes')), ['tulipan']);
+    deepEq(inc(parse('nada más que rosas blancas')), ['rosa-blanca']);
+    ok(parse('puras rosas amarillas').only, 'solo esas');
+    const n = parse('para mi amiga Margarita');
+    eq(n.include.length + n.exclude.length, 0, 'Margarita es un nombre');
+  });
+
+  test('pedido: colores y ocasión', () => {
+    deepEq(parse('algo alegre y amarillo').colors, ['amarillo']);
+    const c = parse('algo color lavanda, nada rojo');
+    deepEq(c.colors, ['morado']);
+    deepEq(c.avoidColors, ['rojo']);
+    deepEq(parse('algo rosa pastel').colors, ['rosa']);
+    eq(parse('mi amiga se gradúa').occasion, 'graduacion');
+    const m = parse('falleció el papá de mi mejor amigo');
+    eq(m.occasion, 'condolencias');
+    ok(m.mourning, 'duelo');
+  });
+
+  test('propuesta: respeta tamaño, cantidad y flores pedidas', () => {
+    const r = compose({ text: 'para mi profe que me ayudó un montón, sin rosas porfa' });
+    ok(!ids(r.bouquet).some((id) => ROSES.includes(id)), 'sin rosas: ' + ids(r.bouquet).join(', '));
+    eq(r.detected.meanings[0].id, 'Gratitud');
+    const big = compose({ text: 'un ramo grande para pedirle perdón a mi novia, le encantan los tulipanes' });
+    ok(ids(big.bouquet).includes('tulipan'), 'con tulipanes');
+    const t = B().total(big.bouquet);
+    ok(t >= 19 && t <= 30, 'grande: ' + t);
+    const small = compose({ text: 'falleció el papá de mi mejor amigo, algo pequeño y sobrio' });
+    eq(small.detected.meanings[0].id, 'Recuerdo', 'el duelo manda sobre la amistad');
+    eq(small.bouquet.wrap.style, 'ninguno');
+    ok(B().total(small.bouquet) <= 9, 'pequeño: ' + B().total(small.bouquet));
+    eq(B().flowerCount(compose({ text: 'mi amiga se gradúa, unas 15 flores' }).bouquet), 15);
+    const one = compose({ text: 'solo una rosa roja para mi esposa' });
+    eq(B().flowerCount(one.bouquet), 1);
+    eq(one.bouquet.stems[0].item, 'rosa-roja');
+    deepEq(compose({ text: 'tres rosas blancas' }).bouquet.stems[0], { item: 'rosa-blanca', n: 3 });
+    ok(/Tomé en cuenta/.test(big.rationale.lead), big.rationale.lead);
+  });
+
+  test('propuesta: colores pedidos y flores tóxicas con mascotas', () => {
+    const y = compose({ text: 'algo alegre y amarillo para mi amiga' });
+    y.bouquet.stems.filter((s) => FL.item(s.item).type === 'flower')
+      .forEach((s) => ok(FL.item(s.item).colors.includes('amarillo'), 'amarilla: ' + s.item));
+    const p = compose({ text: 'le encantan los lirios', petSafe: true });
+    ok(!ids(p.bouquet).includes('lirio'), 'sin lirio');
+    ok(/lirio/.test(p.rationale.lead) && /tóxico/.test(p.rationale.lead), p.rationale.lead);
+  });
+
   /* ---------- 7. Cuidados ---------- */
   test('cuidados: plan de cada ramo popular', () => {
     FL.popular.forEach((p) => {

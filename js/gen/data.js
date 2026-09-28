@@ -2451,7 +2451,7 @@ window.FL.data = {
      "gratitud",
      "reconoc",
      "maestr",
-     "profesor",
+     "profe",
      "mama",
      "madre",
      "abuel",
@@ -2641,7 +2641,15 @@ window.FL.data = {
     "meanings": [
      "Amor"
     ],
-    "text": "El rojo es el color de la pasión y el amor declarado."
+    "text": "El rojo es el color de la pasión y el amor declarado.",
+    "words": [
+     "roj*",
+     "carmesi",
+     "granate",
+     "escarlata",
+     "bermellon",
+     "burdeo*"
+    ]
    },
    {
     "id": "rosa",
@@ -2650,7 +2658,15 @@ window.FL.data = {
      "Gratitud",
      "Admiración"
     ],
-    "text": "El rosa habla de ternura, gratitud y admiración."
+    "text": "El rosa habla de ternura, gratitud y admiración.",
+    "words": [
+     "rosad*",
+     "rosita*",
+     "rosa palo",
+     "rosa pastel",
+     "fucsia*",
+     "magenta"
+    ]
    },
    {
     "id": "blanco",
@@ -2659,7 +2675,11 @@ window.FL.data = {
      "Nuevos comienzos",
      "Recuerdo"
     ],
-    "text": "El blanco dice respeto, pureza y comienzo; en parte de Asia oriental también es color de luto."
+    "text": "El blanco dice respeto, pureza y comienzo; en parte de Asia oriental también es color de luto.",
+    "words": [
+     "blanc*",
+     "marfil"
+    ]
    },
    {
     "id": "amarillo",
@@ -2668,7 +2688,11 @@ window.FL.data = {
      "Amistad",
      "Alegría"
     ],
-    "text": "El amarillo es hoy el color de la amistad y la alegría (en el siglo XIX llegó a leerse como celos)."
+    "text": "El amarillo es hoy el color de la amistad y la alegría (en el siglo XIX llegó a leerse como celos).",
+    "words": [
+     "amarill*",
+     "dorad*"
+    ]
    },
    {
     "id": "naranja",
@@ -2677,7 +2701,13 @@ window.FL.data = {
      "Alegría",
      "Admiración"
     ],
-    "text": "El naranja transmite entusiasmo, energía y celebración."
+    "text": "El naranja transmite entusiasmo, energía y celebración.",
+    "words": [
+     "naranj*",
+     "anaranjad*",
+     "coral",
+     "salmon"
+    ]
    },
    {
     "id": "morado",
@@ -2686,7 +2716,14 @@ window.FL.data = {
      "Admiración",
      "Calma"
     ],
-    "text": "El morado sugiere admiración, dignidad y serenidad."
+    "text": "El morado sugiere admiración, dignidad y serenidad.",
+    "words": [
+     "morad*",
+     "lila*",
+     "violet*",
+     "purpur*",
+     "malva"
+    ]
    },
    {
     "id": "azul",
@@ -2695,14 +2732,22 @@ window.FL.data = {
      "Calma",
      "Esperanza"
     ],
-    "text": "El azul, escaso en las flores, evoca serenidad y confianza."
+    "text": "El azul, escaso en las flores, evoca serenidad y confianza.",
+    "words": [
+     "azul*",
+     "celest*",
+     "turquesa*"
+    ]
    },
    {
     "id": "verde",
     "hex": "#6f8f5a",
     "meanings": [],
     "text": "El follaje verde da marco y frescura.",
-    "explorer": false
+    "explorer": false,
+    "words": [
+     "verde*"
+    ]
    }
   ],
   "seasons": [
@@ -2843,6 +2888,10 @@ window.FL.data = {
     },
     "meanings": [
      "Amor"
+    ],
+    "words": [
+     "dia de los enamorados",
+     "14 de febrero"
     ]
    },
    {
@@ -2855,6 +2904,11 @@ window.FL.data = {
     "meanings": [
      "Admiración",
      "Gratitud"
+    ],
+    "words": [
+     "dia de la mujer",
+     "8 de marzo",
+     "8m"
     ]
    },
    {
@@ -2869,7 +2923,11 @@ window.FL.data = {
      "Gratitud",
      "Amor"
     ],
-    "note": "Segundo domingo de mayo en Chile, Estados Unidos y muchos otros países; en España es el primer domingo de mayo y en México, el 10 de mayo."
+    "note": "Segundo domingo de mayo en Chile, Estados Unidos y muchos otros países; en España es el primer domingo de mayo y en México, el 10 de mayo.",
+    "words": [
+     "dia de las madres",
+     "dia de mama"
+    ]
    },
    {
     "id": "dia-padre",
@@ -2883,7 +2941,11 @@ window.FL.data = {
      "Gratitud",
      "Admiración"
     ],
-    "note": "Tercer domingo de junio en Chile y muchos otros países."
+    "note": "Tercer domingo de junio en Chile y muchos otros países.",
+    "words": [
+     "dia de los padres",
+     "dia de papa"
+    ]
    },
    {
     "id": "flores-amarillas",
@@ -2896,7 +2958,10 @@ window.FL.data = {
      "Amistad",
      "Alegría"
     ],
-    "note": "Costumbre reciente, difundida por redes sociales en varios países de Latinoamérica e inspirada en una canción de la teleserie argentina «Floricienta». En el hemisferio sur coincide con la primavera; en México, con el otoño."
+    "note": "Costumbre reciente, difundida por redes sociales en varios países de Latinoamérica e inspirada en una canción de la teleserie argentina «Floricienta». En el hemisferio sur coincide con la primavera; en México, con el otoño.",
+    "words": [
+     "21 de septiembre"
+    ]
    },
    {
     "id": "dia-profesor",
@@ -2909,7 +2974,13 @@ window.FL.data = {
      "Gratitud",
      "Admiración"
     ],
-    "note": "16 de octubre en Chile; la fecha cambia según el país."
+    "note": "16 de octubre en Chile; la fecha cambia según el país.",
+    "words": [
+     "dia de la profesora",
+     "dia de los profesores",
+     "dia del maestro",
+     "dia de la maestra"
+    ]
    },
    {
     "id": "todos-santos",
@@ -2920,6 +2991,12 @@ window.FL.data = {
     },
     "meanings": [
      "Recuerdo"
+    ],
+    "words": [
+     "dia de muertos",
+     "dia de los muertos",
+     "1 de noviembre",
+     "cementerio"
     ]
    },
    {
@@ -2932,6 +3009,11 @@ window.FL.data = {
     "meanings": [
      "Alegría",
      "Esperanza"
+    ],
+    "words": [
+     "naviden*",
+     "nochebuena",
+     "noche buena"
     ]
    },
    {
@@ -2940,6 +3022,9 @@ window.FL.data = {
     "meanings": [
      "Alegría",
      "Amistad"
+    ],
+    "words": [
+     "cumple"
     ]
    },
    {
@@ -2947,6 +3032,14 @@ window.FL.data = {
     "name": "Aniversario",
     "meanings": [
      "Amor"
+    ],
+    "words": [
+     "aniversario*",
+     "anos juntos",
+     "meses juntos",
+     "anos de casad*",
+     "bodas de oro",
+     "bodas de plata"
     ]
    },
    {
@@ -2955,6 +3048,16 @@ window.FL.data = {
     "meanings": [
      "Amor",
      "Nuevos comienzos"
+    ],
+    "words": [
+     "bodas",
+     "casamiento",
+     "matrimonio",
+     "se casa*",
+     "nos casamos",
+     "me caso",
+     "casarnos",
+     "casarse"
     ]
    },
    {
@@ -2963,6 +3066,12 @@ window.FL.data = {
     "meanings": [
      "Nuevos comienzos",
      "Alegría"
+    ],
+    "words": [
+     "nacio",
+     "bebe*",
+     "recien nacid*",
+     "baby shower"
     ]
    },
    {
@@ -2971,6 +3080,11 @@ window.FL.data = {
     "meanings": [
      "Admiración",
      "Nuevos comienzos"
+    ],
+    "words": [
+     "gradu*",
+     "titul*",
+     "egres*"
     ]
    },
    {
@@ -2979,6 +3093,20 @@ window.FL.data = {
     "meanings": [
      "Recuerdo",
      "Calma"
+    ],
+    "words": [
+     "fallec*",
+     "murio",
+     "muerte",
+     "funeral",
+     "velorio",
+     "sepelio",
+     "pesame",
+     "condolencia",
+     "luto",
+     "descanse en paz",
+     "se nos fue",
+     "partio"
     ]
    },
    {
@@ -2987,6 +3115,18 @@ window.FL.data = {
     "meanings": [
      "Esperanza",
      "Alegría"
+    ],
+    "words": [
+     "recupera*",
+     "mejorat*",
+     "que te mejores",
+     "hospital*",
+     "operacion",
+     "operaron",
+     "cirugia",
+     "enfermo",
+     "enferma",
+     "enfermedad"
     ]
    },
    {
@@ -2994,6 +3134,13 @@ window.FL.data = {
     "name": "Pedir perdón",
     "meanings": [
      "Perdón"
+    ],
+    "words": [
+     "perdon*",
+     "disculp*",
+     "lo siento",
+     "me equivoque",
+     "arrepent*"
     ]
    },
    {
@@ -3001,6 +3148,12 @@ window.FL.data = {
     "name": "Agradecer",
     "meanings": [
      "Gratitud"
+    ],
+    "words": [
+     "agradec*",
+     "gratitud",
+     "dar las gracias",
+     "darle las gracias"
     ]
    },
    {
@@ -3008,6 +3161,10 @@ window.FL.data = {
     "name": "Amistad",
     "meanings": [
      "Amistad"
+    ],
+    "words": [
+     "dia del amigo",
+     "dia de la amistad"
     ]
    },
    {
@@ -3015,9 +3172,64 @@ window.FL.data = {
     "name": "Porque sí",
     "meanings": [
      "Alegría"
+    ],
+    "words": [
+     "sin motivo",
+     "sin razon",
+     "sin ocasion"
     ]
    }
   ],
+  "aliases": {
+   "rosa": [
+    "rosa-roja",
+    "rosa-blanca",
+    "rosa-rosada",
+    "rosa-amarilla"
+   ],
+   "azucena": [
+    "lirio"
+   ],
+   "cerezo": [
+    "cerezo"
+   ],
+   "sakura": [
+    "cerezo"
+   ],
+   "lirio peruano": [
+    "alstroemeria"
+   ],
+   "astromelia": [
+    "alstroemeria"
+   ],
+   "alstromeria": [
+    "alstroemeria"
+   ],
+   "freesia": [
+    "fresia"
+   ],
+   "lisiantus": [
+    "lisianthus"
+   ],
+   "paniculata": [
+    "gypsophila"
+   ],
+   "gipsofila": [
+    "gypsophila"
+   ],
+   "velo de novia": [
+    "gypsophila"
+   ],
+   "helecho": [
+    "helecho"
+   ],
+   "statice": [
+    "limonium"
+   ],
+   "siempreviva": [
+    "limonium"
+   ]
+  },
   "wraps": [
    {
     "id": "kraft",

@@ -40,6 +40,7 @@ Las tipografías (Cormorant, Newsreader y Jost) se cargan desde Google Fonts. Si
 - **Mostrador** (`#ramos`): veinte ramos tradicionales de Occidente por temporada y por temática (San Valentín, Día de la Madre, bodas, condolencias…). La temporada se calcula según el hemisferio, detectado por la zona horaria (Chile, Argentina, Australia… → sur) y ajustable a mano. Muestra las próximas fechas del calendario. Cada ramo se puede personalizar en el taller.
 - **Un ramo recibido** (`#ramo=…`): quien abre el enlace ve el ramo, la tarjeta, lo que dice cada flor y cómo cuidarlo, con un calendario `.ics` de recordatorios para cambiar el agua.
 - **Agente de IA** (opcional): interpreta un ramo y propone uno a partir de lo que sientes, siempre con flores del catálogo. Sin servidor, un motor local (`js/meaning.js`) hace ambas cosas con reglas.
+- **Propuesta desde lo que escribes:** además de los sentimientos y la ocasión, el motor local entiende el tamaño («un ramo grande», «algo pequeño», «una sola flor»), la cantidad («unas 15 flores», «una docena de rosas»), las flores que se piden o se rechazan («le encantan los tulipanes», «sin rosas», «nada de lirios ni claveles»), los colores («algo amarillo», «nada rojo») y un estilo sobrio. El duelo manda sobre lo demás, y los nombres propios («mi amiga Margarita») no se leen como flores. La propuesta dice qué tomó en cuenta.
 - **Explorar:** búsqueda y filtros por significado, color y estación. Las flores coincidentes se resaltan en el jardín.
 - **Modo oscuro** automático (jardín nocturno), según la preferencia del sistema.
 - **Accesibilidad:** navegación con teclado (Tab, Enter, Esc, flechas ← →), foco atrapado en cada ventana y respeto por `prefers-reduced-motion`.
@@ -58,7 +59,8 @@ css/atelier.css         Taller, mostrador, vista de regalo, cuidados y dibujo de
 data/flowers.json       Fichas de las flores (fuente única de datos)
 data/fillers.json       Rellenos y follajes de ramo
 data/taxonomy.json      Significados y su léxico, colores, estaciones por hemisferio, ocasiones,
-                        envoltorios, cintas, cuidados generales y límites
+                        envoltorios, cintas, cuidados generales, límites y el vocabulario con que
+                        se lee lo que se escribe (alias de flores, palabras de ocasiones y colores)
 data/popular.json       Ramos tradicionales del mostrador
 data/schema/            Esquemas JSON: ramo, catálogo y proveedores (este último, solo diseño)
 tools/build_data.py     Valida los JSON y genera js/gen/data.js
@@ -107,6 +109,8 @@ Un ramo se guarda como una receta, no como una imagen (`data/schema/bouquet.sche
 5. Ejecuta `python tools/build_data.py`: valida los datos contra los esquemas, revisa que exista el dibujo, el tallo y la fila, y regenera `js/gen/data.js`.
 
 Los rellenos (`data/fillers.json`) solo necesitan ficha, dibujo y papel en el ramo.
+
+El taller reconoce el nombre de cada flor cuando alguien lo escribe, también en plural («tulipanes»). Si se la conoce por otros nombres, agrégalos en `aliases` de `data/taxonomy.json` (en minúsculas y sin tildes, como el resto del vocabulario).
 
 ## Pruebas
 

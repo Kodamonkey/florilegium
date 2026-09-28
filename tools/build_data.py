@@ -203,6 +203,20 @@ def build() -> tuple[dict, list[str]]:
             if m not in meanings:
                 errors.append(f"color {c['id']}: significado desconocido «{m}»")
 
+    # Vocabulario con que js/meaning.js lee la intención: minúsculas sin tildes, «*» solo al final.
+    word = re.compile(r"^[a-z0-9]+( [a-z0-9]+)*\*?$")
+    for kind, entries in (("ocasión", taxonomy["occasions"]), ("color", taxonomy["colors"])):
+        for e in entries:
+            for w in e.get("words", []):
+                if not word.match(w):
+                    errors.append(f"{kind} {e['id']}: palabra «{w}» (minúsculas sin tildes; «*» solo al final)")
+    for alias, ids in taxonomy.get("aliases", {}).items():
+        if not word.match(alias) or alias.endswith("*"):
+            errors.append(f"alias «{alias}»: minúsculas sin tildes")
+        for i in ids:
+            if i not in seen:
+                errors.append(f"alias «{alias}»: ítem desconocido «{i}»")
+
     data = {"flowers": flowers, "fillers": fillers, "taxonomy": taxonomy, "popular": popular}
     return data, errors
 
