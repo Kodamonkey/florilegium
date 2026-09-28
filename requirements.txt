@@ -1,0 +1,8 @@
+# Florilegio no tiene dependencias de Python ni de ningún otro gestor de paquetes.
+# Es una página estática (HTML, CSS y JavaScript sin librerías).
+#
+# Para verla basta un navegador moderno:
+#   Chrome/Edge 111+, Safari 16.4+ o Firefox 121+.
+#
+# Opcional: servidor local con la biblioteca estándar de Python 3 (sin instalar nada):
+#   python -m http.server 5173
