@@ -237,6 +237,8 @@ body.sheet-open { overflow: hidden; }
   /* Fila de la paleta compacta: la ficha como «i», así el nombre de la flor cabe en una línea. */
   .at-item .at-thumb { width: 40px; height: 40px; }
   .at-item .at-nm { font-size: 1.1rem; }
+  /* El papel y lo que dice la flor en hasta dos líneas: cortado en una sola quedaba en «Protagonista · A…». */
+  .at-item .at-nm small { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-height: 1.25; }
   .at-qty .qbtn { width: 36px; height: 36px; }
   .at-item .at-info {
     display: grid; place-items: center; width: 36px; height: 36px; padding: 0; font-size: 0;
