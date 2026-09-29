@@ -50,8 +50,14 @@
       const n = Math.max(BACK.length, MID.length, FRONT.length);
       for (let i = 0; i < n; i++) [FRONT[i], BACK[i], MID[i]].forEach((id) => id && flat.push(id));
       per = Math.max(2, Math.min(per, mobile ? 3 : 5) - extra);
+      // Las filas con una flor menos se reparten a lo largo del jardín: ninguna flor queda sola en la última fila.
+      const nb = Math.ceil(flat.length / per), short = nb * per - flat.length;
       lists = [];
-      for (let b = 0; b * per < flat.length; b++) lists.push(flat.slice(b * per, (b + 1) * per));
+      for (let b = 0, k = 0; b < nb; b++) {
+        const n = per - (Math.floor(((b + 1) * short) / nb) > Math.floor((b * short) / nb) ? 1 : 0);
+        lists.push(flat.slice(k, k + n));
+        k += n;
+      }
     }
     return { tall, lists, mobile };
   }
@@ -87,11 +93,17 @@
       // En pantallas bajas (un celular en horizontal) el jardín empieza bajo el título, no a 360 px: si no, la
       // primera pantalla queda solo con el título.
       const below = avoid.reduce((m, z) => Math.max(m, z.y1), 0);
-      const top = mobile ? 300 : VH < 520 ? U.clamp(below + 40, 160, 360) : 360, gap = mobile ? 205 : 235;
+      // En celulares las filas van más juntas: las cabezas de una fila asoman entre los tallos de la de atrás
+      // y el jardín se lee como una pradera, no como estantes.
+      // La primera fila arranca bajo el título: hasta un tulipán de tallo corto tiene que caber sin pisar el subtítulo.
+      const top = mobile ? Math.max(300, below + 80) : VH < 520 ? U.clamp(below + 40, 160, 360) : 360, gap = mobile ? 168 : 235;
       H = top + nb * gap + 40;
       for (let b = 0; b < nb; b++) grounds.push(top + b * gap + gap * 0.92);
     }
     const base = tall ? (mobile ? 118 : 138) : U.clamp(W * 0.1, 96, 196);
+    // Con las filas entrelazadas (modo alto) la elipse de cada cabeza se acerca más al dibujo real y se tolera
+    // menos solape: una camelia grande podía tapar casi entero al loto de la fila de atrás.
+    const ek = tall ? 0.48 : 0.44;
     const items = [];
     lists.forEach((ids, b) => {
       const slot = W / ids.length;
@@ -114,14 +126,14 @@
         items.push({
           fl, dr, b, depth, hw, hh, ax, ay, ground, bend, z, gd: tall ? 0.15 + r() * 0.45 : 0.25 + b * 0.35 + r() * 0.55,
           node: {
-            x: hx, y: cy(stem0), rx: hw * 0.44, ry: hh * 0.44, band: b, z,
+            x: hx, y: cy(stem0), rx: hw * ek, ry: hh * ek, band: b, z,
             minX: hw * 0.46 + 4, maxX: W - hw * 0.46 - 4, minY: Math.max(cy(maxStem), hh * 0.46 + 8), maxY: cy(minStem)
           }
         });
       });
     });
     const nodes = items.map((it) => it.node);
-    FL.layout.relax(nodes, { gap: 10, allow: 0.1, avoid });
+    FL.layout.relax(nodes, { gap: 10, allow: tall ? 0.05 : 0.1, avoid });
     const vis = FL.layout.visibility(nodes);
     items.forEach((it, k) => {
       it.vis = vis[k];
