@@ -220,6 +220,7 @@ body.sheet-open { overflow: hidden; }
   /* Cabecera en una línea: fija arriba, cada línea de más le quita espacio al contenido. */
   .sheet-head .eyebrow { display: none; }
   .sheet-head h2 { font-size: 1.5rem; white-space: nowrap; }
+  .at-grid { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
   /* Filtros del mostrador en filas que se deslizan de lado: así los ramos asoman en la primera pantalla. */
   .sc-filters .chips {
     flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding-inline: 16px;
@@ -228,7 +229,31 @@ body.sheet-open { overflow: hidden; }
   }
   .sc-filters .chips::-webkit-scrollbar { display: none; }
   .sc-filters .chip { flex: none; }
+  /* En el taller, el ramo queda arriba y la lista de flores muy abajo: mientras se elige, una barra muestra el ramo. */
+  .atelier.docked .at-dock:not([hidden]) { display: flex; }
+  /* Fila de la paleta compacta: la ficha como «i», así el nombre de la flor cabe en una línea. */
+  .at-item .at-thumb { width: 40px; height: 40px; }
+  .at-item .at-nm { font-size: 1.1rem; }
+  .at-qty .qbtn { width: 36px; height: 36px; }
+  .at-item .at-info {
+    display: grid; place-items: center; width: 36px; height: 36px; padding: 0; font-size: 0;
+    border: 1px solid var(--line); border-radius: 50%;
+  }
+  .at-item .at-info::before { content: "i"; font-family: var(--f-display); font-style: italic; font-weight: 600; font-size: 1.1rem; letter-spacing: 0; text-transform: none; color: var(--ink-2); }
+  .atelier.docked .toast { bottom: calc(env(safe-area-inset-bottom, 0px) + 92px); }
 }
+.at-dock {
+  display: none; position: fixed; z-index: 15; left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  align-items: center; gap: 0.75rem; padding: 6px 16px 6px 8px; cursor: pointer; text-align: left; color: var(--ink);
+  background: var(--paper-2); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 14px 34px -14px rgba(40, 40, 20, 0.5);
+  animation: dockin 0.3s ease both;
+}
+@keyframes dockin { from { opacity: 0; translate: 0 12px; } }
+.at-dock-bq { flex: none; width: 40px; height: 52px; }
+.at-dock-bq .bq { width: 100%; height: 100%; }
+.at-dock-txt { flex: 1; display: grid; min-width: 0; font-family: var(--f-display); font-size: 1.15rem; line-height: 1.15; }
+.at-dock-txt small { font-family: var(--f-ui); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+.at-dock svg { flex: none; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 @media (max-width: 900px) {
   .navbtn .navlong { display: none; }
 }

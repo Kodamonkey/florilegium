@@ -6,7 +6,8 @@
   const A = (FL.atelier = {});
   const $ = (id) => document.getElementById(id);
   const DRAFT = 'fl.draft';
-  let root, cur = null, role = '', query = '', lastFocus = null, renderT = 0, toastT = 0, busyMsg = '', itemsDone = false;
+  let root, dock, cur = null, role = '', query = '', lastFocus = null, renderT = 0, toastT = 0, busyMsg = '', itemsDone = false;
+  const narrow = window.matchMedia ? window.matchMedia('(max-width: 760px)') : { matches: false };
 
   const esc = U.esc;
   // Nombres para leer los colores de envoltorio y cinta en voz alta.
@@ -43,6 +44,17 @@
       });
     });
     root.addEventListener('keydown', trap);
+    // En celulares el ramo queda arriba y la lista de flores muy abajo: mientras el ramo no se ve, una barra lo muestra.
+    dock = document.createElement('button');
+    dock.type = 'button';
+    dock.id = 'atDock';
+    dock.className = 'at-dock';
+    dock.innerHTML = '<span class="at-dock-bq" aria-hidden="true"></span><span class="at-dock-txt"><span></span><small>Ver el ramo</small></span>' +
+      '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 10l4-4 4 4"/></svg>';
+    root.appendChild(dock);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => { root.classList.toggle('docked', !e.isIntersecting); dockArt(); }, { root }).observe($('atCanvas'));
+    }
     $('atelierBtn').addEventListener('click', () => A.open());
   };
 
@@ -190,6 +202,7 @@
     if (d.sharemine) { const b = FL.bouquet.get(d.sharemine); if (b) share(b); return; }
     switch (t.id) {
       case 'atClose': A.close(); break;
+      case 'atDock': $('atCanvas').scrollIntoView({ block: 'center', behavior: FL.reduce ? 'auto' : 'smooth' }); break;
       case 'atMine': toggleMine(true); break;
       case 'atMineClose': toggleMine(false); break;
       case 'atPropose': propose(false); break;
@@ -316,13 +329,28 @@
       $('atOccasion').value = cur.occasion || '';
     }
     const total = FL.bouquet.total(cur), L = FL.limits;
-    $('atCount').textContent = total ? total + (total === 1 ? ' tallo' : ' tallos') + ' · ' + cur.stems.length + (cur.stems.length === 1 ? ' tipo' : ' tipos') + ' (máximo ' + L.stems + ')' : 'Toca una flor para empezar.';
+    $('atCount').textContent = total ? countText() + ' (máximo ' + L.stems + ')' : 'Toca una flor para empezar.';
     clearTimeout(renderT);
     renderT = setTimeout(() => {
       $('atCanvas').innerHTML = FL.bouquetArt.render(cur, { cls: full ? 'enter' : '' }).svg;
       renderReading();
+      dockArt();
     }, full ? 0 : 60);
     saveDraft();
+  }
+
+  function countText() {
+    const total = FL.bouquet.total(cur), n = cur.stems.length;
+    return total + (total === 1 ? ' tallo' : ' tallos') + ' · ' + n + (n === 1 ? ' tipo' : ' tipos');
+  }
+
+  // La barra solo se dibuja cuando se ve (pantallas angostas, con el ramo fuera de la vista).
+  function dockArt() {
+    if (!cur || !dock || !narrow.matches || !root.classList.contains('docked')) return;
+    dock.hidden = !cur.stems.length;
+    if (dock.hidden) return;
+    dock.querySelector('.at-dock-txt span').textContent = countText();
+    dock.querySelector('.at-dock-bq').innerHTML = FL.bouquetArt.render(cur).svg;
   }
 
   function renderReading() {
