@@ -197,7 +197,14 @@ body.sheet-open { overflow: hidden; }
 .care-tox.tox-alta { background: color-mix(in srgb, #d0302f 13%, transparent); }
 .care-specific { display: grid; gap: 0.3rem; }
 .care-specific details { border: 1px solid var(--line); border-radius: 12px; padding: 0.5rem 0.8rem; }
-.care-specific summary { cursor: pointer; font-family: var(--f-display); font-size: 1.1rem; }
+.care-specific summary { cursor: pointer; font-family: var(--f-display); font-size: 1.1rem; list-style: none; display: flex; align-items: center; gap: 0.7rem; }
+/* Un chevrón fino en lugar del triángulo negro del navegador. */
+.care-specific summary::-webkit-details-marker { display: none; }
+.care-specific summary::before {
+  content: ""; flex: none; width: 7px; height: 7px; margin-left: 2px;
+  border-right: 1.5px solid var(--ink-3); border-bottom: 1.5px solid var(--ink-3); rotate: -45deg; transition: rotate 0.25s ease;
+}
+.care-specific details[open] > summary::before { rotate: 45deg; }
 .care-specific ul { margin: 0.4rem 0 0.2rem; padding-left: 1.1rem; font-size: 0.93rem; color: var(--ink-2); }
 .card-foot .pillbtn { justify-self: start; margin-top: 0.4rem; }
 
