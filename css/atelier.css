@@ -123,6 +123,9 @@ body.sheet-open { overflow: hidden; }
 .rd-list { margin: 0.2rem 0 0; padding-left: 1.1rem; font-size: 0.93rem; color: var(--ink-2); display: grid; gap: 0.3rem; }
 .rd-warn li::marker { content: "! "; color: #c0602a; }
 .rd-sugg { display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 0.6rem; align-items: center; font-size: 0.88rem; color: var(--ink-2); }
+/* Aire entre el resumen, las barras y cada bloque (notas, avisos, sugerencias): sin él los títulos quedaban pegados al texto de arriba. */
+#atReading { display: grid; gap: 0.6rem; }
+#atReading .mini { margin-top: 0.65rem; }
 .at-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .toast {
   position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); translate: -50% 20px; z-index: 30; max-width: min(92vw, 34rem);
