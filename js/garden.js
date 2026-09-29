@@ -66,12 +66,14 @@
   function reservedZones() {
     const top = root.getBoundingClientRect().top + window.scrollY;
     const zones = [];
+    // En celulares el nombre de la flor (al filtrar) aparece sobre la cabeza: se deja lugar para que no pise el subtítulo.
+    const tag = document.documentElement.clientWidth < 700 ? 30 : 10;
     document.querySelectorAll('.brand, .topnav').forEach((el) => {
       const rc = el.getBoundingClientRect();
       if (!rc.width || rc.top > window.innerHeight / 2) return;
       // La navegación es fija: su zona es la de la pantalla sin desplazar, aunque se reconstruya con scroll.
       const dy = getComputedStyle(el).position === 'fixed' ? 0 : window.scrollY;
-      zones.push({ x0: rc.left - 12, y0: rc.top + dy - top - 8, x1: rc.right + 12, y1: rc.bottom + dy - top + 10 });
+      zones.push({ x0: rc.left - 12, y0: rc.top + dy - top - 8, x1: rc.right + 12, y1: rc.bottom + dy - top + tag });
     });
     return zones;
   }
