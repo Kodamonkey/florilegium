@@ -232,6 +232,10 @@ body.sheet-open { overflow: hidden; }
   }
   .sc-filters .chips::-webkit-scrollbar { display: none; }
   .sc-filters .chip { flex: none; }
+  /* A todo el ancho, cada ramo llenaba la pantalla: más contenido, asoma el texto y el siguiente. */
+  .sc-bq { width: 74%; justify-self: center; padding: 14px 0 0; }
+  .sc-card { background: radial-gradient(70% 34% at 50% 22%, color-mix(in srgb, var(--sun) 70%, transparent), transparent), var(--card); }
+  .sc-card .sc-bq { background: none; }
   /* En el taller, el ramo queda arriba y la lista de flores muy abajo: mientras se elige, una barra muestra el ramo. */
   .atelier.docked .at-dock:not([hidden]) { display: flex; }
   /* Fila de la paleta compacta: la ficha como «i», así el nombre de la flor cabe en una línea. */
