@@ -222,9 +222,9 @@ body:is(.focus-open, .days-open, .sheet-open) .garden * { animation-play-state: 
   -webkit-tap-highlight-color: transparent;
 }
 @keyframes nod { from { rotate: -2.2deg; } to { rotate: 2.2deg; } }
-.head:hover, .head:focus-visible { scale: 1.07; }
+.head:focus-visible { scale: 1.07; }
 /* La flor que miras pasa al frente y se ve entera. */
-.plant:has(.head:hover), .plant:has(.head:focus-visible) { z-index: 58 !important; }
+.plant:has(.head:focus-visible) { z-index: 58 !important; }
 .head:focus-visible { outline: none; }
 .head:focus-visible .bloom::after {
   content: ""; position: absolute; inset: -6%; border-radius: 50%; border: 1.5px dashed var(--moss);
@@ -244,7 +244,13 @@ body:is(.focus-open, .days-open, .sheet-open) .garden * { animation-play-state: 
   text-shadow: 0 0 12px var(--paper), 0 0 5px var(--paper), 0 0 2px var(--paper);
   transition: opacity 0.5s, translate 0.5s;
 }
-.head:hover .tag, .head:focus-visible .tag, .plant.match .tag { opacity: 1; translate: -50% 0; }
+.head:focus-visible .tag, .plant.match .tag { opacity: 1; translate: -50% 0; }
+/* Solo con cursor: en pantallas táctiles el «hover» queda pegado y la flor tocada seguía agrandada y con su nombre al volver. */
+@media (hover: hover) {
+  .head:hover { scale: 1.07; }
+  .plant:has(.head:hover) { z-index: 58 !important; }
+  .head:hover .tag { opacity: 1; translate: -50% 0; }
+}
 
 /* ---------- Dibujo: comportamiento común ---------- */
 .fh { display: block; width: 100%; height: 100%; overflow: visible; }
