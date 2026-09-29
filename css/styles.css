@@ -639,7 +639,8 @@ body:is(.focus-open, .days-open, .sheet-open) .garden * { animation-play-state: 
   transition: background-color 0.2s;
 }
 .ex-list button:hover { background: color-mix(in srgb, var(--sage) 12%, transparent); }
-.ex-list i { grid-row: span 2; width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15); }
+/* Solo el punto de color: el nombre científico también lleva <i> (el género en cursiva) y no debe verse como un punto. */
+.ex-list button > i { grid-row: span 2; width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15); }
 .ex-list .nm { font-family: var(--f-display); font-size: 1.28rem; font-weight: 500; line-height: 1.1; }
 .ex-list .sc { grid-column: 2; font-size: 0.84rem; color: var(--ink-3); line-height: 1.3; }
 .ex-list .empty { font-style: italic; color: var(--ink-2); padding: 0.5rem; }
