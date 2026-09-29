@@ -722,7 +722,17 @@ body:is(.focus-open, .days-open, .sheet-open) .garden * { animation-play-state: 
 .days.on .days-back { opacity: 1; }
 
 /* ---------- Pantallas medianas y pequeñas ---------- */
-@media (max-width: 900px) {
+/* Poca altura (celular en horizontal): el título no puede ocupar la primera pantalla entera,
+   y la ficha, en su columna, sube hasta casi el borde. */
+@media (max-height: 520px) and (orientation: landscape) {
+  .brand { top: calc(env(safe-area-inset-top, 0px) + 14px); max-width: min(26rem, 48%); }
+  .brand-eyebrow { margin-bottom: 0.35rem; }
+  .brand-title { font-size: clamp(2.6rem, 6vw, 3.6rem); }
+  .brand-sub { margin-top: 0.6rem; font-size: 0.95rem; }
+  .card { margin-block: 64px 12px; max-height: calc(100vh - 76px); max-height: calc(100dvh - 76px); }
+}
+/* Una columna: flor arriba y ficha debajo. En un celular en horizontal se mantienen las dos columnas. */
+@media (max-width: 900px) and (orientation: portrait), (max-width: 600px) {
   .focus-scroll { display: block; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
   .stage { height: auto; min-height: 58vh; padding: calc(env(safe-area-inset-top, 0px) + 70px) 0 10px; }
   .card { margin: 0 16px calc(env(safe-area-inset-bottom, 0px) + 28px); max-height: none; overflow: visible; translate: 0 26px; }
@@ -741,7 +751,7 @@ body:is(.focus-open, .days-open, .sheet-open) .garden * { animation-play-state: 
 @media (max-width: 700px) {
   .navbtn { font-size: 0.66rem; letter-spacing: 0.1em; padding: 0.62rem 0.85rem; }
   .explorer {
-    top: auto; left: 0; width: 100%; max-height: 84vh; border-left: 0; border-top: 1px solid var(--line);
+    top: auto; left: 0; width: 100%; max-height: 84vh; max-height: 84dvh; border-left: 0; border-top: 1px solid var(--line);
     border-radius: 22px 22px 0 0; translate: 0 100%;
   }
   .explorer.on { translate: 0 0; }

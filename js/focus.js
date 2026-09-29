@@ -90,7 +90,8 @@
 
   function sizeSlot(aspect) {
     const sr = stage.getBoundingClientRect();
-    const narrow = window.innerWidth < 900;
+    // La misma condición que la vista de una columna en el CSS (en horizontal, el celular mantiene dos columnas).
+    const narrow = window.matchMedia('(max-width: 900px) and (orientation: portrait), (max-width: 600px)').matches;
     const maxW = narrow ? Math.min(window.innerWidth * 0.78, 460) : Math.min(sr.width * 0.78, 580);
     const maxH = (narrow ? window.innerHeight * 0.48 : sr.height * 0.72);
     const w = Math.min(maxW, maxH / aspect);

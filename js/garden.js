@@ -84,7 +84,10 @@
       H = Math.max(VH, 600);
       for (let b = 0; b < nb; b++) grounds.push(H * (0.56 + (0.42 * b) / Math.max(1, nb - 1)));
     } else {
-      const top = mobile ? 300 : 360, gap = mobile ? 205 : 235;
+      // En pantallas bajas (un celular en horizontal) el jardín empieza bajo el título, no a 360 px: si no, la
+      // primera pantalla queda solo con el título.
+      const below = avoid.reduce((m, z) => Math.max(m, z.y1), 0);
+      const top = mobile ? 300 : VH < 520 ? U.clamp(below + 40, 160, 360) : 360, gap = mobile ? 205 : 235;
       H = top + nb * gap + 40;
       for (let b = 0; b < nb; b++) grounds.push(top + b * gap + gap * 0.92);
     }
