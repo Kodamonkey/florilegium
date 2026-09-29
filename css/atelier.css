@@ -170,7 +170,13 @@ body.sheet-open { overflow: hidden; }
 .sc-meta .pillbtn { justify-self: start; margin-top: 0.3rem; }
 
 /* ---------- Un ramo recibido ---------- */
-.gift-view { z-index: 88; background: radial-gradient(85vmax 70vmax at 50% 20%, color-mix(in srgb, var(--days-a) 80%, var(--paper)), var(--paper) 75%); }
+.gift-view { z-index: 88; background: radial-gradient(85vmax 70vmax at 50% 20%, color-mix(in srgb, var(--days-a) 80%, var(--paper)), var(--paper) 75%); scroll-timeline: --giftscroll block; }
+/* Los pétalos que celebran el ramo se desvanecen al bajar hacia la lectura y los cuidados: detrás del texto,
+   un pétalo oscuro se comía letras enteras (sobre todo en celulares, donde el texto va de borde a borde). */
+@supports (animation-timeline: scroll()) {
+  .gift-view .days-fx { animation: fxfade linear both; animation-timeline: --giftscroll; animation-range: 0px 420px; }
+}
+@keyframes fxfade { to { opacity: 0.12; } }
 .gift-inner { position: relative; max-width: 40rem; margin: 0 auto; display: grid; justify-items: center; text-align: center; gap: 1rem;
   padding: calc(env(safe-area-inset-top, 0px) + 7vh) 16px calc(env(safe-area-inset-bottom, 0px) + 60px); }
 .gift-inner h2 { margin: 0; font-family: var(--f-display); font-weight: 400; font-style: italic; font-size: clamp(2.4rem, 6vw, 3.6rem); line-height: 1; text-wrap: balance; }
