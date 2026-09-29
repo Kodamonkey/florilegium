@@ -226,6 +226,18 @@ body.sheet-open { overflow: hidden; }
   .navbtn { gap: 0.4rem; padding: 0.58rem 0.7rem; letter-spacing: 0.08em; }
   .at-dress > div { display: grid; justify-items: center; }
 }
+/* Pantallas táctiles: controles de al menos ~40 px. */
+@media (pointer: coarse) {
+  .pillbtn { min-height: 42px; }
+  .mine-actions .pillbtn { min-height: 38px; }
+  .qbtn { width: 40px; height: 40px; }
+  .swatch { width: 36px; height: 36px; }
+  .at-info { padding: 0.75rem 0.35rem; }
+  .linkbtn { padding-block: 0.55rem; }
+  .care-specific summary { padding-block: 0.35rem; }
+  .check { min-height: 40px; }
+  .pillbtn:active, .qbtn:active, .swatch:active { scale: 0.96; }
+}
 @media (max-width: 360px) {
   .navbtn svg, .navbtn .days-dot { display: none; }
   .navbtn { padding: 0.55rem 0.62rem; letter-spacing: 0.05em; }

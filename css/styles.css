@@ -748,6 +748,17 @@ body:is(.focus-open, .days-open, .sheet-open) .garden * { animation-play-state: 
   .tag { font-size: 1.05rem; }
 }
 
+/* ---------- Pantallas táctiles: controles de al menos ~40 px y respuesta al tocar ---------- */
+@media (pointer: coarse) {
+  .chip { min-height: 40px; }
+  .navbtn { min-height: 42px; }
+  .iconbtn { width: 44px; height: 44px; }
+  .card-tabs { gap: 0 1.1rem; }
+  .card-tabs button { padding-block: 0.7rem; }
+  .filter-pill button { width: 36px; height: 36px; }
+  .chip:active, .navbtn:active, .iconbtn:active { scale: 0.96; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
