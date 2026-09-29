@@ -788,6 +788,11 @@ body:is(.focus-open, .days-open, .sheet-open) .garden * { animation-play-state: 
   .filter-pill button { width: 36px; height: 36px; }
   .chip:active, .navbtn:active, .iconbtn:active { scale: 0.96; }
 }
+/* Celular: las cuatro pestañas de la ficha en una sola línea, repartidas a lo ancho (antes «Cuidados» caía sola abajo). */
+@media (max-width: 600px) {
+  .card-tabs { justify-content: space-between; gap: 0 0.5rem; }
+  .card-tabs button { min-height: 44px; font-size: 0.68rem; letter-spacing: 0.1em; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
