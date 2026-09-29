@@ -89,6 +89,8 @@
   }
 
   function paint() {
+    // En celulares cada fila de filtros se desliza de lado: al rehacerla se conserva dónde estaba.
+    const rows = ['scHemi', 'scSeasons', 'scThemes'], keepX = rows.map((id) => $(id).scrollLeft);
     const hemi = FL.hemisphere(), now = FL.seasonOf(new Date(), hemi);
     $('scHemi').innerHTML = ['N', 'S'].map((h) => '<button type="button" class="chip" data-hemi="' + h + '" aria-pressed="' + (h === hemi) + '">Hemisferio ' + (h === 'N' ? 'norte' : 'sur') + '</button>').join('');
     $('scSeasons').innerHTML = [['ahora', 'Ahora: ' + now], ['', 'Todas'], ['todo', 'Todo el año']].concat(SEASONS.map((s) => [s, cap(s)]))
@@ -102,6 +104,7 @@
       const days = Math.round((d - new Date(today.getFullYear(), today.getMonth(), today.getDate())) / 864e5);
       return '<button type="button" class="linkbtn" data-theme="' + o.id + '">' + o.name + ' · ' + d.toLocaleDateString('es', { day: 'numeric', month: 'short' }) + (days === 0 ? ' (hoy)' : ' (en ' + days + (days === 1 ? ' día)' : ' días)')) + '</button>';
     }).join('');
+    rows.forEach((id, i) => { $(id).scrollLeft = keepX[i]; });
     const list = S.filter({ season, theme, hemisphere: hemi });
     $('scCount').textContent = list.length === 1 ? '1 ramo' : list.length + ' ramos';
     $('scGrid').innerHTML = list.length ? list.map((p) => {

@@ -216,7 +216,18 @@ body.sheet-open { overflow: hidden; }
   .sheet-head { gap: 0.6rem; padding-top: calc(env(safe-area-inset-top, 0px) + 12px); }
   .sheet-actions { flex-wrap: nowrap; gap: 0.35rem; }
   .sheet-actions > * { flex: none; }
-  .sheet-actions .pillbtn { padding: 0.45rem 0.7rem; font-size: 0.66rem; white-space: nowrap; }
+  .sheet-actions .pillbtn { padding: 0.45rem 0.7rem; font-size: 0.7rem; white-space: nowrap; }
+  /* Cabecera en una línea: fija arriba, cada línea de más le quita espacio al contenido. */
+  .sheet-head .eyebrow { display: none; }
+  .sheet-head h2 { font-size: 1.5rem; white-space: nowrap; }
+  /* Filtros del mostrador en filas que se deslizan de lado: así los ramos asoman en la primera pantalla. */
+  .sc-filters .chips {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding-inline: 16px;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 28px), transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 28px), transparent);
+  }
+  .sc-filters .chips::-webkit-scrollbar { display: none; }
+  .sc-filters .chip { flex: none; }
 }
 @media (max-width: 900px) {
   .navbtn .navlong { display: none; }
