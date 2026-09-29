@@ -737,6 +737,15 @@ body:is(.focus-open, .days-open, .sheet-open) .garden * { animation-play-state: 
   .stage { height: auto; min-height: 58vh; padding: calc(env(safe-area-inset-top, 0px) + 70px) 0 10px; }
   .card { margin: 0 16px calc(env(safe-area-inset-bottom, 0px) + 28px); max-height: none; overflow: visible; translate: 0 26px; }
   .c-sci dl div { grid-template-columns: 1fr; gap: 0.15rem; }
+  /* La ficha pasa por debajo de los controles al desplazarse: una franja del color del fondo los separa del texto. */
+  .focus-controls {
+    left: 0; right: 0; top: 0; justify-content: flex-end; pointer-events: none;
+    padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 22px;
+    background: linear-gradient(to bottom, var(--paper) 55%, transparent);
+  }
+  .focus-controls .iconbtn { pointer-events: auto; }
+  .focus.dusk .focus-controls { background: linear-gradient(to bottom, var(--dusk) 55%, transparent); }
+  .card section { scroll-margin-top: 76px; }
 }
 /* Hasta este ancho la navegación de arriba choca con el título: se lleva abajo, como en celulares. */
 @media (max-width: 1200px) {
