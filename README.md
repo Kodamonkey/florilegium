@@ -1,8 +1,10 @@
 # Florilegio
 
-Un jardín digital interactivo para descubrir lo que las flores han aprendido a decir por nosotros. Treinta y una flores ilustradas a mano en SVG, cada una con su propia animación y cuatro lecturas: poética, cultural, científica y de cuidados. Además, un taller para armar ramos propios y leer lo que dicen, un mostrador de ramos tradicionales de Occidente y una vista para quien recibe un ramo por enlace.
+Florilegio nace para todas las personas que quieren regalar flores o un ramo y no saben cómo armarlo, ni por dónde empezar: para quien simplemente no sabe y necesita ayuda.
 
-Incluye una sección especial, **«Esos días que no hubo»**: una sola rosa amarilla que se abre despacio, acompañada de un texto breve sobre el significado de las flores amarillas.
+Es un jardín digital interactivo: treinta y una flores ilustradas a mano en SVG, cada una con su propia animación y cuatro lecturas: poética, cultural, científica y de cuidados. Además, un taller para armar ramos propios y leer lo que dicen, un mostrador de ramos tradicionales de Occidente y una vista para quien recibe un ramo por enlace.
+
+Incluye una sección especial, **«Esos días que no hubo»**, para quien alguna vez esperó algo que nunca llegó: lo que se desea y no se tiene, lo que se anhela aunque quizá no llegue. Una sola rosa amarilla se abre despacio con un texto breve que le dice que no desespere, que todo saldrá bien, y cierra con una dedicatoria de Rainer Maria Rilke sobre el amor: la flor nunca fue lo importante, lo importante es el gesto.
 
 ## Cómo abrirlo
 

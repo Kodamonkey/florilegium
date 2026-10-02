@@ -1,4 +1,4 @@
-/* Florilegio — «Esos días que no hubo»: una sola flor amarilla que se abre despacio */
+/* Florilegio — «Esos días que no hubo»: una sola flor amarilla, para quien esperó algo que nunca llegó */
 (function () {
   'use strict';
   const FL = window.FL;
@@ -9,12 +9,14 @@
     id: 'esos-dias', name: 'Rosa amarilla', art: 'rose',
     pal: { a: '#b86a06', b: '#f1af1d', c: '#ffe894', e: '#99590a', g: '#4f6b3a' }
   };
+  // Para quien esperó algo que nunca llegó. La dedicatoria (Rilke) cierra la página en index.html.
   const LINES = [
-    ['Las flores amarillas se regalan sin pedir nada a cambio.', ''],
-    ['Hablan de cariño y de alegría, de la amistad que se queda, de la luz que alguien trae consigo cuando llega.', ''],
-    ['Son buenos deseos dichos sin palabras, energía para seguir, una esperanza pequeña que florece incluso a la orilla de un camino.', ''],
-    ['Sirven para recordar a alguien y, sobre todo, para celebrar que está.', ''],
-    ['Su significado ha cambiado con las épocas: en algunos diccionarios del siglo XIX, el amarillo hablaba de celos o de un amor que se apaga. Con el tiempo, y en casi todas partes, pasó a decir alegría, amistad, optimismo y afecto. En varios países de Latinoamérica incluso se ha vuelto costumbre regalarlas cuando empieza la primavera.', 'aside'],
+    ['Esta flor es para quien alguna vez esperó algo que nunca llegó.', ''],
+    ['Un ramo en una fecha que importaba. Una llamada, una respuesta, una puerta que no se abrió.', ''],
+    ['Para lo que se desea y no se tiene. Para lo que se anhela aun sabiendo que quizá no llegue nunca.', ''],
+    ['Si ese vacío te acompaña, no lo escondas: solo echa de menos quien sabe querer.', ''],
+    ['No desesperes. Lo que no llegó no le quita nada a lo que eres. Todo saldrá bien.', ''],
+    ['Se cuenta que Rainer Maria Rilke, en París, pasaba a diario junto a una mujer que pedía limosna y nunca le daba nada. «Habría que darle algo a su corazón, no a su mano», explicó. Un día le dejó una rosa recién abierta. Ella le besó la mano, se fue y no volvió en una semana. Cuando le preguntaron de qué había vivido esos días, respondió: «De la rosa».', 'aside'],
     ['Esta no llega por una fecha especial. Llega justo a tiempo.', '']
   ];
 

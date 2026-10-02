@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Florilegio</title>
-<meta name="description" content="Un jardín digital para descubrir lo que las flores han aprendido a decir por nosotros: su poesía, su historia cultural y su ciencia.">
+<meta name="description" content="Para quien quiere regalar flores y no sabe cómo: qué dice cada flor, cómo armar un ramo con ellas y cómo cuidarlo.">
 <link rel="preload" href="fonts/cormorant-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/jost-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -17,9 +17,9 @@
 <div class="sky" aria-hidden="true"></div>
 
 <header class="brand">
-  <p class="brand-eyebrow">Un jardín de significados</p>
+  <p class="brand-eyebrow">Para quien quiere regalar flores</p>
   <h1 class="brand-title">Florilegio</h1>
-  <p class="brand-sub"><span id="flowerCount">Treinta y una</span> flores y todo lo que hemos aprendido a decir con ellas. Toca una para descubrir qué guarda.</p>
+  <p class="brand-sub">¿Quieres regalar flores y no sabes cómo? <span id="flowerCount">Treinta y una</span> flores, lo que dice cada una y cómo armar tu ramo. Toca una para empezar.</p>
 </header>
 
 <nav class="topnav" aria-label="Secciones">
@@ -56,6 +56,7 @@
 </div>
 
 <footer class="colophon">
+  <p>Florilegio nace para quien quiere regalar flores y no sabe cómo armar el ramo, ni por dónde empezar: para quien simplemente no sabe y necesita una mano.</p>
   <p>Los significados de las flores cambian con el lugar y la época. Aquí se reúnen tradiciones documentadas; cuando una lectura depende de la cultura, se indica.</p>
 </footer>
 
@@ -121,7 +122,11 @@
     <button type="button" class="days-flower" id="daysFlower" aria-label="Abrir la flor amarilla"></button>
     <p class="days-hint" id="daysHint">toca la flor</p>
     <div class="days-text" id="daysText" aria-live="polite"></div>
-    <p class="days-final" id="daysFinal">Una flor por aquellos días en que no hubo una.</p>
+    <figure class="days-final" id="daysFinal">
+      <blockquote>Amar de persona a persona: eso es quizá lo más difícil que se nos ha encomendado, lo extremo, la última prueba, el trabajo para el cual todo otro trabajo no es más que preparación.</blockquote>
+      <figcaption>Rainer Maria Rilke · <cite>Cartas a un joven poeta</cite>, 1904</figcaption>
+      <p>La flor nunca fue lo importante: lo importante es el gesto.<br>Esta es por aquellos días en que no hubo una.</p>
+    </figure>
   </div>
   <button type="button" class="days-back" id="daysBack">Volver al jardín</button>
 </section>
