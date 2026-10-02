@@ -9,10 +9,9 @@
   const BACK = ['lavanda', 'cerezo', 'jacinto', 'margarita', 'fresia', 'crisantemo', 'nomeolvides', 'clavel', 'iris', 'jazmin'];
   const MID = ['tulipan', 'rosa-blanca', 'lisianthus', 'orquidea', 'amapola', 'rosa-amarilla', 'alstroemeria', 'lirio', 'rosa-rosada', 'gardenia'];
   const FRONT = ['peonia', 'girasol', 'ranunculo', 'rosa-roja', 'diente-de-leon', 'gerbera', 'hortensia', 'dalia', 'anemona', 'loto', 'camelia'];
-  const DRIFT = ['#f8cbd8', '#fbe3ea', '#fff4f7', '#f3d27a', '#f2e8df', '#e9a3b8', '#d9d0ef'];
 
   const mouse = (G.mouse = { px: -1e4, py: -1e4, nx: 0, ny: 0, sx: 0, sy: 0, cx: 0, cy: 0, active: false });
-  let root, back, lastW = 0, lastH = 0, io, spawnT = 0;
+  let root, back, lastW = 0, lastH = 0, io;
 
   /*
    * Las cabezas del jardín son imágenes (FL.headImage), no SVG en línea: más de diez mil nodos menos que
@@ -23,9 +22,15 @@
   const PAD = 0.25;
   const drawnCache = {};
 
-  // Al cambiar entre tema claro y oscuro, las imágenes se rehacen con la luz nueva.
+  // Al cambiar entre tema claro y oscuro, las imágenes ya pedidas se rehacen con la luz nueva.
   G.refreshHeads = function () {
-    G.plants.forEach((p) => { if (p.img) p.img.src = FL.headImage(p.fl, { drawn: drawnCache[p.fl.id], pad: PAD }); });
+    G.plants.forEach((p) => { if (p.img && p.img.hasAttribute('src')) p.img.src = headSrc(p); });
+  };
+  const headSrc = (p) => FL.headImage(p.fl, { drawn: drawnCache[p.fl.id], pad: PAD });
+  // El marcado de FL.headImg, todavía sin imagen: la pide feedHeads cuando la planta se acerca a la vista.
+  const lazyImg = () => {
+    const off = f(-PAD * 100) + '%', size = f((1 + 2 * PAD) * 100) + '%';
+    return '<img class="fhimg" alt="" draggable="false" decoding="async" style="left:' + off + ';top:' + off + ';width:' + size + ';height:' + size + '">';
   };
   if (window.matchMedia) {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -173,6 +178,15 @@
     best.grounds.forEach((y, b) => addBandFront(W, y, b, r, best.tall));
     drawGround(W, best.H, best.grounds, r);
     if (/[?&]debug=layout\b/.test(location.search)) debugLayout(best);
+    /*
+     * Parallax al desplazar (modo alto), solo con mouse: en pantallas táctiles cada cuadro del scroll tendría que
+     * recalcular la posición de todas las plantas. Con animaciones ligadas al scroll lo lleva el navegador; sin ellas,
+     * el bucle.
+     */
+    const plx = best.tall && !(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+    const cssPlx = plx && !FL.reduce && !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: scroll()'));
+    G.plxJS = plx && !cssPlx;
+    root.classList.toggle('plx', cssPlx);
     observe();
     measure();
   };
@@ -190,14 +204,14 @@
     el.className = 'plant sp-' + fl.art + (!G.tall && band === 0 ? ' far' : '');
     el.dataset.id = fl.id;
     el.style.cssText = 'left:' + f(x - Wp / 2) + 'px;top:' + f(ground - Hp) + 'px;width:' + f(Wp) + 'px;height:' + f(Hp) + 'px;z-index:' + z;
-    const art = LIVE.has(fl.art) ? drawn.svg : FL.headImg(fl, { drawn, pad: PAD });
+    const art = LIVE.has(fl.art) ? drawn.svg : lazyImg();
     el.innerHTML = '<div class="sway" style="--amp:' + f(amp) + 'deg;--dur:' + f(dur) + 's;--sd:' + f(-r() * dur) + 's;--gd:' + f(gd) + 's">' + stem +
       '<button type="button" class="head" style="left:' + f(tx - hw * ax) + 'px;top:' + f(ty - hh * ay) + 'px;width:' + f(hw) + 'px;height:' + f(hh) +
       'px;--ax:' + f(ax * 100) + '%;--ay:' + f(ay * 100) + '%;--nd:' + f(4 + r() * 3) + 's" aria-label="' + fl.name + '">' +
       '<span class="bloom"><span class="turn">' + art + '</span></span><span class="tag">' + fl.name + '</span></button></div>';
     root.appendChild(el);
     const btn = el.querySelector('.head');
-    const p = { fl, el, btn, turn: el.querySelector('.turn'), svg: el.querySelector('.fh'), img: el.querySelector('.fhimg'), depth, lean: 0, rx: 0, ry: 0, tx: 0, ty: 0, box: { x, ground, Hp, hh, Wp, hx: it.node.x } };
+    const p = { fl, el, btn, turn: el.querySelector('.turn'), svg: el.querySelector('.fh'), img: el.querySelector('.fhimg'), depth, lean: 0, rx: 10, ry: 16, tx: 0, ty: 0, box: { x, ground, Hp, hh, Wp, hx: it.node.x } };
     // Terminado el crecimiento, sus animaciones se retiran: con «fill: both» dejaban dos capas de GPU vivas por planta.
     el.addEventListener('animationend', (e) => { if (e.animationName === 'bloomin') el.classList.add('grown'); });
     btn.addEventListener('click', () => FL.focus.open(fl, btn));
@@ -259,7 +273,23 @@
   // En pantallas altas, cada planta crece cuando entra en la vista.
   function observe() {
     if (io) io.disconnect();
-    if (!('IntersectionObserver' in window) || FL.reduce) {
+    if (imgIO) imgIO.disconnect();
+    queue = [];
+    const pending = G.plants.filter((p) => p.img);
+    if (!('IntersectionObserver' in window)) {
+      G.plants.forEach((p) => p.el.classList.add('seen'));
+      pending.forEach(want);
+      return;
+    }
+    // Las imágenes se piden algo antes de que la planta entre en la vista: llegan antes de que la flor abra.
+    imgIO = new IntersectionObserver((es) => {
+      es.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top).forEach((e) => {
+        imgIO.unobserve(e.target);
+        want(G.plants.find((p) => p.el === e.target));
+      });
+    }, { rootMargin: '60% 0px 60% 0px' });
+    pending.forEach((p) => imgIO.observe(p.el));
+    if (FL.reduce) {
       G.plants.forEach((p) => p.el.classList.add('seen'));
       return;
     }
@@ -271,14 +301,46 @@
     G.plants.forEach((p) => io.observe(p.el));
   }
 
+  /*
+   * Cada cabeza es un SVG que el navegador decodifica en el hilo principal. Pedidas todas juntas, bloqueaban la
+   * página cerca de un segundo en un celular: se piden de a una, primero las de arriba, y cada una espera a que la
+   * anterior esté lista. En celulares las de más abajo esperan al scroll.
+   */
+  let imgIO = null, queue = [], feeding = false;
+  function want(p) {
+    if (!p || p.img.hasAttribute('src') || queue.includes(p)) return;
+    queue.push(p);
+    if (!feeding) feedHeads();
+  }
+  function feedHeads() {
+    const p = queue.shift();
+    if (!p) { feeding = false; idleHeads(); return; }
+    feeding = true;
+    p.img.src = headSrc(p);
+    const done = () => setTimeout(feedHeads, 0);
+    if (p.img.decode) p.img.decode().then(done, done); else p.img.addEventListener('load', done, { once: true });
+  }
+  // Con la página quieta, las cabezas que faltan se piden de a una: al hacer scroll ya están listas y no se
+  // decodifican en medio del gesto.
+  const whenIdle = window.requestIdleCallback ? (fn) => window.requestIdleCallback(fn, { timeout: 2000 }) : (fn) => setTimeout(fn, 200);
+  function idleHeads() {
+    whenIdle(() => {
+      if (feeding) return;
+      want(G.plants.find((q) => q.img && !q.img.hasAttribute('src')));
+    });
+  }
+
   function measure() {
     const top = root.getBoundingClientRect().top + window.scrollY;
+    // Recorrido del parallax por scroll: el mismo que calculaba el bucle (scrollY · profundidad · 0,05), ya al final.
+    const plx = root.classList.contains('plx') ? Math.max(0, document.documentElement.scrollHeight - window.innerHeight) : 0;
     G.plants.forEach((p) => {
       const b = p.box;
       p.cx = b.hx;
       p.cy = top + b.ground - b.Hp * 0.55;
       p.hx = b.hx;
       p.hy = top + b.ground - b.Hp + b.hh * 0.4;
+      if (plx) p.el.style.setProperty('--plx', f(-plx * (p.depth - 0.45) * 0.05) + 'px');
     });
   }
   G.measure = measure;
@@ -292,6 +354,14 @@
       for (let i = 0; i < 3; i++) shed(rc.left + rc.width * (0.2 + Math.random() * 0.6), rc.top + rc.height * (0.2 + Math.random() * 0.5), p.fl.pal);
     }
   }
+  // Pétalos del cerezo que caen solos, de vez en cuando (en promedio uno cada ocho segundos).
+  setInterval(() => {
+    if (FL.reduce || !G.ambient || !G.ambient.on || document.hidden || Math.random() >= 0.12) return;
+    const c = G.plants.find((p) => p.fl.art === 'cherry');
+    if (!c || c.el.classList.contains('away')) return;
+    const rc = c.btn.getBoundingClientRect();
+    if (rc.bottom > 0 && rc.top < window.innerHeight) shed(rc.left + rc.width * (0.2 + Math.random() * 0.6), rc.top + rc.height * 0.4, c.fl.pal);
+  }, 1000);
   function shed(x, y, pal) {
     G.ambient.add({ type: 'petal', x, y, vx: 8, vy: 6, vr: (Math.random() - 0.5) * 2, s: 0.8 + Math.random() * 0.4, life: 14, col: pal.b, col2: pal.c, wind: 16, fall: 18 });
   }
@@ -357,7 +427,7 @@
       x.moveTo(hr.left + hr.width / 2, hr.top + hr.height / 2);
       x.lineTo(pr.left + pr.width / 2, pr.bottom);
       x.stroke();
-      if (p.img && p.img.complete) heads.push([p, p.img.getBoundingClientRect()]);
+      if (p.img && p.img.complete && p.img.naturalWidth) heads.push([p, p.img.getBoundingClientRect()]);
     }
     for (const [p, rc] of heads) {
       x.globalAlpha = p.el.classList.contains('far') ? 0.86 : 1;
@@ -404,21 +474,27 @@
     if (G.ambient) G.ambient.resize();
   };
 
-  G.tick = function (dt, T) {
+  /*
+   * Un cuadro del jardín: parallax, inclinación hacia el cursor y el girasol. Devuelve si algo sigue moviéndose;
+   * cuando todo llega a su sitio el bucle principal se detiene y el jardín queda en manos de la GPU.
+   */
+  G.tick = function (dt) {
     const k = Math.min(1, dt * 2.2);
     mouse.sx += (mouse.nx - mouse.sx) * k;
     mouse.sy += (mouse.ny - mouse.sy) * k;
-    const sy = G.tall ? window.scrollY : 0; // leer scrollY obliga a recalcular estilos en medio del cuadro
+    let more = Math.abs(mouse.nx - mouse.sx) > 0.002 || Math.abs(mouse.ny - mouse.sy) > 0.002;
+    const sy = G.plxJS ? window.scrollY : 0; // leer scrollY obliga a recalcular estilos en medio del cuadro
     for (const p of G.plants) {
       const par = p.depth - 0.45;
       const tx = mouse.sx * par * 14;
-      const ty = mouse.sy * par * 6 + (G.tall ? -sy * par * 0.05 : 0);
+      const ty = mouse.sy * par * 6 - sy * par * 0.05;
       let target = 0;
       if (mouse.active) {
         const dx = mouse.px - p.cx, dy = mouse.py - p.cy, d = Math.hypot(dx, dy), R = 180;
         if (d < R) target = -Math.sign(dx || 1) * 5 * Math.pow(1 - d / R, 1.4);
       }
       p.lean += (target - p.lean) * Math.min(1, dt * 2.6);
+      if (Math.abs(target - p.lean) > 0.02) more = true;
       // Una sola escritura de transform por planta, y solo si algo cambió.
       if (Math.abs(tx - p.tx) > 0.05 || Math.abs(ty - p.ty) > 0.05 || Math.abs(p.lean - (p.lastLean || 0)) > 0.02) {
         p.tx = tx; p.ty = ty; p.lastLean = p.lean;
@@ -433,6 +509,7 @@
         }
         p.ry += (ry - p.ry) * Math.min(1, dt * 1.6);
         p.rx += (rx - p.rx) * Math.min(1, dt * 1.6);
+        if (Math.abs(ry - p.ry) > 0.05 || Math.abs(rx - p.rx) > 0.05) more = true;
         // Solo se escribe cuando el giro cambia de verdad: cada escritura obliga a recalcular estilos y pintar.
         if (Math.abs(p.rx - (p.lastRx || 0)) > 0.05 || Math.abs(p.ry - (p.lastRy || 0)) > 0.05) {
           p.lastRx = p.rx; p.lastRy = p.ry;
@@ -440,30 +517,6 @@
         }
       }
     }
-    // Pétalos y polen a la deriva
-    const A = G.ambient;
-    if (A && !FL.reduce && !document.body.classList.contains('days-open')) {
-      spawnT -= dt;
-      if (spawnT <= 0 && A.count('petal') < (lastW < 700 ? 4 : 7)) {
-        spawnT = 2.2 + Math.random() * 3;
-        const col = DRIFT[(Math.random() * DRIFT.length) | 0];
-        const fromTop = Math.random() < 0.7;
-        A.add({
-          type: 'petal', x: fromTop ? Math.random() * A.w * 0.8 : -20, y: fromTop ? -20 : Math.random() * A.h * 0.5,
-          vx: 12, vy: 14, vr: (Math.random() - 0.5) * 1.6, s: 0.7 + Math.random() * 0.8, life: 30, col, col2: '#ffffff', wind: 14 + Math.random() * 10, fall: 16 + Math.random() * 12
-        });
-      }
-      while (A.count('pollen') < (lastW < 700 ? 10 : 20)) {
-        A.add({ type: 'pollen', x: Math.random() * A.w, y: Math.random() * A.h, s: 0.5 + Math.random() * 0.8, life: 14 + Math.random() * 12, fin: 2, col: '#e9c25c', a: 0.8 });
-      }
-    }
-    // Pétalos del cerezo que caen solos, de vez en cuando
-    if (A && !FL.reduce && Math.random() < dt * 0.12) {
-      const c = G.plants.find((p) => p.fl.art === 'cherry');
-      if (c && !c.el.classList.contains('away')) {
-        const rc = c.btn.getBoundingClientRect();
-        if (rc.bottom > 0 && rc.top < window.innerHeight) shed(rc.left + rc.width * (0.2 + Math.random() * 0.6), rc.top + rc.height * 0.4, c.fl.pal);
-      }
-    }
+    return more;
   };
 })();

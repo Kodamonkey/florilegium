@@ -73,7 +73,7 @@ js/catalog.js           Conecta los datos con la página; hemisferio, estaciones
 js/art-a.js, art-b.js   Ilustraciones de las 25 flores originales
 js/art-c.js             Gerbera, lisianthus, alstroemeria, ranúnculo, fresia, anémona y rellenos
 js/art-stems.js         Tallos, hojas y agua de cada planta
-js/particles.js         Pétalos, polen, semillas y aromas en canvas
+js/particles.js         Pétalos, polen, semillas y aromas en canvas; la deriva del jardín, en un worker
 js/layout.js            Separación de cabezas florales (jardín y ramos)
 js/garden.js            Composición del jardín, brisa, parallax y reacción al cursor
 js/care.js              Cuidados: ficha, plan para un ramo y recordatorios .ics

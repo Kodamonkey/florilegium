@@ -204,6 +204,11 @@ body:is(.focus-open, .days-open, .sheet-open) .garden * { animation-play-state: 
   animation: sway var(--dur) ease-in-out var(--sd) infinite alternate;
 }
 @keyframes sway { from { rotate: calc(var(--amp) * -1); } to { rotate: var(--amp); } }
+/* Parallax al desplazar el jardín alto, a cargo del compositor (FL.garden fija --plx, el recorrido de cada planta). */
+.garden.plx .plant { animation: plx linear both; animation-timeline: scroll(root block); }
+@keyframes plx { to { translate: 0 var(--plx, 0px); } }
+/* Durante el scroll el vaivén espera: si no, cada cuadro del scroll recalcula las animaciones de todas las plantas. */
+body.scrolling .garden :is(.sway, .head, .ripple) { animation-play-state: paused; }
 .plant .stem {
   position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; transform-origin: 50% 100%;
   animation: stemgrow 1.9s cubic-bezier(0.25, 0.7, 0.25, 1) var(--gd) both;
