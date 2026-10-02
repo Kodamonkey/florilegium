@@ -28,7 +28,7 @@ La página no necesita instalación ni compilación:
 
    El mismo servidor entrega la página y la API en <http://localhost:5173>. Si no hay clave, los botones de IA no aparecen y la página usa la lectura local.
 
-Las tipografías (Cormorant, Newsreader y Jost) se cargan desde Google Fonts. Sin conexión, la página sigue funcionando con las fuentes de respaldo del sistema.
+Las tipografías (Cormorant, Newsreader y Jost) vienen en `fonts/`, servidas desde el mismo sitio: no hay que esperar a otro servidor y funcionan sin conexión. Son fuentes variables de Google Fonts (licencia OFL, en `fonts/OFL.txt`).
 
 ## Qué contiene
 
@@ -56,6 +56,8 @@ Las tipografías (Cormorant, Newsreader y Jost) se cargan desde Google Fonts. Si
 index.html              Estructura de la página
 css/styles.css          Estilos, temas claro/oscuro y animaciones de cada especie
 css/atelier.css         Taller, mostrador, vista de regalo, cuidados y dibujo de ramos
+css/fonts.css           Tipografías propias (@font-face de fonts/)
+fonts/                  Cormorant, Jost y Newsreader en woff2 (alfabetos latinos) y su licencia
 data/flowers.json       Fichas de las flores (fuente única de datos)
 data/fillers.json       Rellenos y follajes de ramo
 data/taxonomy.json      Significados y su léxico, colores, estaciones por hemisferio, ocasiones,
