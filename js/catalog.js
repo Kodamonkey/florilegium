@@ -21,6 +21,15 @@
   FL.occasion = (id) => T.occasions.find((o) => o.id === id);
   FL.role = (id) => T.roles[id];
 
+  // Nombres de los colores de envoltorio y cinta, para leerlos en voz alta y escribirlos en la lámina del ramo.
+  const SWATCH_NAMES = {
+    '#c9a77c': 'kraft claro', '#b48a5c': 'kraft tostado', '#e2cfae': 'arena', '#f3e6ea': 'rosa pálido', '#e9dcc6': 'crema',
+    '#dfe7ef': 'celeste', '#f1efe6': 'blanco', '#2f3a2c': 'verde noche', '#efe7da': 'lino', '#c8b8a6': 'topo', '#7c8a6a': 'salvia',
+    '#384454': 'azul pizarra', '#b54470': 'frambuesa', '#a3182b': 'rojo', '#e7c25c': 'dorado', '#f4f0e4': 'marfil', '#6f97e0': 'azul',
+    '#4d6647': 'verde musgo', '#7d69bb': 'lavanda', '#2b3127': 'carbón'
+  };
+  FL.swatchName = (hex) => SWATCH_NAMES[hex] || hex;
+
   // Número en palabras (femenino: «treinta y una flores»), de 1 a 99.
   FL.countWords = function (n) {
     const ONES = ['cero', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce', 'trece', 'catorce', 'quince',

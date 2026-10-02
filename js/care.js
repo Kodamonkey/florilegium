@@ -40,12 +40,18 @@
     return { first, last, water, cut: cut.length, general: cut.length ? FL.taxonomy.careGeneral : [], specific, cats, dogs, potted: items.filter((it) => it.care.form === 'potted').map((it) => it.name) };
   };
 
+  // Cuánto dura el ramo y cuánta agua quiere, en texto ('' si no hay florero). p: lo que devuelve C.plan.
+  C.lifeLine = function (p) {
+    if (!p.last) return '';
+    return (p.first === p.last ? 'Con buenos cuidados, el ramo luce unos ' + p.last + ' días.'
+      : 'Las primeras flores empezarán a decaer hacia el día ' + p.first + '; las más duraderas pueden llegar al día ' + p.last + '.') +
+      ' Prefiere ' + WATER[p.water] + '.';
+  };
+
   C.planHTML = function (b) {
-    const p = C.plan(b);
-    let life = '';
-    if (p.last) life = p.first === p.last ? 'Con buenos cuidados, el ramo luce unos ' + p.last + ' días.' : 'Las primeras flores empezarán a decaer hacia el día ' + p.first + '; las más duraderas pueden llegar al día ' + p.last + '.';
+    const p = C.plan(b), life = C.lifeLine(p);
     return '<div class="care-plan">' +
-      (life ? '<p class="care-life">' + life + ' Prefiere ' + WATER[p.water] + '.</p>' : '') +
+      (life ? '<p class="care-life">' + life + '</p>' : '') +
       (p.general.length ? '<ol class="care-steps">' + p.general.map((s) => '<li>' + s + '</li>').join('') + '</ol>' : '') +
       (p.specific.length ? '<div class="care-specific">' + p.specific.map((s) => '<details><summary>' + s.name + (s.form === 'potted' ? ' (en maceta)' : '') + '</summary><ul>' + s.steps.map((x) => '<li>' + x + '</li>').join('') + '</ul></details>').join('') + '</div>' : '') +
       (p.cats.length || p.dogs.length ? '<div class="care-tox tox-media"><p class="mini">Mascotas</p><p>' +
@@ -97,13 +103,7 @@
   C.download = function (b) {
     const ics = C.ics(b);
     if (!ics) return;
-    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'cuidados-' + (b.name ? b.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'ramo' : 'ramo') + '.ics';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    FL.u.save(new Blob([ics], { type: 'text/calendar;charset=utf-8' }), 'cuidados-' + FL.u.slug(b.name, 'ramo') + '.ics');
   };
 
 })();

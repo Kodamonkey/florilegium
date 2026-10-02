@@ -73,7 +73,7 @@
         nodes.push({
           x, y, rx: w * 0.42, ry: h * 0.42, z: cfg.z + nodes.length * 0.001, band: role === 'focal' || role === 'secondary' ? role : 'u' + nodes.length,
           allow: cfg.allow, minX: 26 + w * 0.3, maxX: W - 26 - w * 0.3, minY: 26 + h * 0.3, maxY: Math.min(TIE[1] - 70, C[1] + Ry * 0.62),
-          it: u.it, role, w, h, drawn
+          it: u.it, role, w, h, drawn, seed
         });
       });
     });
@@ -126,6 +126,8 @@
 
   /*
    * Devuelve { svg, nodes }. opts.label: texto accesible; opts.cls: clases extra del <svg>.
+   * opts.standalone: cada cabeza va como SVG anidado con sus propias reglas CSS, no como imagen de URL blob, y con la
+   * luz opts.lit: así el ramo se puede pintar fuera de la página (en un canvas, para descargarlo).
    */
   BA.render = function (b, opts = {}) {
     if (!b || !b.stems || !b.stems.length) {
@@ -145,11 +147,14 @@
         '<ellipse cx="' + f(ex) + '" cy="' + f(500 + (i % 3) * 3) + '" rx="1.3" ry=".8" fill="#dbe6c2"/>';
       const tilt = U.clamp((n.x - TIE[0]) / lay.R, -1, 1) * 14;
       // En la página cada cabeza es una imagen: un ramo grande en línea serían miles de nodos SVG.
-      const svg = n.drawn.src
-        ? '<image href="' + n.drawn.src + '" x="' + f(-n.w * (0.5 + PAD)) + '" y="' + f(-n.h * (0.5 + PAD)) + '" width="' + f(n.w * (1 + 2 * PAD)) +
-          '" height="' + f(n.h * (1 + 2 * PAD)) + '" preserveAspectRatio="xMidYMid meet"/>'
-        : n.drawn.svg.replace('<svg ', '<svg x="' + f(-n.w / 2) + '" y="' + f(-n.h / 2) + '" width="' + f(n.w) + '" height="' + f(n.h) +
-          '" style="width:' + f(n.w) + 'px;height:' + f(n.h) + 'px;overflow:visible" ');
+      const box = 'x="' + f(-n.w * (0.5 + PAD)) + '" y="' + f(-n.h * (0.5 + PAD)) + '" width="' + f(n.w * (1 + 2 * PAD)) +
+        '" height="' + f(n.h * (1 + 2 * PAD)) + '" preserveAspectRatio="xMidYMid meet"';
+      const svg = opts.standalone
+        ? FL.headSVG(n.it, { open: true, pad: PAD, seed: n.seed, lit: opts.lit }).svg.replace('<svg ', '<svg ' + box + ' ')
+        : n.drawn.src
+          ? '<image href="' + n.drawn.src + '" ' + box + '/>'
+          : n.drawn.svg.replace('<svg ', '<svg x="' + f(-n.w / 2) + '" y="' + f(-n.h / 2) + '" width="' + f(n.w) + '" height="' + f(n.h) +
+            '" style="width:' + f(n.w) + 'px;height:' + f(n.h) + 'px;overflow:visible" ');
       heads += '<g transform="translate(' + P(n.x, n.y) + ') rotate(' + f(tilt) + ')"><g class="bqh" style="--d:' + f(i * 45) + 'ms">' + svg + '</g></g>';
     });
     const label = opts.label || 'Ramo: ' + b.stems.map((s) => s.n + ' ' + (FL.item(s.item) || {}).name).join(', ');

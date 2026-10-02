@@ -200,6 +200,12 @@
         <button type="button" class="pillbtn pillbtn--solid" id="atSave">Guardar</button>
         <button type="button" class="pillbtn" id="atShare">Compartir enlace</button>
         <button type="button" class="pillbtn" id="atGift">Ver como regalo</button>
+        <button type="button" class="pillbtn" id="atRecipe">Receta para la florería</button>
+      </div>
+      <div class="dl-row" role="group" aria-labelledby="atDlLabel">
+        <span class="mini" id="atDlLabel">Descargar con todos los detalles</span>
+        <button type="button" class="pillbtn" id="atPng">Imagen</button>
+        <button type="button" class="pillbtn" id="atPdf">PDF</button>
       </div>
       <p class="toast" id="atToast" role="status"></p>
     </div>
@@ -212,6 +218,22 @@
       </button>
     </div>
     <ul class="mine-list" id="atMineItems"></ul>
+  </div>
+  <div class="at-mine at-recipe" id="atRecipeBox" hidden>
+    <div class="at-mine-head">
+      <h3>Receta para la florería</h3>
+      <button type="button" class="iconbtn" id="atRecipeClose" aria-label="Cerrar la receta">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+    <p class="muted">Muéstrala en la florería o envíala por mensaje: dice qué pedir y cuánto.</p>
+    <div class="recipe-bq" id="atRecipeBq"></div>
+    <div id="atRecipeBody"></div>
+    <div class="at-actions">
+      <button type="button" class="pillbtn pillbtn--solid" id="atRecipeSend">Copiar la receta</button>
+      <a class="pillbtn" id="atMaps" target="_blank" rel="noopener noreferrer">Florerías cerca</a>
+    </div>
+    <p class="recipe-fine">Se abre Google Maps, que busca cerca de donde estés. Esta página no conoce tu ubicación.</p>
   </div>
 </section>
 
@@ -252,11 +274,24 @@
       <div id="giftCare"></div>
       <button type="button" class="pillbtn" id="giftIcs">Recordatorios para cambiar el agua (.ics)</button>
     </section>
+    <section class="gift-recipe" id="giftRecipe">
+      <details id="giftRecipeFold">
+        <summary>Pedir uno igual en una florería</summary>
+        <div id="giftRecipeBody"></div>
+        <a class="pillbtn" id="giftMaps" target="_blank" rel="noopener noreferrer">Buscar florerías cerca</a>
+      </details>
+    </section>
+    <div class="dl-row" id="giftDl" role="group" aria-labelledby="giftDlLabel">
+      <span class="mini" id="giftDlLabel">Guárdalo con todos los detalles</span>
+      <button type="button" class="pillbtn" id="giftPng">Imagen</button>
+      <button type="button" class="pillbtn" id="giftPdf">PDF</button>
+    </div>
     <div class="gift-actions">
       <button type="button" class="pillbtn" id="giftCopy">Armar uno parecido</button>
       <button type="button" class="pillbtn pillbtn--solid" id="giftBack">Ir al jardín</button>
     </div>
   </div>
+  <p class="toast" id="giftToast" role="status"></p>
 </section>
 
 <script src="js/core.js"></script>
@@ -270,6 +305,7 @@
 <script src="js/layout.js"></script>
 <script src="js/garden.js"></script>
 <script src="js/care.js"></script>
+<script src="js/recipe.js"></script>
 <script src="js/focus.js"></script>
 <script src="js/explore.js"></script>
 <script src="js/days.js"></script>
@@ -277,6 +313,7 @@
 <script src="js/bouquet-art.js"></script>
 <script src="js/meaning.js"></script>
 <script src="js/ai.js"></script>
+<script src="js/plate.js"></script>
 <script src="js/atelier.js"></script>
 <script src="js/showcase.js"></script>
 <script src="js/gift.js"></script>

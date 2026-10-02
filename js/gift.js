@@ -4,7 +4,15 @@
   const FL = window.FL, U = FL.u;
   const Gf = (FL.gift = {});
   const $ = (id) => document.getElementById(id);
-  let root, cur = null, preview = false, lastFocus = null, sys = null;
+  let root, cur = null, preview = false, lastFocus = null, sys = null, toastT = 0;
+
+  function toast(msg, sticky) {
+    const t = $('giftToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastT);
+    if (!sticky) toastT = setTimeout(() => t.classList.remove('show'), 3800);
+  }
 
   Gf.init = function () {
     root = $('gift');
@@ -20,6 +28,8 @@
       FL.atelier.open({ bouquet: copy });
     });
     $('giftIcs').addEventListener('click', () => cur && FL.care.download(cur));
+    $('giftMaps').href = FL.recipe.mapsUrl;
+    FL.plate.bind($('giftPng'), $('giftPdf'), () => cur, toast);
     root.addEventListener('keydown', (e) => {
       if (e.key !== 'Tab') return;
       const els = Array.from(root.querySelectorAll('button, summary, [href]')).filter((x) => x.offsetParent !== null);
@@ -56,6 +66,8 @@
       $('giftReading').innerHTML = '';
       $('giftCare').innerHTML = '';
       $('giftIcs').hidden = true;
+      $('giftRecipe').hidden = true;
+      $('giftDl').hidden = true;
       $('giftCopy').hidden = true;
     } else {
       const c = b.card || {};
@@ -72,6 +84,11 @@
         (r.notes.length ? '<p class="note">' + esc(r.notes[0]) + '</p>' : '');
       $('giftCare').innerHTML = FL.care.planHTML(b);
       $('giftIcs').hidden = !FL.care.plan(b).cut;
+      // Sin la tarjeta: es de quien recibe el ramo, no de la florería.
+      $('giftRecipe').hidden = false;
+      $('giftRecipeFold').open = false;
+      $('giftRecipeBody').innerHTML = FL.recipe.html(b);
+      $('giftDl').hidden = false;
       $('giftCopy').hidden = false;
       $('giftCopy').textContent = preview ? 'Volver al taller' : 'Armar uno parecido';
     }

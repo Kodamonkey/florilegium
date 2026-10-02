@@ -39,8 +39,10 @@ Las tipografías (Cormorant, Newsreader y Jost) vienen en `fonts/`, servidas des
 - **Una animación por especie:** la rosa abre sus anillos, el girasol sigue al cursor, el tulipán se inclina antes de abrirse, la margarita se deshoja, el diente de león suelta semillas, la hortensia cambia de color según la acidez del suelo, la fresia abre sus flores de la base a la punta, la anémona se recoge y se vuelve a abrir, entre otras.
 - **Ficha de cada flor:** significado poético, cultural (con notas cuando cambia según la cultura), mirada científica y **cuidados**: cuánto dura en florero, cuánta agua quiere, pasos específicos y toxicidad para gatos y perros. Desde la ficha se puede agregar la flor a un ramo.
 - **Taller de ramos** (`#armar`): elige flores, rellenos y follajes tallo por tallo, o escribe lo que quieres decir y pide una propuesta. Elige envoltorio y cinta, escribe una tarjeta y lee en vivo qué dice el ramo: significados ponderados, notas culturales y advertencias (mascotas, números pares, flores de luto en algunas culturas). Los ramos se guardan en **Mis ramos** y se comparten con un enlace.
+- **Descargar el ramo** como imagen (PNG) o PDF, con todos los detalles: el dibujo, la tarjeta, de qué está hecho, qué dice (con la lectura de la IA si la hay) y cómo cuidarlo. La imagen es una sola lámina larga, para guardar o enviar por mensaje; el PDF reparte lo mismo en páginas A4, listo para imprimir. Está en el taller y en la vista de un ramo recibido. Se arma en el navegador, sin enviar nada a ningún servidor, y siempre en papel claro, aunque la página esté en modo oscuro.
 - **Mostrador** (`#ramos`): veinte ramos tradicionales de Occidente por temporada y por temática (San Valentín, Día de la Madre, bodas, condolencias…). La temporada se calcula según el hemisferio, detectado por la zona horaria (Chile, Argentina, Australia… → sur) y ajustable a mano. Muestra las próximas fechas del calendario. Cada ramo se puede personalizar en el taller.
 - **Un ramo recibido** (`#ramo=…`): quien abre el enlace ve el ramo, la tarjeta, lo que dice cada flor y cómo cuidarlo, con un calendario `.ics` de recordatorios para cambiar el agua.
+- **Receta para la florería:** desde el taller, el ramo se convierte en una lista para pedirlo en una florería: cuántos tallos de cada flor (y de qué color, cuando la flor se vende en varios), envoltorio, cinta, total y el texto de la tarjeta. Se copia o se envía por mensaje con el enlace al dibujo, y avisa cuando una flor casi nunca se encuentra en florerías. Quien recibe un ramo también ve la receta, sin la tarjeta. El botón «Florerías cerca» abre Google Maps con la búsqueda «florería»: Maps pide la ubicación por su cuenta y la página no envía nada más.
 - **Agente de IA** (opcional): interpreta un ramo y propone uno a partir de lo que sientes, siempre con flores del catálogo. Sin servidor, un motor local (`js/meaning.js`) hace ambas cosas con reglas.
 - **Propuesta desde lo que escribes:** además de los sentimientos y la ocasión, el motor local entiende el tamaño («un ramo grande», «algo pequeño», «una sola flor»), la cantidad («unas 15 flores», «una docena de rosas»), las flores que se piden o se rechazan («le encantan los tulipanes», «sin rosas», «nada de lirios ni claveles»), los colores («algo amarillo», «nada rojo») y un estilo sobrio. El duelo manda sobre lo demás, y los nombres propios («mi amiga Margarita») no se leen como flores. La propuesta dice qué tomó en cuenta.
 - **Explorar:** búsqueda y filtros por significado, color y estación. Las flores coincidentes se resaltan en el jardín.
@@ -79,6 +81,7 @@ js/particles.js         Pétalos, polen, semillas y aromas en canvas; la deriva 
 js/layout.js            Separación de cabezas florales (jardín y ramos)
 js/garden.js            Composición del jardín, brisa, parallax y reacción al cursor
 js/care.js              Cuidados: ficha, plan para un ramo y recordatorios .ics
+js/recipe.js            Receta para la florería y búsqueda de florerías cerca
 js/focus.js             Vista en primer plano, comportamiento de cada especie y ficha
 js/explore.js           Buscador y filtros
 js/days.js              Sección «Esos días que no hubo»
@@ -86,6 +89,7 @@ js/bouquet-model.js     Modelo de ramo: normalizar, validar, enlaces y «Mis ram
 js/bouquet-art.js       Dibujo de un ramo: cúpula, tallos, envoltorio y cinta
 js/meaning.js           Lectura local: qué dice un ramo y qué ramo dice lo que sientes
 js/ai.js                Cliente del agente de IA
+js/plate.js             Lámina descargable de un ramo: imagen (PNG) y PDF hecho a mano, sin bibliotecas
 js/atelier.js           Taller de ramos
 js/showcase.js          Mostrador de ramos populares
 js/gift.js              Vista de un ramo recibido

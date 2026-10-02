@@ -759,4 +759,107 @@
     deepEq(p.general, []);
     eq(FL.care.ics(b), null);
   });
+
+  /* ---------- 9. Lámina descargable ---------- */
+  test('lámina: el PDF tiene una página por imagen y su índice apunta a cada objeto', () => {
+    const NL = String.fromCharCode(10), raw = [0xff, 0xd8, 0x00, 0x80, 0xff, 0xd9];
+    const jpeg = new Uint8Array(raw), jpegText = String.fromCharCode(...raw);
+    const bytes = FL.plate.pdf([{ jpeg, w: 4, h: 6 }, { jpeg, w: 4, h: 6 }], { title: 'Para mamá ✿', date: new Date(2026, 9, 2, 9, 5, 7) });
+    const s = Array.from(bytes, (c) => String.fromCharCode(c)).join('');
+    ok(s.startsWith('%PDF-1.4' + NL), 'cabecera');
+    ok(s.endsWith('%%EOF' + NL), 'final');
+    ok(s.includes('/Count 2 /Kids [4 0 R 7 0 R]'), 'dos páginas');
+    eq(s.split('/Filter /DCTDecode /Length 6 >>' + NL + 'stream' + NL + jpegText + NL + 'endstream').length, 3, 'imágenes íntegras');
+    ok(s.includes('/Title <FEFF00500061007200610020006D0061006D00E10020273F>'), 'título en UTF-16');
+    ok(s.includes('/CreationDate (D:20261002090507)'), 'fecha');
+    const lines = s.split(NL), at = lines.lastIndexOf('startxref');
+    const start = +lines[at + 1];
+    ok(s.startsWith(['xref', '0 10', '0000000000 65535 f '].join(NL) + NL, start), 'tabla xref');
+    const rows = s.slice(start).split(NL).slice(3, 12);
+    eq(rows.length, 9, 'una entrada por objeto');
+    rows.forEach((row, k) => {
+      ok(/^\d{10} 00000 n $/.test(row), 'entrada de 20 bytes: ' + row);
+      ok(s.startsWith((k + 1) + ' 0 obj' + NL, +row.slice(0, 10)), 'objeto ' + (k + 1));
+    });
+  });
+
+  test('lámina: nombre de archivo sin tildes ni símbolos', () => {
+    eq(FL.u.slug('Para mamá, con cariño ✿', 'ramo'), 'para-mama-con-carino');
+    eq(FL.u.slug('', 'ramo'), 'ramo');
+    eq(FL.u.slug('✿✿', 'ramo'), 'ramo');
+  });
+
+  test('lectura: display junta la lectura de la IA con los avisos locales', () => {
+    const b = mk([['lirio', 3], ['rosa-roja', 2]]);
+    const local = FL.reading.display(b);
+    eq(local.source, 'local');
+    eq(local.summary, FL.reading.interpret(b).summary);
+    b.reading = { source: 'ai', summary: 'Resumen de la IA.', full: { summary: 'Resumen de la IA.', meanings: [{ id: 'amor', weight: 1 }], warnings: ['Aviso de la IA.'] } };
+    const ai = FL.reading.display(b);
+    eq(ai.source, 'ai');
+    eq(ai.summary, 'Resumen de la IA.');
+    deepEq(ai.meanings, [{ id: 'amor', weight: 1 }]);
+    ok(ai.warnings[0] === 'Aviso de la IA.' && ai.warnings.some((w) => /gatos/.test(w)), 'avisos de ambas');
+    deepEq(ai.notes, local.notes, 'sin notas de la IA, las locales');
+    eq(ai.perItem.length, 2, 'lo que dice cada flor');
+  });
+
+  test('dibujo: modo independiente, con cada cabeza en línea y sin URLs blob', () => {
+    if (typeof document === 'undefined') skip('necesita un navegador');
+    const b = fromPopular('docena-roja');
+    const svg = FL.bouquetArt.render(b, { standalone: true, lit: '0.4' }).svg;
+    ok(!/blob:/.test(svg), 'sin blob');
+    eq((svg.match(/<svg /g) || []).length, 1 + B().total(b), 'un SVG por tallo');
+    ok(svg.includes('--lit-o:0.4'), 'luz dada');
+    const doc = new DOMParser().parseFromString(svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '), 'image/svg+xml');
+    eq(doc.getElementsByTagName('parsererror').length, 0, 'XML válido');
+  });
+
+  /* ---------- Receta para la florería ---------- */
+  test('receta: protagonistas primero, unidades y color cuando la flor viene en varios', () => {
+    const b = B().create({ stems: [{ item: 'eucalipto', n: 3 }, { item: 'tulipan', n: 7 }, { item: 'rosa-roja', n: 1 }, { item: 'orquidea', n: 2 }] });
+    const L = FL.recipe.lines(b);
+    deepEq(L.map((l) => l.item), ['rosa-roja', 'tulipan', 'orquidea', 'eucalipto']);
+    eq(L[0].unit, 'tallo');
+    eq(L[0].color, '', 'la rosa roja viene en un solo color');
+    eq(L[1].unit, 'tallos');
+    eq(L[1].color, 'rojo', 'el tulipán se dibuja rojo');
+    eq(L[2].unit, 'macetas');
+    eq(FL.recipe.totalText(L), '11 tallos y 2 macetas');
+  });
+
+  test('receta: texto con envoltorio, cinta y total; tarjeta y enlace solo si se piden', () => {
+    const b = B().create({
+      name: 'Para mamá', stems: [{ item: 'girasol', n: 5 }], wrap: { style: 'kraft', color: '#c9a77c' }, ribbon: { color: '#e7c25c' },
+      card: { to: 'Mamá', message: 'Gracias', from: 'Seba' }
+    });
+    const t = FL.recipe.text(b);
+    ok(t.startsWith('Receta para la florería · «Para mamá»'), t);
+    ok(t.includes('- 5 tallos de girasol\n'), 'línea del girasol');
+    ok(t.includes('Envoltorio: papel kraft claro'), 'envoltorio');
+    ok(t.includes('Cinta: dorado'), 'cinta');
+    ok(t.includes('Total: 5 tallos'), 'total');
+    ok(!t.includes('Gracias') && !t.includes('Así se ve'), 'sin tarjeta ni enlace');
+    const full = FL.recipe.text(b, { card: true, link: 'https://x.test/#ramo=abc' });
+    ok(full.includes('Para: Mamá\n«Gracias»\nDe: Seba'), 'tarjeta');
+    ok(full.endsWith('Así se ve: https://x.test/#ramo=abc'), 'enlace');
+    const wrap = (style, color) => FL.recipe.wrapText(B().create({ stems: [{ item: 'girasol', n: 1 }], wrap: { style, color } }));
+    eq(wrap('seda', '#f3e6ea'), 'papel de seda rosa pálido');
+    eq(wrap('tela', '#7c8a6a'), 'tela salvia');
+    eq(wrap('ninguno'), 'sin envoltorio');
+  });
+
+  test('receta: escapa la tarjeta y avisa lo que no suele haber en florerías', () => {
+    const b = B().create({ stems: [{ item: 'loto', n: 1 }, { item: 'rosa-blanca', n: 2 }], card: { to: '<img src=x onerror=alert(1)>', message: 'a "b" <i>', from: '' } });
+    const h = FL.recipe.html(b, { card: true });
+    ok(!/<img|<i>/.test(h), 'sin etiquetas escritas por la persona');
+    ok(h.includes('&lt;img'), 'escapado');
+    ok(!FL.recipe.html(b).includes('recipe-card'), 'sin tarjeta por defecto');
+    ok(/Loto: poco habitual en florerías/.test(FL.recipe.text(b)), 'aviso del loto');
+    ok(!/Rosa blanca: poco habitual/.test(FL.recipe.text(b)), 'la rosa sí se consigue');
+  });
+
+  test('receta: Maps recibe solo la palabra «florería»', () => {
+    eq(FL.recipe.mapsUrl, 'https://www.google.com/maps/search/?api=1&query=florer%C3%ADa');
+  });
 })(typeof window !== 'undefined' ? window : globalThis);
