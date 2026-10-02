@@ -120,6 +120,23 @@
     };
   };
 
+  // Lo que se muestra de un ramo: la lectura de la IA si la hay, completada con la local, que trae lo que dice cada flor,
+  // los avisos y las sugerencias (la IA puede traer solo un resumen). La usan el taller y la lámina descargable.
+  R.display = function (b) {
+    const local = R.interpret(b);
+    const ai = b.reading && b.reading.source === 'ai' ? b.reading.full || { summary: b.reading.summary } : null;
+    const r = ai || local;
+    return {
+      source: ai ? 'ai' : 'local',
+      summary: r.summary,
+      meanings: (r.meanings && r.meanings.length ? r.meanings : local.meanings).slice(0, 5),
+      notes: ai && ai.cultural_notes && ai.cultural_notes.length ? ai.cultural_notes : local.notes,
+      warnings: Array.from(new Set((ai && ai.warnings ? ai.warnings : []).concat(local.warnings))),
+      perItem: local.perItem,
+      suggestions: local.suggestions || []
+    };
+  };
+
   // Mejor ítem del catálogo para unos significados (con filtros básicos).
   function bestFor(meanings, o = {}) {
     let best = null, bestS = 0;

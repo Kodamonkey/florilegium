@@ -127,6 +127,10 @@ body.sheet-open { overflow: hidden; }
 #atReading { display: grid; gap: 0.6rem; }
 #atReading .mini { margin-top: 0.65rem; }
 .at-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+/* Descargar la lámina del ramo (imagen o PDF): el rótulo arriba, los dos formatos lado a lado. */
+.dl-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.dl-row .mini { flex-basis: 100%; color: var(--ink-2); }
+.gift-inner .dl-row { width: 100%; justify-content: center; padding-top: 1rem; border-top: 1px solid var(--line); }
 .toast {
   position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); translate: -50% 20px; z-index: 30; max-width: min(92vw, 34rem);
   margin: 0; padding: 0.7rem 1.1rem; border-radius: 14px; background: var(--ink); color: var(--paper); font-family: var(--f-ui); font-size: 0.86rem;
@@ -205,14 +209,41 @@ body.sheet-open { overflow: hidden; }
 .care-specific details { border: 1px solid var(--line); border-radius: 12px; padding: 0.5rem 0.8rem; }
 .care-specific summary { cursor: pointer; font-family: var(--f-display); font-size: 1.1rem; list-style: none; display: flex; align-items: center; gap: 0.7rem; }
 /* Un chevrón fino en lugar del triángulo negro del navegador. */
-.care-specific summary::-webkit-details-marker { display: none; }
-.care-specific summary::before {
+.care-specific summary::-webkit-details-marker, .gift-recipe summary::-webkit-details-marker { display: none; }
+.care-specific summary::before, .gift-recipe summary::before {
   content: ""; flex: none; width: 7px; height: 7px; margin-left: 2px;
   border-right: 1.5px solid var(--ink-3); border-bottom: 1.5px solid var(--ink-3); rotate: -45deg; transition: rotate 0.25s ease;
 }
-.care-specific details[open] > summary::before { rotate: 45deg; }
+.care-specific details[open] > summary::before, .gift-recipe details[open] > summary::before { rotate: 45deg; }
 .care-specific ul { margin: 0.4rem 0 0.2rem; padding-left: 1.1rem; font-size: 0.93rem; color: var(--ink-2); }
 .card-foot .pillbtn { justify-self: start; margin-top: 0.4rem; }
+
+/* ---------- Receta para la florería ---------- */
+a.pillbtn { text-decoration: none; }
+.recipe { display: grid; gap: 0.9rem; text-align: left; }
+.recipe-list { list-style: none; margin: 0; padding: 0; }
+.recipe-list li { display: grid; grid-template-columns: 2.4rem 1fr; align-items: baseline; gap: 0.7rem; padding: 0.45rem 0; border-bottom: 1px dashed var(--line); }
+.recipe-n { font-family: var(--f-display); font-size: 1.6rem; line-height: 1; text-align: right; color: var(--ink); font-variant-numeric: lining-nums; }
+.recipe-what { font-size: 1rem; line-height: 1.4; color: var(--ink); }
+.recipe-dress { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 0.9rem; align-items: baseline; }
+.recipe-dress dt { font-family: var(--f-ui); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); }
+.recipe-dress dd { margin: 0; font-size: 0.97rem; color: var(--ink); }
+.recipe-rare { margin: 0; font-size: 0.92rem; color: var(--ink-2); }
+.recipe-rare::before { content: "! "; color: #c0602a; }
+.recipe-card { padding: 0.8rem 1rem; border: 1px solid var(--card-line); border-radius: 4px 16px 4px 16px; background: var(--card); overflow-wrap: anywhere; }
+.recipe-card p:not(.mini) { margin: 0.25rem 0 0; font-size: 0.95rem; color: var(--ink-2); }
+.recipe-card blockquote { margin: 0.35rem 0 0; font-family: var(--f-display); font-style: italic; font-size: 1.2rem; line-height: 1.35; color: var(--ink); }
+.at-recipe { display: grid; align-content: start; gap: 1rem; }
+.at-recipe .at-mine-head, .at-recipe > p { margin: 0; }
+.recipe-bq { width: min(200px, 56%); justify-self: center; }
+.recipe-fine { font-size: 0.85rem; color: var(--ink-2); }
+.gift-recipe { width: 100%; text-align: left; padding-top: 1rem; border-top: 1px solid var(--line); }
+.gift-recipe summary {
+  cursor: pointer; list-style: none; display: flex; align-items: center; gap: 0.7rem; min-height: 32px;
+  font-family: var(--f-ui); font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-3);
+}
+.gift-recipe .recipe { margin-top: 0.8rem; }
+.gift-recipe .pillbtn { margin-top: 1rem; }
 
 /* ---------- Navegación con cuatro secciones ---------- */
 .navbtn .navlong { display: inline; }

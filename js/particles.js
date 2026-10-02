@@ -4,17 +4,20 @@
   const FL = window.FL;
   const TAU = Math.PI * 2;
 
+  // Tamaño de un lienzo a pantalla completa: ancho y alto en px CSS y densidad (con tope, el polen no pide más).
+  const sizeOf = (c) => ({ w: c.clientWidth || window.innerWidth, h: c.clientHeight || window.innerHeight, d: Math.min(1.5, window.devicePixelRatio || 1) });
+
+  // size: { w, h, d } para un lienzo sin documento (OffscreenCanvas en un worker); si falta, se mide el elemento.
   class Particles {
-    constructor(canvas) {
+    constructor(canvas, size) {
       this.c = canvas;
       this.x = canvas.getContext('2d');
       this.ps = [];
       this.T = 0;
-      this.resize();
+      this.resize(size);
     }
-    resize() {
-      const d = Math.min(1.5, window.devicePixelRatio || 1);
-      const w = this.c.clientWidth || window.innerWidth, h = this.c.clientHeight || window.innerHeight;
+    resize(size) {
+      const { w, h, d } = size || sizeOf(this.c);
       this.c.width = Math.round(w * d);
       this.c.height = Math.round(h * d);
       this.x.setTransform(d, 0, 0, d, 0, 0);
@@ -142,6 +145,95 @@
     }
   }
   FL.Particles = Particles;
+
+  // Deriva de fondo del jardín: pétalos que cruzan de vez en cuando y polen suspendido. st guarda el reloj de aparición.
+  const DRIFT = ['#f8cbd8', '#fbe3ea', '#fff4f7', '#f3d27a', '#f2e8df', '#e9a3b8', '#d9d0ef'];
+  function drift(sys, dt, st) {
+    const small = sys.w < 700;
+    st.spawnT -= dt;
+    if (st.spawnT <= 0 && sys.count('petal') < (small ? 4 : 7)) {
+      st.spawnT = 2.2 + Math.random() * 3;
+      const col = DRIFT[(Math.random() * DRIFT.length) | 0];
+      const fromTop = Math.random() < 0.7;
+      sys.add({
+        type: 'petal', x: fromTop ? Math.random() * sys.w * 0.8 : -20, y: fromTop ? -20 : Math.random() * sys.h * 0.5,
+        vx: 12, vy: 14, vr: (Math.random() - 0.5) * 1.6, s: 0.7 + Math.random() * 0.8, life: 30, col, col2: '#ffffff', wind: 14 + Math.random() * 10, fall: 16 + Math.random() * 12
+      });
+    }
+    while (sys.count('pollen') < (small ? 10 : 20)) {
+      sys.add({ type: 'pollen', x: Math.random() * sys.w, y: Math.random() * sys.h, s: 0.5 + Math.random() * 0.8, life: 14 + Math.random() * 12, fin: 2, col: '#e9c25c', a: 0.8 });
+    }
+  }
+
+  // Cuerpo del worker de la deriva (se arma como texto en FL.Ambient, junto con Particles y drift).
+  function ambientWorker() {
+    let sys = null, on = false, reduce = false, raf = 0, last = 0, T = 0;
+    const st = { spawnT: 0 };
+    const next = self.requestAnimationFrame ? (fn) => self.requestAnimationFrame(fn) : (fn) => setTimeout(() => fn(performance.now()), 16);
+    const frame = (now) => {
+      raf = 0;
+      if (!on || !sys) return;
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      T += dt;
+      if (!reduce) drift(sys, dt, st);
+      sys.step(dt, T);
+      // Sin deriva (movimiento reducido) y sin partículas, el worker descansa hasta que llegue otra.
+      if (!reduce || sys.ps.length || sys.dirty) raf = next(frame);
+    };
+    self.onmessage = (e) => {
+      const m = e.data;
+      if (m.t === 'init') { sys = new Particles(m.canvas, m.size); reduce = m.reduce; on = m.on; }
+      else if (m.t === 'size') sys.resize(m.size);
+      else if (m.t === 'add') sys.add(m.p);
+      else if (m.t === 'run') on = m.on;
+      if (on && sys && !raf) { last = performance.now(); raf = next(frame); }
+    };
+  }
+
+  /*
+   * La deriva del jardín se pinta en un worker, sobre un OffscreenCanvas: el hilo principal no tiene que pedir un
+   * cuadro tras otro, y sin cuadros pedidos las flores se mecen solo en la GPU, sin recalcular estilos en cada uno.
+   * Sin worker (navegadores viejos, la página abierta con doble clic) se pinta aquí y el bucle principal la mueve.
+   * Devuelve { add, resize, run, step, on }: step(dt, T) solo trabaja sin worker y dice si hace falta otro cuadro.
+   */
+  FL.Ambient = function (canvas) {
+    const A = { on: true, local: null };
+    const st = { spawnT: 0 };
+    let wk = null, moved = false;
+    const local = () => {
+      if (wk) { wk.terminate(); wk = null; }
+      // Un lienzo ya entregado al worker no admite otro contexto: se cambia por uno nuevo.
+      if (moved) { const c = canvas.cloneNode(false); canvas.replaceWith(c); canvas = c; moved = false; }
+      A.local = new Particles(canvas);
+      if (FL.wake) FL.wake();
+    };
+    try {
+      if (!canvas.transferControlToOffscreen || typeof Worker === 'undefined') throw new Error('sin OffscreenCanvas');
+      const src = 'const TAU=Math.PI*2;const DRIFT=' + JSON.stringify(DRIFT) + ';const Particles=' + Particles + ';const drift=' + drift + ';(' + ambientWorker + ')();';
+      wk = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
+      const off = canvas.transferControlToOffscreen();
+      moved = true;
+      wk.onerror = (e) => { if (e && e.preventDefault) e.preventDefault(); local(); };
+      wk.postMessage({ t: 'init', canvas: off, size: sizeOf(canvas), reduce: !!FL.reduce, on: A.on }, [off]);
+    } catch (e) {
+      local();
+    }
+    A.add = (p) => { if (wk) wk.postMessage({ t: 'add', p }); else A.local.add(p); };
+    A.resize = () => { if (wk) wk.postMessage({ t: 'size', size: sizeOf(canvas) }); else A.local.resize(); };
+    A.run = (on) => {
+      if (on === A.on) return;
+      A.on = on;
+      if (wk) wk.postMessage({ t: 'run', on });
+    };
+    A.step = (dt, T) => {
+      if (!A.local || !A.on) return false;
+      if (!FL.reduce) drift(A.local, dt, st);
+      A.local.step(dt, T);
+      return !FL.reduce || A.local.ps.length > 0 || !!A.local.dirty;
+    };
+    return A;
+  };
 
   // Pequeña explosión de pétalos y polen alrededor de un punto (flor que entra en foco).
   FL.burst = function (sys, cx, cy, cols, n = 16, spread = 120) {

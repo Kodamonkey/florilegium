@@ -45,6 +45,17 @@
     const target = usable(el) ? el : usable(fallback) ? fallback : null;
     if (target) target.focus({ preventScroll: true });
   };
+  // Nombre de archivo a partir de un texto: «Para mamá» → «para-mama».
+  U.slug = (s, fallback) => (s ? U.norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) : '') || fallback;
+  // Descarga un archivo hecho en la página.
+  U.save = function (blob, filename) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  };
   // Texto escrito por personas, listo para insertar en HTML.
   U.esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
@@ -217,7 +228,9 @@
    *   opts.open: abierta; las transiciones y animaciones de apertura quedan en su estado final.
    *   opts.pad: margen alrededor del viewBox, en fracción del ancho y alto: una imagen recorta lo que sobresale.
    *   opts.seed: variación del dibujo (la misma de FL.drawHead).
-   * FL.headArt devuelve { src, aspect, anchor }; FL.headImage, solo la URL.
+   *   opts.lit: luz del tema con que se pinta (solo FL.headSVG; por defecto, la de la página).
+   * FL.headSVG devuelve { svg, aspect, anchor }, con el documento SVG completo (la lámina descargable de un ramo
+   * lo inserta tal cual); FL.headArt, { src, aspect, anchor } con ese documento como URL; FL.headImage, solo la URL.
    */
   let cssByArt = null;
   const artCache = {};
@@ -246,21 +259,25 @@
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     if (mq.addEventListener) mq.addEventListener('change', () => { lit = null; });
   }
-  FL.headArt = function (fl, opts = {}) {
-    const lit = FL.litLevel(), pad = opts.pad || 0;
-    const key = fl.id + '|' + (opts.open ? 1 : 0) + '|' + pad + '|' + (opts.seed || 0) + '|' + lit;
-    if (artCache[key]) return artCache[key];
+  FL.headSVG = function (fl, opts = {}) {
+    const lit = opts.lit != null ? opts.lit : FL.litLevel(), pad = opts.pad || 0;
     const drawn = opts.drawn || FL.drawHead(fl, { cls: opts.open ? 'open' : '', seed: opts.seed });
     const vb = drawn.svg.match(/viewBox="([^"]+)"/)[1].split(/[\s,]+/).map(Number);
     const box = [vb[0] - vb[2] * pad, vb[1] - vb[3] * pad, vb[2] * (1 + 2 * pad), vb[3] * (1 + 2 * pad)].map(f).join(' ');
     const still = opts.open
       ? '*{transition:none!important;animation-duration:0s!important;animation-delay:0s!important;animation-iteration-count:1!important}'
       : '*{transition:none!important;animation:none!important}';
-    const src = drawn.svg
+    const svg = drawn.svg
       .replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ')
       .replace(/viewBox="[^"]+"/, 'viewBox="' + box + '"')
       .replace('<defs>', '<style>:root{--lit-o:' + lit + '}' + speciesCSS(fl.art) + still + '</style><defs>');
-    artCache[key] = { src: URL.createObjectURL(new Blob([src], { type: 'image/svg+xml' })), aspect: drawn.aspect, anchor: drawn.anchor };
+    return { svg, aspect: drawn.aspect, anchor: drawn.anchor };
+  };
+  FL.headArt = function (fl, opts = {}) {
+    const key = fl.id + '|' + (opts.open ? 1 : 0) + '|' + (opts.pad || 0) + '|' + (opts.seed || 0) + '|' + FL.litLevel();
+    if (artCache[key]) return artCache[key];
+    const h = FL.headSVG(fl, { drawn: opts.drawn, open: opts.open, pad: opts.pad, seed: opts.seed });
+    artCache[key] = { src: URL.createObjectURL(new Blob([h.svg], { type: 'image/svg+xml' })), aspect: h.aspect, anchor: h.anchor };
     return artCache[key];
   };
   FL.headImage = (fl, opts) => FL.headArt(fl, opts).src;

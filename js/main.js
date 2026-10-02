@@ -24,8 +24,7 @@
   function init() {
     const count = document.getElementById('flowerCount');
     if (count) { const w = FL.countWords(FL.flowers.length); count.textContent = w.charAt(0).toUpperCase() + w.slice(1); }
-    FL.garden.build();
-    FL.garden.ambient = new FL.Particles(document.getElementById('ambient'));
+    FL.garden.ambient = FL.Ambient(document.getElementById('ambient'));
     FL.focus.init();
     FL.explore.init();
     FL.days.init();
@@ -34,15 +33,29 @@
     FL.gift.init();
     FL.ai.check();
 
-    window.addEventListener('pointermove', FL.garden.onPointer, { passive: true });
-    document.documentElement.addEventListener('pointerleave', FL.garden.onLeave);
-    window.addEventListener('blur', FL.garden.onLeave);
+    const G = FL.garden;
+    window.addEventListener('pointermove', (e) => { G.onPointer(e); if (G.mouse.active) FL.wake(); }, { passive: true });
+    const leave = () => { G.onLeave(); FL.wake(); };
+    document.documentElement.addEventListener('pointerleave', leave);
+    window.addEventListener('blur', leave);
     let rt;
     window.addEventListener('resize', () => {
       clearTimeout(rt);
-      rt = setTimeout(() => { FL.garden.resize(); FL.focus.resize(); FL.days.resize(); FL.gift.resize(); }, 220);
+      rt = setTimeout(() => { G.resize(); FL.focus.resize(); FL.days.resize(); FL.gift.resize(); FL.wake(); }, 220);
     });
-    window.addEventListener('scroll', FL.garden.onScroll, { passive: true });
+    /*
+     * Al desplazar solo hace falta un cuadro si el cursor está sobre el jardín o si el parallax lo calcula el bucle.
+     * Mientras dura el scroll, el vaivén de las flores se pausa: cada cuadro del scroll recalculaba sus ~60 animaciones.
+     */
+    let st = 0;
+    const settled = () => { st = 0; document.body.classList.remove('scrolling'); };
+    window.addEventListener('scroll', () => {
+      G.onScroll();
+      if (G.mouse.active || G.plxJS) FL.wake();
+      if (!st) document.body.classList.add('scrolling');
+      clearTimeout(st);
+      st = setTimeout(settled, 160);
+    }, { passive: true });
     window.addEventListener('hashchange', route);
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
@@ -59,24 +72,45 @@
     });
 
     document.body.classList.add('ready');
-    setTimeout(route, 300);
+    // El jardín se arma tras el primer cuadro: el título y la navegación se pintan sin esperar a dibujar 31 flores.
+    requestAnimationFrame(() => setTimeout(() => {
+      G.build();
+      FL.wake();
+      setTimeout(route, 300);
+    }, 0));
 
-    let last = performance.now(), T = 0;
+    /*
+     * Bucle de animación a demanda: corre mientras el cursor mueve el jardín, hay una vista abierta con sus
+     * partículas o la deriva de fondo se pinta aquí (sin worker). En reposo no pide cuadros: cada cuadro pedido
+     * obligaba a recalcular los estilos de las ~60 animaciones del jardín, y en celulares eso copaba el hilo principal.
+     */
+    let raf = 0, last = 0, T = 0;
+    const covered = () => { const b = document.body.classList; return b.contains('focus-open') || b.contains('days-open') || b.contains('sheet-open'); };
     const loop = (now) => {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       T += dt;
-      const b = document.body.classList;
-      if (!b.contains('focus-open') && !b.contains('days-open') && !b.contains('sheet-open')) {
-        FL.garden.tick(dt, T);
-        FL.garden.ambient.step(dt, T);
+      let more = false;
+      if (!covered()) {
+        if (G.tick(dt, T)) more = true;
+        if (G.ambient.step(dt, T)) more = true;
       }
       FL.focus.tick(dt, T);
       FL.days.tick(dt, T);
       FL.gift.tick(dt, T);
-      requestAnimationFrame(loop);
+      if (FL.focus.isOpen() || FL.days.isOpen() || FL.gift.isOpen()) more = true;
+      raf = more ? requestAnimationFrame(loop) : 0;
     };
-    requestAnimationFrame(loop);
+    FL.wake = () => {
+      if (raf) return;
+      last = performance.now();
+      raf = requestAnimationFrame(loop);
+    };
+    // Abrir o cerrar una vista cambia las clases del cuerpo: la deriva se pausa debajo y el bucle despierta.
+    const sync = () => { G.ambient.run(!covered() && !document.hidden); FL.wake(); };
+    new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    document.addEventListener('visibilitychange', sync);
+    sync();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
