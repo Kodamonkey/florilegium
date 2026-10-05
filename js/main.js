@@ -31,7 +31,6 @@
     FL.atelier.init();
     FL.showcase.init();
     FL.gift.init();
-    FL.ai.check();
 
     const G = FL.garden;
     window.addEventListener('pointermove', (e) => { G.onPointer(e); if (G.mouse.active) FL.wake(); }, { passive: true });

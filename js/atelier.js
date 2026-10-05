@@ -6,7 +6,7 @@
   const A = (FL.atelier = {});
   const $ = (id) => document.getElementById(id);
   const DRAFT = 'fl.draft';
-  let root, dock, cur = null, role = '', query = '', lastFocus = null, renderT = 0, toastT = 0, busyMsg = '', itemsDone = false;
+  let root, dock, cur = null, role = '', query = '', lastFocus = null, renderT = 0, toastT = 0, itemsDone = false, lastKey = '', leads = [], occPicked = null;
   const narrow = window.matchMedia ? window.matchMedia('(max-width: 760px)') : { matches: false };
 
   const esc = U.esc;
@@ -27,8 +27,8 @@
 
     root.addEventListener('click', onClick);
     $('atSearch').addEventListener('input', (e) => { query = U.norm(e.target.value.trim()); renderItems(); });
-    // La ocasión cambia lo que el ramo dice: la lectura de la IA deja de valer.
-    $('atOccasion').addEventListener('change', (e) => { if (!cur) return; if (e.target.value) cur.occasion = e.target.value; else delete cur.occasion; changed(); });
+    // La ocasión cambia lo que el ramo dice. Elegida aquí, manda sobre la que se lea en el texto.
+    $('atOccasion').addEventListener('change', (e) => { occPicked = !!e.target.value; if (!cur) return; if (e.target.value) cur.occasion = e.target.value; else delete cur.occasion; changed(); });
     [['atName', 'name'], ['atTo', 'to'], ['atMsg', 'message'], ['atFrom', 'from']].forEach(([id, key]) => {
       $(id).addEventListener('input', (e) => {
         if (!cur) return;
@@ -75,6 +75,8 @@
     U.syncSheets();
     requestAnimationFrame(() => root.classList.add('on'));
     sync(true);
+    // El léxico se compila mientras el navegador descansa: la primera propuesta no espera.
+    if (FL.intent && FL.intent.warm) (window.requestIdleCallback || setTimeout)(() => FL.intent.warm());
     try { history.replaceState(null, '', '#armar'); } catch (e) { /* sin historial */ }
     setTimeout(() => $('atClose').focus({ preventScroll: true }), 60);
   };
@@ -125,6 +127,9 @@
       }
     }
     cur = next;
+    // «Otra opción» y sus flores ya vistas son de la propuesta anterior; la ocasión de este ramo se juzga de nuevo.
+    leads = []; lastKey = ''; occPicked = null;
+    $('atAnother').hidden = true;
     $('atRationale').innerHTML = '';
     $('atIntent').value = (cur.intent && cur.intent.text) || '';
   }
@@ -205,8 +210,7 @@
       case 'atMine': toggleMine(true); break;
       case 'atMineClose': toggleMine(false); break;
       case 'atPropose': propose(false); break;
-      case 'atProposeAI': propose(true); break;
-      case 'atAI': interpretAI(); break;
+      case 'atAnother': propose(true); break;
       case 'atSave':
         if (!cur.stems.length) { toast('Agrega al menos una flor antes de guardar.'); break; }
         toast(FL.bouquet.save(cur) ? 'Guardado en Mis ramos (solo en este navegador).' : 'No se pudo guardar: el navegador no permite almacenamiento.');
@@ -224,53 +228,46 @@
   function feelings() { return Array.from(root.querySelectorAll('[data-feel][aria-pressed="true"]')).map((c) => c.dataset.feel); }
 
   /* ---------- Propuesta desde lo que sientes ---------- */
-  async function propose(useAI) {
+  // «Otra opción» pide lo mismo evitando las flores principales ya propuestas; si se agotan, vuelve a empezar.
+  // La búsqueda corre en setTimeout(0) para que el clic se pinte antes.
+  function propose(again) {
     const req = {
-      text: $('atIntent').value.trim(), feelings: feelings(), occasion: $('atOccasion').value || undefined,
+      text: $('atIntent').value.trim(), feelings: feelings(), occasion: pickedOccasion(),
       petSafe: $('atPetSafe').checked, hemisphere: FL.hemisphere(), season: FL.seasonOf(new Date())
     };
     if (!req.text && !req.feelings.length && !req.occasion) { toast('Escribe lo que quieres decir o elige un sentimiento.'); $('atIntent').focus(); return; }
-    let res = null;
-    const box = $('atRationale');
-    if (useAI && FL.ai.available) {
-      busy(true, 'Pensando un ramo…');
-      try { res = await FL.ai.compose(req); busy(false); } catch (err) { busy(false); toast('La IA no respondió (' + err.message + '). Uso la propuesta local.'); }
-    }
-    if (!res) res = FL.reading.compose(req);
-    const keep = { name: cur.name, card: cur.card };
-    cur = FL.bouquet.normalize(Object.assign({}, res.bouquet, keep, { id: cur.id })).bouquet;
-    if (res.reading && res.reading.source === 'ai') cur.reading = { source: 'ai', summary: res.reading.summary, at: new Date().toISOString(), full: res.reading };
-    box.innerHTML = '<strong>' + esc(res.rationale.lead) + '</strong>' +
-      '<ul>' + res.rationale.items.map((x) => '<li>' + esc(x.n + ' × ' + x.name) + ': ' + esc(x.why) + '</li>').join('') + '</ul>';
-    sync(true);
+    const key = JSON.stringify(req);
+    if (!again || key !== lastKey) { leads = []; lastKey = key; }
+    if (again) req.avoidLeads = leads.slice();
+    setTimeout(() => {
+      const res = FL.reading.compose(req);
+      if (res.search && res.search.cycled) { leads = []; toast('No quedan otras flores principales para esto: vuelvo a la primera propuesta.'); }
+      const lead = res.bouquet.stems[0] && res.bouquet.stems[0].item;
+      if (lead && !leads.includes(lead)) leads.push(lead);
+      // La ocasión que ahora muestra el selector la puso la propuesta: solo cuenta como elegida si venía del pedido
+      // y el motor la mantuvo (una fiesta elegida no envuelve un duelo). Si la dejó de lado, la siguiente vuelta pide sin ella.
+      occPicked = !!req.occasion && res.bouquet.occasion === req.occasion;
+      if (req.occasion && !occPicked) lastKey = JSON.stringify(Object.assign({}, req, { occasion: undefined, avoidLeads: undefined }));
+      const keep = { name: cur.name, card: cur.card };
+      cur = FL.bouquet.normalize(Object.assign({}, res.bouquet, keep, { id: cur.id })).bouquet;
+      $('atRationale').innerHTML = '<strong>' + esc(res.rationale.lead) + '</strong>' +
+        '<ul>' + res.rationale.items.map((x) => '<li>' + esc(x.n + ' × ' + x.name) + ': ' + esc(x.why) + '</li>').join('') + '</ul>';
+      $('atAnother').hidden = false;
+      sync(true);
+    }, 0);
   }
 
-  // La lectura se pega solo si el ramo sigue siendo el mismo que se envió.
-  async function interpretAI() {
-    if (!cur.stems.length) { toast('El ramo está vacío.'); return; }
-    const sent = cur, stamp = cur.updatedAt;
-    busy(true, 'Leyendo tu ramo…');
-    try {
-      const r = await FL.ai.interpret(sent);
-      busy(false);
-      if (cur !== sent || cur.updatedAt !== stamp) { toast('El ramo cambió mientras la IA lo leía. Vuelve a pedir la lectura.'); return; }
-      cur.reading = { source: 'ai', summary: r.summary, at: new Date().toISOString(), full: r };
-      renderReading();
-      saveDraft();
-    } catch (err) {
-      busy(false);
-      toast('La IA no respondió (' + err.message + '). Sigue disponible la lectura local.');
+  // El selector va en el pedido solo si la persona eligió esa ocasión. La que dejó una propuesta anterior salió del texto:
+  // con un texto nuevo se vuelve a leer (un duelo no queda como «cumpleaños») y no cambia la clave de «Otra opción».
+  function pickedOccasion() {
+    const v = $('atOccasion').value;
+    if (!v) return undefined;
+    if (occPicked == null) {
+      // Ramo abierto o retomado: si su propio texto ya dice esa ocasión, salió de ahí; si no, la eligió alguien.
+      const it = cur.intent || {}, d = it.text ? FL.reading.detect({ text: it.text, feelings: it.feelings || [] }) : null;
+      occPicked = !(d && d.occasion && d.occasion.id === v);
     }
-  }
-
-  function busy(on, msg) {
-    root.classList.toggle('busy', on);
-    ['atAI', 'atProposeAI', 'atPropose'].forEach((id) => { $(id).disabled = on; });
-    if (on) { busyMsg = msg; toast(msg, true); return; }
-    // Solo se retira el aviso de espera, no un mensaje que haya llegado después.
-    const t = $('atToast');
-    if (busyMsg && t.textContent === busyMsg) t.classList.remove('show');
-    busyMsg = '';
+    return occPicked ? v : undefined;
   }
 
   /* ---------- Compartir ---------- */
@@ -384,20 +381,18 @@
   }
 
   function renderReading() {
-    const box = $('atReading'), src = $('atSource');
+    const box = $('atReading');
     const had = box.contains(document.activeElement) ? document.activeElement.dataset.suggest || '' : null;
-    paintReading(box, src);
+    paintReading(box);
     if (had == null) return;
     const again = (had && box.querySelector('[data-suggest="' + had + '"]')) || box.querySelector('[data-suggest]');
     if (again) again.focus({ preventScroll: true });
     else { box.tabIndex = -1; box.focus({ preventScroll: true }); }
   }
 
-  function paintReading(box, src) {
-    if (!cur.stems.length) { box.innerHTML = '<p class="muted">Cuando agregues flores, aquí aparecerá lo que tu ramo dice.</p>'; src.textContent = ''; return; }
-    const r = FL.reading.display(cur);
-    src.textContent = r.source === 'ai' ? 'IA' : 'local';
-    src.className = 'src' + (r.source === 'ai' ? ' src--ai' : '');
+  function paintReading(box) {
+    if (!cur.stems.length) { box.innerHTML = '<p class="muted">Cuando agregues flores, aquí aparecerá lo que tu ramo dice.</p>'; return; }
+    const r = FL.reading.display(cur, { petSafe: $('atPetSafe').checked });
     const maxW = Math.max(...r.meanings.map((m) => m.weight), 0.01);
     box.innerHTML = '<p class="rd-summary">' + esc(r.summary) + '</p>' +
       '<ul class="rd-bars">' + r.meanings.map((m) => '<li><span>' + esc(m.id) + '</span><i style="--w:' + Math.round((m.weight / maxW) * 100) + '%"></i></li>').join('') + '</ul>' +
@@ -408,12 +403,12 @@
   }
   const listBlock = (title, arr, cls, max) => (arr && arr.length ? '<p class="mini">' + title + '</p><ul class="rd-list ' + (cls || '') + '">' + arr.slice(0, max || 5).map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '');
 
-  function toast(msg, sticky) {
+  function toast(msg) {
     const t = $('atToast');
     t.textContent = msg;
     t.classList.add('show');
     clearTimeout(toastT);
-    if (!sticky) toastT = setTimeout(() => t.classList.remove('show'), 3800);
+    toastT = setTimeout(() => t.classList.remove('show'), 3800);
   }
 
   function saveDraft() {
@@ -425,9 +420,4 @@
       return raw ? FL.bouquet.normalize(JSON.parse(raw)).bouquet : null;
     } catch (e) { return null; }
   }
-
-  A.aiChanged = function (on) {
-    $('atAI').hidden = !on;
-    $('atProposeAI').hidden = !on;
-  };
 })();

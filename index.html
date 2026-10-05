@@ -160,7 +160,7 @@
         </div>
         <div class="at-row">
           <button type="button" class="pillbtn pillbtn--solid" id="atPropose">Proponer un ramo</button>
-          <button type="button" class="pillbtn pillbtn--ai" id="atProposeAI" hidden>Proponer con IA</button>
+          <button type="button" class="pillbtn" id="atAnother" hidden>Otra opción</button>
         </div>
         <div class="at-rationale" id="atRationale" aria-live="polite"></div>
       </section>
@@ -185,9 +185,8 @@
     </div>
     <div class="at-side">
       <section class="at-reading">
-        <p class="label">Qué dice tu ramo <span id="atSource" class="src"></span></p>
+        <p class="label">Qué dice tu ramo</p>
         <div id="atReading"></div>
-        <button type="button" class="pillbtn pillbtn--ai" id="atAI" hidden>Interpretar con IA</button>
       </section>
       <section class="at-card" aria-labelledby="atCardTitle">
         <p class="label" id="atCardTitle">Tarjeta</p>
@@ -312,7 +311,8 @@
 <script src="js/bouquet-model.js"></script>
 <script src="js/bouquet-art.js"></script>
 <script src="js/meaning.js"></script>
-<script src="js/ai.js"></script>
+<script src="js/intent.js"></script>
+<script src="js/compose.js"></script>
 <script src="js/plate.js"></script>
 <script src="js/atelier.js"></script>
 <script src="js/showcase.js"></script>

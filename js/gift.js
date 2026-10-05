@@ -78,7 +78,7 @@
         ? '<blockquote>' + esc(c.message).replace(/\n/g, '<br>') + '</blockquote>' + (c.from ? '<p class="gift-from">— ' + esc(c.from) + '</p>' : '')
         : '';
       const r = FL.reading.interpret(b);
-      const summary = b.reading && b.reading.source === 'ai' ? b.reading.summary : r.summary;
+      const summary = r.summary;
       $('giftReading').innerHTML = '<h3>Qué dice este ramo</h3><p class="rd-summary">' + esc(summary) + '</p>' +
         '<ul class="gift-items">' + r.perItem.map((x) => '<li><strong>' + esc(x.n + ' ' + x.name.toLowerCase()) + '</strong> — ' + esc(x.says) + '</li>').join('') + '</ul>' +
         (r.notes.length ? '<p class="note">' + esc(r.notes[0]) + '</p>' : '');

@@ -18,8 +18,6 @@ body.sheet-open { overflow: hidden; }
 .pillbtn:disabled { opacity: 0.5; cursor: progress; }
 .pillbtn--solid { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .pillbtn--solid:hover { background: color-mix(in srgb, var(--ink) 85%, var(--sage)); }
-.pillbtn--ai { border-color: color-mix(in srgb, #7d69bb 55%, transparent); background: color-mix(in srgb, #7d69bb 10%, var(--pill)); }
-.pillbtn--ai::before { content: "✦"; content: "✦" / ""; color: #7d69bb; letter-spacing: 0; }
 .pillbtn--quiet { background: transparent; color: var(--ink-3); }
 .linkbtn {
   background: none; border: 0; padding: 0.15rem 0; cursor: pointer; color: var(--ink-2); font: inherit; font-size: 0.9rem;
@@ -108,14 +106,10 @@ body.sheet-open { overflow: hidden; }
 
 .at-stage { position: sticky; top: 96px; display: grid; gap: 0.8rem; justify-items: center; min-width: 0; }
 .at-canvas { width: min(100%, 440px, max(220px, calc((100vh - 290px) * 400 / 520))); aspect-ratio: 400 / 520; display: grid; place-items: center; }
-.atelier.busy .at-canvas { animation: breathe 1.6s ease-in-out infinite alternate; }
 .at-count { margin: 0; font-family: var(--f-ui); font-size: 0.76rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); text-align: center; }
 .at-dress { display: flex; flex-wrap: wrap; gap: 1rem 1.6rem; justify-content: center; }
 .at-dress .mini { margin-bottom: 0.4rem; }
 
-.src { margin-left: 0.4rem; padding: 0.1rem 0.45rem; border-radius: 999px; font-size: 0.6rem; letter-spacing: 0.14em; background: color-mix(in srgb, var(--sage) 16%, transparent); color: var(--ink-2); }
-.src:empty { display: none; }
-.src--ai { background: color-mix(in srgb, #7d69bb 18%, transparent); color: color-mix(in srgb, #7d69bb 70%, var(--ink)); }
 .rd-summary { margin: 0; font-family: var(--f-display); font-style: italic; font-size: 1.28rem; line-height: 1.35; color: var(--ink); text-wrap: pretty; }
 .rd-bars { list-style: none; margin: 0.2rem 0 0; padding: 0; display: grid; gap: 0.3rem; }
 .rd-bars li { display: grid; grid-template-columns: 8.5rem 1fr; align-items: center; gap: 0.6rem; font-family: var(--f-ui); font-size: 0.8rem; color: var(--ink-2); }

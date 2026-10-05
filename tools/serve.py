@@ -4,8 +4,7 @@
 
 Igual que `python -m http.server`, pero pide al navegador no guardar copias:
 así cada recarga usa los archivos recién editados. Solo atiende a este computador
-(Host local) y no entrega lo interno (.env, .git, .venv, server/, tools/).
-Para el agente de IA usa el servidor de server/ (ver README).
+(Host local) y no entrega lo interno (.env, .git, .venv, tools/).
 """
 
 import functools
@@ -16,7 +15,7 @@ import urllib.parse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-HIDDEN_DIRS = {"server", "tools", "__pycache__", "node_modules"}
+HIDDEN_DIRS = {"tools", "__pycache__", "node_modules"}
 LOCAL_HOSTS = {"localhost", "127.0.0.1", "[::1]", "::1"}
 
 

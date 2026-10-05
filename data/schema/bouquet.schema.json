@@ -39,7 +39,7 @@
       "additionalProperties": true,
       "required": ["source", "summary"],
       "properties": {
-        "source": { "enum": ["local", "ai"] },
+        "source": { "enum": ["local"], "description": "Las lecturas antiguas de la IA se descartan al normalizar." },
         "summary": { "type": "string", "maxLength": 2000 },
         "at": { "type": "string", "maxLength": 40 }
       }

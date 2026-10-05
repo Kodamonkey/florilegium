@@ -8,7 +8,7 @@ const vm = require('vm');
 const ROOT = path.resolve(__dirname, '..');
 const FILES = [
   'js/core.js', 'js/gen/data.js', 'js/catalog.js', 'js/art-a.js', 'js/art-b.js', 'js/art-c.js', 'js/art-stems.js',
-  'js/layout.js', 'js/bouquet-model.js', 'js/bouquet-art.js', 'js/meaning.js', 'js/care.js', 'js/recipe.js', 'js/plate.js', 'tests/specs.js'
+  'js/layout.js', 'js/bouquet-model.js', 'js/bouquet-art.js', 'js/meaning.js', 'js/intent.js', 'js/compose.js', 'js/care.js', 'js/recipe.js', 'js/plate.js', 'tests/specs.js'
 ];
 
 function memoryStorage() {

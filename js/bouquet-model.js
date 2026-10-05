@@ -64,7 +64,7 @@
     out.card = { to: str(c.to, 60), message: str(c.message, L.message), from: str(c.from, 60) };
     const seed = Number(src.layoutSeed);
     out.layoutSeed = Number.isInteger(seed) && seed >= 0 && seed <= 4294967295 ? seed : B.newSeed();
-    if (src.reading && typeof src.reading.summary === 'string' && (src.reading.source === 'ai' || src.reading.source === 'local')) {
+    if (src.reading && typeof src.reading.summary === 'string' && src.reading.source === 'local') {
       out.reading = Object.assign({}, src.reading, { summary: str(src.reading.summary, 2000) });
     }
     return { bouquet: out, issues };
@@ -117,8 +117,7 @@
     if (b.name) o.n = b.name;
     if (b.occasion) o.o = b.occasion;
     if (b.card && (b.card.to || b.card.message || b.card.from)) o.c = [b.card.to, b.card.message, b.card.from];
-    // La lectura de la IA no viaja: puede parafrasear la intención privada de quien arma el ramo,
-    // y quien recibe el enlace no podría distinguirla de un texto escrito por cualquiera.
+    // Ninguna lectura viaja en el enlace: quien lo recibe ve la lectura local, calculada al abrirlo, y la intención escrita queda privada.
     return o;
   };
   const fromCompact = (o) => ({

@@ -236,7 +236,7 @@
       : 'Envoltorio: ' + wrapStyle.name.toLowerCase() + (b.wrap.color ? ', ' + FL.swatchName(b.wrap.color) : '');
     add(text(g, dress + ' · cinta ' + FL.swatchName(b.ribbon.color) + '.', S.body, { gap: 10 }));
 
-    add(heading('Qué dice este ramo' + (r.source === 'ai' ? ' · lectura de la IA' : '')));
+    add(heading('Qué dice este ramo'));
     add(text(g, r.summary, S.summary, { gap: 6 }));
     if (r.meanings.length) add(barRows(r.meanings));
     add(subhead(g, 'Lo que dice cada flor'));

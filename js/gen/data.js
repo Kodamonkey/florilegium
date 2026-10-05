@@ -1214,7 +1214,8 @@ window.FL.data = {
    "bouquet": {
     "role": "secondary",
     "florist": true,
-    "caution": "En gran parte de Europa y Latinoamérica se asocia a los cementerios y al Día de Todos los Santos."
+    "caution": "En gran parte de Europa y Latinoamérica se asocia a los cementerios y al Día de Todos los Santos.",
+    "mourningOnly": true
    }
   },
   {
@@ -2363,274 +2364,2172 @@ window.FL.data = {
    {
     "id": "Amor",
     "phrase": "amor declarado",
-    "strong": [
-     "te amo",
-     "enamorad",
-     "san valentin",
-     "mi amor"
-    ],
-    "lexicon": [
-     "amor",
-     "te amo",
-     "te quiero",
-     "enamor",
-     "romance",
-     "romantic",
-     "pasion",
-     "deseo",
-     "novia",
-     "novio",
-     "pareja",
-     "esposa",
-     "esposo",
-     "san valentin",
-     "corazon",
-     "beso",
-     "cita"
-    ]
+    "tender": "cariño",
+    "near": {
+     "Admiración": 0.3,
+     "Gratitud": 0.3,
+     "Amistad": 0.2,
+     "Alegría": 0.2
+    }
    },
    {
     "id": "Amistad",
     "phrase": "amistad",
-    "strong": [
-     "amig",
-     "amistad"
-    ],
-    "lexicon": [
-     "amig",
-     "amistad",
-     "companer",
-     "lealtad",
-     "hermana",
-     "hermano",
-     "colega",
-     "vecin",
-     "juntos",
-     "siempre ahi",
-     "apoyo"
-    ]
+    "near": {
+     "Alegría": 0.5,
+     "Gratitud": 0.3,
+     "Esperanza": 0.2
+    }
    },
    {
     "id": "Admiración",
     "phrase": "admiración",
-    "strong": [
-     "felicit",
-     "orgull",
-     "graduac",
-     "logro",
-     "titul"
-    ],
-    "lexicon": [
-     "admir",
-     "orgull",
-     "logro",
-     "felicit",
-     "exito",
-     "talento",
-     "graduac",
-     "titul",
-     "inspir",
-     "respeto",
-     "premio",
-     "ascenso",
-     "estreno",
-     "brillante"
-    ]
+    "near": {
+     "Gratitud": 0.5,
+     "Alegría": 0.3,
+     "Nuevos comienzos": 0.2
+    }
    },
    {
     "id": "Gratitud",
     "phrase": "gratitud",
-    "strong": [
-     "gracias",
-     "agradec",
-     "gratitud"
-    ],
-    "lexicon": [
-     "gracias",
-     "agradec",
-     "gratitud",
-     "reconoc",
-     "maestr",
-     "profe",
-     "mama",
-     "madre",
-     "abuel",
-     "cuidar",
-     "cuido",
-     "ayuda",
-     "ayudo",
-     "todo lo que"
-    ]
+    "near": {
+     "Admiración": 0.5,
+     "Amistad": 0.3,
+     "Alegría": 0.2
+    }
    },
    {
     "id": "Recuerdo",
     "phrase": "recuerdo",
-    "strong": [
-     "fallec",
-     "murio",
-     "muerte",
-     "luto",
-     "duelo",
-     "condolen",
-     "pesame",
-     "funeral",
-     "velorio",
-     "descanse en paz",
-     "partio"
-    ],
-    "lexicon": [
-     "recuerd",
-     "memoria",
-     "extran",
-     "echo de menos",
-     "ausencia",
-     "luto",
-     "duelo",
-     "condolen",
-     "pesame",
-     "fallec",
-     "murio",
-     "muerte",
-     "partio",
-     "despedi",
-     "homenaje",
-     "lejos",
-     "distancia",
-     "nunca olvid"
-    ]
+    "near": {
+     "Calma": 0.5,
+     "Gratitud": 0.3,
+     "Esperanza": 0.2
+    }
    },
    {
     "id": "Esperanza",
     "phrase": "esperanza",
-    "strong": [
-     "mejorate",
-     "recuper",
-     "hospital",
-     "operacion"
-    ],
-    "lexicon": [
-     "esperanza",
-     "animo",
-     "mejorat",
-     "recuper",
-     "salud",
-     "hospital",
-     "enferm",
-     "operacion",
-     "fuerza",
-     "optimis",
-     "sueno",
-     "futuro",
-     "saldra",
-     "pronto"
-    ]
+    "near": {
+     "Nuevos comienzos": 0.5,
+     "Alegría": 0.3,
+     "Calma": 0.2
+    }
    },
    {
     "id": "Perdón",
     "phrase": "un pedido de perdón",
-    "strong": [
-     "perdon",
-     "lo siento",
-     "disculp",
-     "me equivoque",
-     "arrepient"
-    ],
-    "lexicon": [
-     "perdon",
-     "perdona",
-     "lo siento",
-     "disculp",
-     "me equivoque",
-     "error",
-     "arrepient",
-     "reconcil",
-     "pelea",
-     "peleamos",
-     "discusion",
-     "discutimos",
-     "falle",
-     "enojad"
-    ]
+    "near": {
+     "Calma": 0.5,
+     "Nuevos comienzos": 0.3,
+     "Esperanza": 0.2
+    }
    },
    {
     "id": "Nuevos comienzos",
     "phrase": "nuevos comienzos",
-    "strong": [
-     "bebe",
-     "nacimiento",
-     "nacio",
-     "boda",
-     "matrimonio",
-     "mudanza",
-     "casa nueva",
-     "trabajo nuevo"
-    ],
-    "lexicon": [
-     "nuevo",
-     "nueva",
-     "comienz",
-     "empez",
-     "mudanza",
-     "casa nueva",
-     "trabajo nuevo",
-     "bebe",
-     "nacimiento",
-     "nacio",
-     "boda",
-     "matrimonio",
-     "casamiento",
-     "casan",
-     "jubil",
-     "inaugur",
-     "primer dia"
-    ]
+    "near": {
+     "Esperanza": 0.5,
+     "Alegría": 0.5
+    }
    },
    {
     "id": "Alegría",
     "phrase": "alegría",
-    "strong": [
-     "cumple",
-     "celebr",
-     "feliz"
-    ],
-    "lexicon": [
-     "alegr",
-     "feliz",
-     "felicidad",
-     "celebr",
-     "fiesta",
-     "sonri",
-     "cumple",
-     "buen dia",
-     "porque si",
-     "sorpresa",
-     "diverti",
-     "luz",
-     "sol"
-    ]
+    "near": {
+     "Amistad": 0.5,
+     "Admiración": 0.3,
+     "Esperanza": 0.2
+    }
    },
    {
     "id": "Calma",
     "phrase": "calma",
+    "near": {
+     "Esperanza": 0.5,
+     "Gratitud": 0.3,
+     "Recuerdo": 0.2
+    }
+   }
+  ],
+  "neutral": [
+   "vale la pena",
+   "valga la pena",
+   "valio la pena",
+   "espero que te guste",
+   "espero que le guste",
+   "espero que les guste",
+   "ojala te guste",
+   "ojala le guste",
+   "a pesar de",
+   "a partir de",
+   "sin embargo",
+   "de nada",
+   "no se",
+   "no se que",
+   "no se como",
+   "no se cual",
+   "ni idea",
+   "sin importar",
+   "no importa",
+   "por favor",
+   "porfa",
+   "porfis",
+   "la verdad",
+   "o sea",
+   "algo asi",
+   "lo que sea",
+   "sin falta",
+   "nada mas",
+   "no mas",
+   "de todas formas",
+   "capaz que",
+   "a lo mejor",
+   "se me murio el cel*",
+   "se me murio el telefono",
+   "se me murio la bateria",
+   "se murio la bateria",
+   "se me murio el auto",
+   "se me murio el compu*",
+   "se me murio el notebook",
+   "murio de la risa",
+   "murio de risa",
+   "se murio de la risa",
+   "muerto de risa",
+   "muerta de risa",
+   "hasta la muerte",
+   "susto de muerte",
+   "perdon por la molestia",
+   "perdon la molestia",
+   "perdona la molestia",
+   "disculpa la molestia",
+   "disculpe la molestia",
+   "disculpen la molestia",
+   "perdon por la demora",
+   "perdon la demora",
+   "disculpa la demora",
+   "disculpe la demora",
+   "disculpa la tardanza",
+   "disculpa la pregunta",
+   "disculpe la pregunta",
+   "disculpa que te moleste",
+   "disculpe que lo moleste",
+   "perdon que te moleste",
+   "disculpa la hora",
+   "disculpe la hora",
+   "disculpen la hora",
+   "perdon la hora",
+   "perdon por la hora",
+   "perdon por escribir",
+   "disculpa por escribir",
+   "disculpe por escribir",
+   "perdon por molestar",
+   "disculpa por molestar",
+   "disculpe por molestar",
+   "perdon por preguntar",
+   "disculpa por preguntar",
+   "perdon por las faltas",
+   "perdon las faltas",
+   "disculpa las faltas",
+   "disculpen las faltas",
+   "perdon por la ortografia",
+   "disculpa la ortografia",
+   "perdon por el mensaje",
+   "disculpa el mensaje",
+   "ojala algo",
+   "ojala que sea",
+   "ojala sea",
+   "se cumple",
+   "se cumplen",
+   "hola disculpa",
+   "hola disculpe",
+   "disculpa pero",
+   "disculpe pero",
+   "recuerda que",
+   "recuerden que",
+   "te recuerdo que",
+   "le recuerdo que",
+   "acuerdate que",
+   "acuerdese que",
+   "la serena"
+  ],
+  "names": [
+   "paz",
+   "luz",
+   "esperanza",
+   "consuelo",
+   "soledad",
+   "alegria",
+   "felicidad",
+   "fe",
+   "angel",
+   "victoria",
+   "serena"
+  ],
+  "modifiers": {
+   "intensifiers": [
+    "muy",
+    "mucho",
+    "mucha",
+    "muchisimo",
+    "muchisima",
+    "tanto",
+    "tanta",
+    "tan",
+    "demasiado",
+    "demasiada",
+    "super",
+    "re",
+    "requete",
+    "bien",
+    "full",
+    "enormemente",
+    "profundamente",
+    "infinitamente",
+    "inmensamente",
+    "sinceramente",
+    "realmente",
+    "de verdad",
+    "de corazon",
+    "con todo mi corazon",
+    "con el alma"
+   ],
+   "after": [
+    "mucho",
+    "muchisimo",
+    "un monton",
+    "demasiado",
+    "infinitamente",
+    "de verdad",
+    "de corazon",
+    "con el alma",
+    "con todo mi corazon",
+    "un mundo"
+   ],
+   "softeners": [
+    "un poco",
+    "un poquito",
+    "un tanto",
+    "medio",
+    "levemente",
+    "ligeramente",
+    "apenas"
+   ],
+   "emphatic": [
+    "no sabes cuanto",
+    "no sabes lo",
+    "no hay palabras",
+    "no puedo dejar de",
+    "no dejo de",
+    "no me canso de",
+    "no tengo como",
+    "nunca dejare de",
+    "no hay dia que",
+    "no hay dia en que"
+   ]
+  },
+  "intents": [
+   {
+    "id": "amor",
+    "label": "amor",
+    "romance": true,
+    "mix": {
+     "Amor": 0.9,
+     "Alegría": 0.1
+    },
+    "with": {
+     "familia": {
+      "Amor": 0.55,
+      "Gratitud": 0.2,
+      "Alegría": 0.25
+     },
+     "amistad": {
+      "Amistad": 0.5,
+      "Amor": 0.3,
+      "Alegría": 0.2
+     }
+    },
     "strong": [
-     "estres",
-     "ansiedad",
-     "descans"
+     "te amo",
+     "la amo",
+     "lo amo",
+     "te adoro",
+     "enamor*",
+     "mi amor",
+     "amor de mi vida",
+     "te amare",
+     "te voy a amar",
+     "amarte",
+     "loca por ti",
+     "loco por ti",
+     "me encantas"
     ],
-    "lexicon": [
+    "words": [
+     "amor",
+     "amores",
+     "romance",
+     "romantic*",
+     "pasion",
+     "apasionad*",
+     "besar*",
+     "media naranja",
+     "pololear",
+     "pololeamos",
+     "pololeando",
+     "pololeo",
+     "juntos para siempre",
+     "sin ti no soy nada",
+     "no puedo vivir sin ti"
+    ],
+    "emoji": [
+     "❤",
+     "♥",
+     "😍",
+     "😘",
+     "💘",
+     "💕",
+     "💖",
+     "💗",
+     "💞",
+     "💌",
+     "🌹"
+    ]
+   },
+   {
+    "id": "carino",
+    "label": "cariño",
+    "mix": {
+     "Amistad": 0.4,
+     "Amor": 0.3,
+     "Alegría": 0.3
+    },
+    "with": {
+     "familia": {
+      "Amor": 0.4,
+      "Alegría": 0.35,
+      "Amistad": 0.25
+     },
+     "amistad": {
+      "Amistad": 0.6,
+      "Alegría": 0.25,
+      "Amor": 0.15
+     },
+     "pareja": {
+      "Amor": 0.85,
+      "Alegría": 0.15
+     }
+    },
+    "strong": [
+     "te quiero",
+     "la quiero",
+     "lo quiero",
+     "los quiero",
+     "las quiero"
+    ],
+    "words": [
+     "carino",
+     "carinos*",
+     "ternura",
+     "tierno",
+     "tierna",
+     "tiernos",
+     "tiernas",
+     "querid*",
+     "mimos",
+     "apapach*",
+     "dulzura",
+     "beso",
+     "besos",
+     "besito",
+     "besitos"
+    ]
+   },
+   {
+    "id": "abrazo",
+    "label": "un abrazo",
+    "mix": {
+     "Amistad": 0.4,
+     "Amor": 0.3,
+     "Calma": 0.3
+    },
+    "words": [
+     "abrazo",
+     "abrazos",
+     "abrazar*",
+     "te abrazo"
+    ],
+    "emoji": [
+     "🤗",
+     "🫂"
+    ]
+   },
+   {
+    "id": "belleza",
+    "label": "admiración por su belleza",
+    "mix": {
+     "Admiración": 0.6,
+     "Amor": 0.4
+    },
+    "words": [
+     "eres hermos*",
+     "eres preciosa",
+     "eres precioso",
+     "eres bell*",
+     "eres lind*",
+     "que linda eres",
+     "que lindo eres",
+     "tan linda",
+     "tan lindo",
+     "tan hermosa",
+     "tan hermoso",
+     "tan bella",
+     "preciosa",
+     "guapa",
+     "guapo"
+    ]
+   },
+   {
+    "id": "extranar",
+    "label": "nostalgia",
+    "mix": {
+     "Recuerdo": 0.5,
+     "Amor": 0.35,
+     "Esperanza": 0.15
+    },
+    "negate": [
+     "Recuerdo"
+    ],
+    "with": {
+     "amistad": {
+      "Recuerdo": 0.45,
+      "Amistad": 0.4,
+      "Esperanza": 0.15
+     },
+     "familia": {
+      "Recuerdo": 0.45,
+      "Amor": 0.35,
+      "Gratitud": 0.2
+     }
+    },
+    "strong": [
+     "te extran*",
+     "te echo de menos",
+     "te hecho de menos",
+     "me haces falta",
+     "nos haces falta"
+    ],
+    "words": [
+     "lo extran*",
+     "la extran*",
+     "los extran*",
+     "las extran*",
+     "le extran*",
+     "extrano a",
+     "extranamos",
+     "extranar*",
+     "extranand*",
+     "echo de menos",
+     "hecho de menos",
+     "echamos de menos",
+     "echar de menos",
+     "echare de menos",
+     "echaremos de menos",
+     "me hace falta",
+     "nos hace falta",
+     "nostalgi*",
+     "anoranza",
+     "anoro",
+     "anorar*"
+    ]
+   },
+   {
+    "id": "distancia",
+    "label": "la distancia",
+    "mix": {
+     "Recuerdo": 0.4,
+     "Esperanza": 0.35,
+     "Amistad": 0.25
+    },
+    "words": [
+     "lejos",
+     "distancia",
+     "a la distancia",
+     "kilometros",
+     "otro pais",
+     "otra ciudad",
+     "se mudo lejos",
+     "se fue lejos",
+     "se fue a vivir",
+     "me fui a vivir",
+     "vive lejos",
+     "vivimos lejos",
+     "estamos lejos"
+    ]
+   },
+   {
+    "id": "duelo",
+    "label": "duelo",
+    "mourning": true,
+    "mix": {
+     "Recuerdo": 0.7,
+     "Calma": 0.2,
+     "Esperanza": 0.1
+    },
+    "negate": [
+     "Recuerdo"
+    ],
+    "strong": [
+     "fallec*",
+     "murio",
+     "murieron",
+     "muerte",
+     "se nos fue",
+     "se fue al cielo",
+     "partio al cielo",
+     "descanse en paz",
+     "en paz descanse",
+     "que en paz descanse",
+     "qepd",
+     "q e p d",
+     "velorio",
+     "funeral",
+     "funerales",
+     "sepelio",
+     "pesame",
+     "sentido pesame",
+     "mi mas sentido pesame",
+     "condolencia*",
+     "luto",
+     "duelo",
+     "ya no esta con nosotros",
+     "ya no estas con nosotros",
+     "que ya no esta",
+     "siento mucho tu perdida",
+     "lamento tu perdida",
+     "lamento mucho tu perdida",
+     "lamento su perdida",
+     "lo siento por tu perdida",
+     "lo siento mucho por tu perdida",
+     "lo siento por tu abuel*",
+     "lo siento mucho por tu abuel*",
+     "lo siento por tu papa",
+     "lo siento mucho por tu papa",
+     "lo siento por tu mama",
+     "lo siento mucho por tu mama",
+     "lo siento por tu padre",
+     "lo siento por tu madre",
+     "lo siento por tu herman*",
+     "su partida",
+     "te acompano en el sentimiento",
+     "acompano en el sentimiento",
+     "cumpleanos en el cielo",
+     "cumpleanos al cielo",
+     "desde el cielo",
+     "descansa en paz",
+     "descansen en paz",
+     "que esta en el cielo",
+     "que estas en el cielo",
+     "mama en el cielo",
+     "papa en el cielo",
+     "abuel* en el cielo",
+     "herman* en el cielo",
+     "nos dejo ayer",
+     "nos dejo anoche",
+     "nos dejo hoy",
+     "nos dejo para siempre",
+     "se nos adelanto",
+     "partio anoche",
+     "partio ayer",
+     "partio esta madrugada",
+     "lo de tu papa",
+     "lo de tu mama",
+     "lo de tu padre",
+     "lo de tu madre",
+     "lo de tu abuel*",
+     "lo de tu herman*",
+     "perdio a su bebe",
+     "perdi a mi bebe",
+     "perdio al bebe",
+     "perdio a su guagua",
+     "perdi a mi guagua",
+     "perdio la guagua",
+     "perdida del bebe",
+     "tuvo una perdida",
+     "aborto espontaneo",
+     "tuvo un aborto",
+     "sufrio un aborto",
+     "perdio su embarazo",
+     "perdio el embarazo",
+     "perdi mi embarazo",
+     "perdi el embarazo",
+     "perdida del embarazo",
+     "perdida gestacional",
+     "muerte gestacional",
+     "perdida perinatal",
+     "muerte perinatal",
+     "nacio muerto",
+     "nacio muerta",
+     "nacio sin vida",
+     "perdio a su mama",
+     "perdio a su papa",
+     "perdio a su madre",
+     "perdio a su padre",
+     "perdio a su abuel*",
+     "perdio a su herman*",
+     "perdio a su hij*",
+     "perdio a su espos*",
+     "perdio a su marido",
+     "perdio a su pareja",
+     "perdi a mi mama",
+     "perdi a mi papa",
+     "perdi a mi madre",
+     "perdi a mi padre",
+     "perdi a mi abuel*",
+     "perdi a mi herman*",
+     "perdi a mi hij*",
+     "perdi a mi espos*",
+     "perdi a mi marido",
+     "perdi a mi pareja",
+     "perdiste a tu mama",
+     "perdiste a tu papa",
+     "perdiste a tu madre",
+     "perdiste a tu padre",
+     "perdiste a tu abuel*",
+     "perdiste a tu herman*",
+     "perdiste a tu hij*",
+     "perdiste a tu espos*",
+     "perdiste a tu marido",
+     "perdiste a tu pareja",
+     "en su dolor",
+     "en tu dolor"
+    ],
+    "words": [
+     "cementerio",
+     "difunt*",
+     "in memoriam"
+    ]
+   },
+   {
+    "id": "memoria",
+    "label": "memoria",
+    "mix": {
+     "Recuerdo": 0.7,
+     "Amor": 0.2,
+     "Gratitud": 0.1
+    },
+    "negate": [
+     "Recuerdo"
+    ],
+    "words": [
+     "recuerd*",
+     "recordar*",
+     "recordand*",
+     "memoria",
+     "en memoria",
+     "homenaje",
+     "nunca te olvid*",
+     "no te olvid*",
+     "jamas te olvid*",
+     "no me olvides",
+     "siempre te recordare",
+     "siempre en mi corazon",
+     "en nuestros corazones",
+     "en el cielo"
+    ]
+   },
+   {
+    "id": "despedida",
+    "label": "una despedida",
+    "mix": {
+     "Gratitud": 0.3,
+     "Esperanza": 0.3,
+     "Recuerdo": 0.25,
+     "Amistad": 0.15
+    },
+    "words": [
+     "despedi*",
+     "adios",
+     "hasta pronto",
+     "hasta siempre",
+     "buen viaje",
+     "se va a vivir",
+     "se va del pais",
+     "te vas del pais",
+     "se va de la empresa",
+     "ultimo dia",
+     "deja la empresa",
+     "deja el trabajo"
+    ]
+   },
+   {
+    "id": "despedida-soltera",
+    "label": "una despedida de soltera",
+    "mix": {
+     "Alegría": 0.6,
+     "Amistad": 0.25,
+     "Amor": 0.15
+    },
+    "words": [
+     "despedida de soltera",
+     "despedida de soltero"
+    ]
+   },
+   {
+    "id": "bienvenida",
+    "label": "una bienvenida",
+    "mix": {
+     "Alegría": 0.5,
+     "Amistad": 0.2,
+     "Nuevos comienzos": 0.15,
+     "Amor": 0.15
+    },
+    "words": [
+     "bienvenid*",
+     "de vuelta",
+     "de regreso",
+     "volviste",
+     "regresaste",
+     "reencuentro",
+     "reencontr*",
+     "por fin juntos",
+     "por fin juntas",
+     "por fin en casa"
+    ]
+   },
+   {
+    "id": "gratitud",
+    "label": "gratitud",
+    "mix": {
+     "Gratitud": 1
+    },
+    "strong": [
+     "gracias",
+     "gracias por todo",
+     "agradec*",
+     "agradezc*",
+     "gratitud",
+     "te debo",
+     "mil gracias",
+     "muchas gracias",
+     "infinitas gracias"
+    ],
+    "emoji": [
+     "🙏"
+    ]
+   },
+   {
+    "id": "apoyo",
+    "label": "agradecimiento por su ayuda",
+    "mix": {
+     "Gratitud": 0.65,
+     "Amistad": 0.2,
+     "Amor": 0.15
+    },
+    "with": {
+     "trabajo": {
+      "Gratitud": 0.7,
+      "Admiración": 0.3
+     },
+     "escuela": {
+      "Gratitud": 0.7,
+      "Admiración": 0.3
+     },
+     "familia": {
+      "Gratitud": 0.6,
+      "Amor": 0.25,
+      "Amistad": 0.15
+     }
+    },
+    "words": [
+     "me ayud*",
+     "me apoy*",
+     "me cuid*",
+     "me acompan*",
+     "me ensen*",
+     "me salv*",
+     "me escuch*",
+     "estuviste ahi",
+     "estuviste conmigo",
+     "siempre estas",
+     "siempre ahi",
+     "siempre has estado",
+     "por cuidarme",
+     "por apoyarme",
+     "por ayudarme",
+     "por todo lo que haces",
+     "por todo lo que hiciste",
+     "todo lo que haces",
+     "todo lo que hiciste",
+     "todo lo que has hecho",
+     "por estar ahi",
+     "por estar siempre",
+     "tu apoyo",
+     "su apoyo",
+     "tu ayuda",
+     "su ayuda",
+     "tus consejos",
+     "su dedicacion",
+     "tu dedicacion",
+     "tu paciencia",
+     "su paciencia"
+    ]
+   },
+   {
+    "id": "orgullo",
+    "label": "orgullo",
+    "mix": {
+     "Admiración": 0.8,
+     "Alegría": 0.2
+    },
+    "with": {
+     "familia": {
+      "Admiración": 0.6,
+      "Amor": 0.25,
+      "Alegría": 0.15
+     }
+    },
+    "strong": [
+     "orgullos*",
+     "orgullo",
+     "te admiro",
+     "la admiro",
+     "lo admiro"
+    ],
+    "words": [
+     "admir*",
+     "eres increible",
+     "eres la mejor",
+     "eres el mejor",
+     "eres un ejemplo",
+     "eres mi ejemplo",
+     "un ejemplo",
+     "inspir*",
+     "talent*",
+     "brillante*",
+     "eres muy capaz",
+     "eres capaz",
+     "muy capaz",
+     "tan capaz",
+     "valiente*",
+     "valentia",
+     "te lo mereces",
+     "te lo mereciste",
+     "se lo merece",
+     "lo mereces",
+     "bien merecido",
+     "crack",
+     "genia",
+     "genio"
+    ]
+   },
+   {
+    "id": "logro",
+    "label": "un logro",
+    "mix": {
+     "Admiración": 0.6,
+     "Alegría": 0.3,
+     "Nuevos comienzos": 0.1
+    },
+    "words": [
+     "logr*",
+     "lo lograste",
+     "lo conseguiste",
+     "conseguiste",
+     "exito",
+     "exitos",
+     "triunf*",
+     "ganaste",
+     "premio*",
+     "premiad*",
+     "ascenso",
+     "te ascendieron",
+     "la ascendieron",
+     "lo ascendieron",
+     "aprobaste",
+     "aprobo",
+     "pasaste el examen",
+     "pasaste de curso",
+     "cumpliste tu meta",
+     "nuevo cargo",
+     "nuevo puesto",
+     "tesis",
+     "memoria de titulo",
+     "su memoria de",
+     "mi memoria de",
+     "tu memoria de",
+     "examen de grado",
+     "te titulaste",
+     "se titulo",
+     "estreno"
+    ],
+    "emoji": [
+     "🎓",
+     "🏆",
+     "🥇"
+    ]
+   },
+   {
+    "id": "logro-compartido",
+    "label": "un logro compartido",
+    "mix": {
+     "Alegría": 0.45,
+     "Admiración": 0.3,
+     "Amistad": 0.25
+    },
+    "words": [
+     "lo logramos",
+     "lo conseguimos",
+     "ganamos",
+     "nuestro logro",
+     "nuestro exito",
+     "lo hicimos",
+     "salimos adelante"
+    ]
+   },
+   {
+    "id": "felicitar",
+    "label": "felicitaciones",
+    "mix": {
+     "Admiración": 0.5,
+     "Alegría": 0.5
+    },
+    "strong": [
+     "felicit*",
+     "felicidades",
+     "enhorabuena"
+    ],
+    "words": [
+     "bravo"
+    ]
+   },
+   {
+    "id": "alegria",
+    "label": "alegría",
+    "mix": {
+     "Alegría": 0.85,
+     "Amistad": 0.15
+    },
+    "strong": [
+     "celebr*",
+     "festej*"
+    ],
+    "words": [
+     "alegr*",
+     "feliz",
+     "felices",
+     "felicidad",
+     "contenta",
+     "contento",
+     "contentas",
+     "contentos",
+     "sonri*",
+     "risa*",
+     "reir",
+     "diverti*",
+     "fiesta*",
+     "buena onda",
+     "buen dia",
+     "buenos dias",
+     "lindo dia",
+     "colorid*",
+     "vibrante*",
+     "energia",
+     "luminos*",
+     "radiante*"
+    ],
+    "emoji": [
+     "😊",
+     "😄",
+     "😁",
+     "🥳",
+     "🎉",
+     "🎊",
+     "🎈",
+     "🎂",
+     "☀",
+     "🌞"
+    ]
+   },
+   {
+    "id": "sorpresa",
+    "label": "un detalle",
+    "mix": {
+     "Alegría": 0.65,
+     "Amor": 0.2,
+     "Amistad": 0.15
+    },
+    "words": [
+     "sorpresa",
+     "sorprender*",
+     "un detalle",
+     "alegrarle el dia",
+     "alegrar su dia",
+     "alegrarte el dia",
+     "sacarle una sonrisa",
+     "sacarte una sonrisa",
+     "porque si",
+     "solo porque"
+    ]
+   },
+   {
+    "id": "animo",
+    "label": "ánimo",
+    "mix": {
+     "Esperanza": 0.55,
+     "Amistad": 0.3,
+     "Alegría": 0.15
+    },
+    "strong": [
+     "animo",
+     "mucho animo",
+     "fuerza",
+     "fuerzas",
+     "mucha fuerza",
+     "tu puedes",
+     "usted puede",
+     "no te rindas",
+     "no estas sola",
+     "no estas solo",
+     "cuenta conmigo",
+     "cuentas conmigo",
+     "aqui estoy",
+     "estoy contigo",
+     "estoy aqui para ti"
+    ],
+    "words": [
+     "saldras adelante",
+     "vas a salir adelante",
+     "saldra adelante",
+     "todo va a estar bien",
+     "todo estara bien",
+     "todo saldra bien",
+     "todo va a salir bien",
+     "lo vas a lograr",
+     "vas a poder",
+     "resiste",
+     "aguanta",
+     "se fuerte",
+     "eres fuerte",
+     "fortaleza",
+     "vamos que se puede",
+     "arriba ese animo",
+     "consuelo"
+    ],
+    "emoji": [
+     "💪"
+    ]
+   },
+   {
+    "id": "recuperacion",
+    "label": "una pronta recuperación",
+    "mix": {
+     "Esperanza": 0.7,
+     "Calma": 0.15,
+     "Alegría": 0.15
+    },
+    "strong": [
+     "mejorat*",
+     "que te mejores",
+     "que se mejore",
+     "pronta recuperacion",
+     "recuperat*",
+     "que te recuperes",
+     "que se recupere",
+     "no esta bien",
+     "no anda bien"
+    ],
+    "words": [
+     "recuper*",
+     "salud",
+     "sanes",
+     "sanar*",
+     "hospital*",
+     "clinica",
+     "operacion",
+     "operaron",
+     "operada",
+     "operado",
+     "cirugia",
+     "enfermo",
+     "enferma",
+     "enfermos",
+     "enfermas",
+     "enfermedad*",
+     "convalec*",
+     "quimio*",
+     "cancer",
+     "tratamiento",
+     "diagnostic*",
+     "reposo",
+     "licencia medica",
+     "con licencia",
+     "accidente",
+     "fractura",
+     "esta mal de salud",
+     "q te mejores",
+     "q se mejore",
+     "operar*",
+     "se opero",
+     "grave",
+     "uci",
+     "cuidados intensivos"
+    ]
+   },
+   {
+    "id": "preocupacion",
+    "label": "preocupación",
+    "mix": {
+     "Esperanza": 0.5,
+     "Calma": 0.3,
+     "Amistad": 0.2
+    },
+    "words": [
+     "preocupad*",
+     "me preocupa*",
+     "nos preocupa*",
+     "estoy pendiente",
+     "estamos pendientes"
+    ]
+   },
+   {
+    "id": "tranquilidad",
+    "label": "tranquilidad",
+    "mix": {
+     "Calma": 0.6,
+     "Esperanza": 0.2,
+     "Amistad": 0.2
+    },
+    "words": [
+     "no te preocup*",
+     "no se preocupe",
+     "tranqui",
+     "sin presion",
+     "sin apuro"
+    ]
+   },
+   {
+    "id": "tristeza",
+    "label": "tristeza",
+    "mix": {
+     "Esperanza": 0.45,
+     "Calma": 0.3,
+     "Amistad": 0.25
+    },
+    "negate": [
+     "Recuerdo"
+    ],
+    "words": [
+     "trist*",
+     "pena",
+     "penas",
+     "apenad*",
+     "deprimid*",
+     "depre",
+     "depresion",
+     "decaid*",
+     "bajonead*",
+     "bajon",
+     "bajo de animo",
+     "baja de animo",
+     "desanimad*",
+     "mal momento",
+     "momento dificil",
+     "momentos dificiles",
+     "momento tan dificil",
+     "momentos tan dificiles",
+     "dias dificiles",
+     "tiempos dificiles",
+     "lo esta pasando mal",
+     "lo estoy pasando mal",
+     "pasandolo mal",
+     "esta mal",
+     "llor*"
+    ],
+    "emoji": [
+     "😢",
+     "😭",
+     "😔"
+    ]
+   },
+   {
+    "id": "desamor",
+    "label": "un corazón roto",
+    "mix": {
+     "Amistad": 0.4,
+     "Esperanza": 0.35,
+     "Alegría": 0.25
+    },
+    "avoid": [
+     "Amor"
+    ],
+    "words": [
+     "corazon roto",
+     "me dejo mi novia",
+     "me dejo mi novio",
+     "nos separamos",
+     "se separaron",
+     "me separe",
+     "terminamos",
+     "termino conmigo",
+     "ruptura",
+     "desamor",
+     "despecho",
+     "divorci*",
+     "termino con su novio",
+     "termino con su novia",
+     "termino con su pololo",
+     "termino con su polola",
+     "rompio con",
+     "rompieron",
+     "la dejo su novio",
+     "lo dejo su novia"
+    ],
+    "emoji": [
+     "💔"
+    ]
+   },
+   {
+    "id": "soledad",
+    "label": "soledad",
+    "mix": {
+     "Amistad": 0.45,
+     "Esperanza": 0.3,
+     "Amor": 0.25
+    },
+    "words": [
+     "me siento sola",
+     "me siento solo",
+     "se siente sola",
+     "se siente solo",
+     "esta sola",
+     "esta solo",
+     "estoy sola",
+     "estoy solo",
+     "solita",
+     "solito",
+     "soledad",
+     "aislad*",
+     "sin nadie"
+    ]
+   },
+   {
+    "id": "calma",
+    "label": "calma",
+    "mix": {
+     "Calma": 0.9,
+     "Esperanza": 0.1
+    },
+    "words": [
      "calma",
+     "necesito calma",
      "paz",
-     "tranquil",
-     "descans",
-     "estres",
-     "relaj",
-     "serenidad",
+     "tranquil*",
+     "relaj*",
+     "descans*",
+     "seren*",
+     "respir*",
      "dormir",
-     "ansiedad",
-     "respir",
+     "insomnio",
      "pausa",
-     "cansad",
-     "agotad"
+     "desconect*",
+     "medit*",
+     "armonia",
+     "equilibrio",
+     "bienestar"
+    ],
+    "emoji": [
+     "🕊"
+    ]
+   },
+   {
+    "id": "estres",
+    "label": "cansancio",
+    "mix": {
+     "Calma": 0.7,
+     "Esperanza": 0.2,
+     "Alegría": 0.1
+    },
+    "strong": [
+     "estres*",
+     "ansied*",
+     "ansios*",
+     "agobi*",
+     "abrumad*",
+     "burnout",
+     "colapsad*",
+     "sobrepasad*"
+    ],
+    "words": [
+     "cansad*",
+     "agotad*",
+     "exhaust*",
+     "no doy mas",
+     "no puedo mas",
+     "mucho trabajo",
+     "nervios*",
+     "semana pesad*",
+     "dia pesad*",
+     "semana dificil",
+     "dia dificil",
+     "semana terrible",
+     "dia terrible"
+    ]
+   },
+   {
+    "id": "miedo",
+    "label": "miedo",
+    "mix": {
+     "Esperanza": 0.6,
+     "Calma": 0.4
+    },
+    "words": [
+     "miedo",
+     "me da miedo",
+     "asustad*",
+     "temor",
+     "terror"
+    ]
+   },
+   {
+    "id": "entusiasmo",
+    "label": "ilusión",
+    "mix": {
+     "Alegría": 0.6,
+     "Nuevos comienzos": 0.4
+    },
+    "words": [
+     "emocionad*",
+     "entusiasm*",
+     "ilusionad*",
+     "ilusion",
+     "que emocion"
+    ]
+   },
+   {
+    "id": "alivio",
+    "label": "alivio",
+    "mix": {
+     "Calma": 0.5,
+     "Alegría": 0.3,
+     "Gratitud": 0.2
+    },
+    "words": [
+     "alivio",
+     "aliviad*",
+     "por fin"
+    ]
+   },
+   {
+    "id": "pedir-perdon",
+    "label": "arrepentimiento",
+    "mix": {
+     "Perdón": 0.85,
+     "Amor": 0.15
+    },
+    "negate": [
+     "Perdón"
+    ],
+    "inMourning": "duelo",
+    "with": {
+     "amistad": {
+      "Perdón": 0.8,
+      "Amistad": 0.2
+     },
+     "familia": {
+      "Perdón": 0.8,
+      "Amistad": 0.2
+     },
+     "trabajo": {
+      "Perdón": 0.9,
+      "Calma": 0.1
+     },
+     "pareja": {
+      "Perdón": 0.75,
+      "Amor": 0.25
+     }
+    },
+    "strong": [
+     "perdon*",
+     "disculp*",
+     "me equivoque",
+     "nos equivocamos",
+     "fue mi culpa",
+     "mi culpa",
+     "arrepentid*",
+     "me arrepiento",
+     "meti la pata",
+     "la cague",
+     "me mande un condoro",
+     "me mande una cagada",
+     "me porte mal",
+     "la embarre",
+     "la regue",
+     "te falle",
+     "fallarte",
+     "pedir perdon",
+     "pedirte perdon",
+     "pedirle perdon",
+     "pedirles perdon",
+     "pedir disculpas",
+     "pedirte disculpas",
+     "pedirle disculpas"
+    ],
+    "words": [
+     "lo siento",
+     "lo lamento",
+     "culpable",
+     "remordimiento*",
+     "me siento pesimo",
+     "me siento fatal",
+     "me siento horrible"
+    ]
+   },
+   {
+    "id": "reconciliacion",
+    "label": "reconciliación",
+    "mix": {
+     "Perdón": 0.45,
+     "Nuevos comienzos": 0.35,
+     "Calma": 0.2
+    },
+    "words": [
+     "te perdono",
+     "te perdone",
+     "ya te perdone",
+     "lo perdone",
+     "la perdone",
+     "reconcili*",
+     "hagamos las paces",
+     "hacer las paces",
+     "hicimos las paces",
+     "las paces",
+     "empezar de nuevo",
+     "empecemos de nuevo",
+     "borron y cuenta nueva",
+     "otra oportunidad",
+     "segunda oportunidad",
+     "sin rencor",
+     "sin rencores",
+     "dejemoslo atras",
+     "ya no estoy enojad*",
+     "no estoy enojad* contigo",
+     "no estoy molest* contigo"
+    ]
+   },
+   {
+    "id": "pelea",
+    "label": "una pelea",
+    "mix": {
+     "Perdón": 0.7,
+     "Amor": 0.15,
+     "Calma": 0.15
+    },
+    "negate": [],
+    "with": {
+     "amistad": {
+      "Perdón": 0.7,
+      "Amistad": 0.15,
+      "Calma": 0.15
+     },
+     "familia": {
+      "Perdón": 0.7,
+      "Amistad": 0.15,
+      "Calma": 0.15
+     }
+    },
+    "words": [
+     "pele*",
+     "discuti*",
+     "discusion*",
+     "enoj*",
+     "ofendid*",
+     "dolid*",
+     "te lastime",
+     "te hice dano",
+     "te heri",
+     "te decepcione",
+     "decepcion*",
+     "rencor*",
+     "no nos hablamos",
+     "no me habla",
+     "molesto",
+     "molesta",
+     "molestos",
+     "molestas",
+     "rabia",
+     "furios*"
+    ]
+   },
+   {
+    "id": "disculpa",
+    "label": "una disculpa",
+    "mix": {
+     "Perdón": 0.7,
+     "Amistad": 0.15,
+     "Amor": 0.15
+    },
+    "words": [
+     "me olvide de",
+     "se me olvido",
+     "llegue tarde",
+     "no pude ir",
+     "no pude estar",
+     "no estuve",
+     "te deje plantad*",
+     "no fui a tu",
+     "no fui a su",
+     "no fui al",
+     "no llegue a tu",
+     "no llegue a su",
+     "no llegue al"
+    ]
+   },
+   {
+    "id": "celos",
+    "label": "celos",
+    "mix": {
+     "Amor": 0.45,
+     "Perdón": 0.3,
+     "Calma": 0.25
+    },
+    "words": [
+     "celos*",
+     "celar"
+    ]
+   },
+   {
+    "id": "nuevo-comienzo",
+    "label": "un nuevo comienzo",
+    "quietInMourning": true,
+    "mix": {
+     "Nuevos comienzos": 0.7,
+     "Esperanza": 0.2,
+     "Alegría": 0.1
+    },
+    "strong": [
+     "nueva etapa",
+     "nuevo comienzo",
+     "nuevos comienzos",
+     "nuevo trabajo",
+     "trabajo nuevo",
+     "nueva pega",
+     "pega nueva",
+     "nuevo empleo",
+     "empezar de cero",
+     "comenzar de cero"
+    ],
+    "words": [
+     "nuevo inicio",
+     "nuevo capitulo",
+     "nueva vida",
+     "nuevo ciclo",
+     "nuevo camino",
+     "nuevo rumbo",
+     "nuevo proyecto",
+     "primer dia",
+     "primer trabajo",
+     "emprend*",
+     "nuevo negocio",
+     "inaugur*",
+     "comienz*",
+     "empezar*",
+     "empieza",
+     "empiezas",
+     "empiezan",
+     "empiezo",
+     "inicio"
+    ]
+   },
+   {
+    "id": "nuevo-hogar",
+    "label": "una casa nueva",
+    "mix": {
+     "Nuevos comienzos": 0.6,
+     "Alegría": 0.25,
+     "Calma": 0.15
+    },
+    "words": [
+     "casa nueva",
+     "nueva casa",
+     "nuevo hogar",
+     "nuevo depa",
+     "depa nuevo",
+     "departamento nuevo",
+     "mudanza",
+     "se mudo",
+     "se mudaron",
+     "nos mudamos",
+     "me mude",
+     "me mudo",
+     "te mudaste",
+     "te mudas",
+     "se muda",
+     "casa propia"
+    ]
+   },
+   {
+    "id": "compromiso",
+    "label": "un compromiso",
+    "romance": true,
+    "mix": {
+     "Amor": 0.55,
+     "Nuevos comienzos": 0.35,
+     "Alegría": 0.1
+    },
+    "words": [
+     "me pidio matrimonio",
+     "le pedi matrimonio",
+     "pedida de mano",
+     "nos comprometimos",
+     "se comprometieron",
+     "comprometid*",
+     "nos vamos a casar",
+     "se van a casar",
+     "se va a casar"
+    ],
+    "emoji": [
+     "💍"
+    ]
+   },
+   {
+    "id": "embarazo",
+    "label": "la llegada de un bebé",
+    "quietInMourning": true,
+    "mix": {
+     "Nuevos comienzos": 0.55,
+     "Alegría": 0.3,
+     "Esperanza": 0.15
+    },
+    "words": [
+     "embaraz*",
+     "vas a ser mama",
+     "vas a ser papa",
+     "seras mama",
+     "seras papa",
+     "vamos a ser papas",
+     "dar a luz",
+     "dio a luz",
+     "diste a luz",
+     "bienvenido al mundo",
+     "bienvenida al mundo",
+     "guagua",
+     "guaguita",
+     "bebe",
+     "bebes",
+     "recien nacid*"
+    ],
+    "emoji": [
+     "👶",
+     "🍼"
+    ]
+   },
+   {
+    "id": "bautizo",
+    "label": "un bautizo",
+    "mix": {
+     "Nuevos comienzos": 0.4,
+     "Esperanza": 0.3,
+     "Alegría": 0.3
+    },
+    "words": [
+     "bautizo",
+     "bautizos",
+     "bautismo",
+     "bautiz*",
+     "primera comunion"
+    ]
+   },
+   {
+    "id": "jubilacion",
+    "label": "una jubilación",
+    "mix": {
+     "Gratitud": 0.35,
+     "Admiración": 0.25,
+     "Nuevos comienzos": 0.25,
+     "Calma": 0.15
+    },
+    "words": [
+     "jubil*",
+     "se retira",
+     "me retiro",
+     "su retiro",
+     "tu retiro",
+     "anos de servicio",
+     "anos de trabajo"
+    ]
+   },
+   {
+    "id": "pensar",
+    "label": "cercanía",
+    "mix": {
+     "Amistad": 0.3,
+     "Amor": 0.25,
+     "Esperanza": 0.25,
+     "Recuerdo": 0.2
+    },
+    "words": [
+     "te pienso",
+     "pienso en ti",
+     "pensando en ti",
+     "pensar en ti",
+     "te tengo presente",
+     "te llevo en el corazon",
+     "en mis pensamientos",
+     "en mis oraciones",
+     "rezo por ti",
+     "rezando por ti",
+     "oro por ti",
+     "cerca de ti",
+     "un beso grande"
+    ]
+   },
+   {
+    "id": "amistad",
+    "label": "amistad",
+    "mix": {
+     "Amistad": 0.85,
+     "Alegría": 0.15
+    },
+    "strong": [
+     "amistad",
+     "amigos para siempre",
+     "amigas para siempre"
+    ],
+    "words": [
+     "lealtad",
+     "leal",
+     "complicidad",
+     "complice*",
+     "incondicional*",
+     "siempre juntas",
+     "siempre juntos",
+     "hermandad",
+     "mi persona",
+     "inseparables",
+     "juntos",
+     "juntas"
+    ],
+    "emoji": [
+     "💛",
+     "🤝"
+    ]
+   },
+   {
+    "id": "respeto",
+    "label": "respeto",
+    "mix": {
+     "Admiración": 0.55,
+     "Gratitud": 0.45
+    },
+    "words": [
+     "respeto",
+     "respetuos*",
+     "con todo respeto",
+     "aprecio",
+     "estima",
+     "estimad*",
+     "reconoc*",
+     "trayectoria",
+     "profesionalismo",
+     "dedicacion"
+    ]
+   },
+   {
+    "id": "esperanza",
+    "label": "buenos deseos",
+    "mix": {
+     "Esperanza": 0.75,
+     "Alegría": 0.15,
+     "Nuevos comienzos": 0.1
+    },
+    "words": [
+     "esperanza*",
+     "espero que",
+     "ojala",
+     "suerte",
+     "mucha suerte",
+     "buena suerte",
+     "mucho exito",
+     "exito en",
+     "te deseo lo mejor",
+     "le deseo lo mejor",
+     "les deseo lo mejor",
+     "lo mejor para",
+     "que te vaya bien",
+     "futuro",
+     "suenos",
+     "tus suenos",
+     "fe",
+     "confio en ti",
+     "confianza",
+     "optimis*",
+     "porvenir",
+     "ano nuevo",
+     "nuevo ano",
+     "brindo por"
+    ],
+    "emoji": [
+     "🍀",
+     "🌈",
+     "🤞"
+    ]
+   },
+   {
+    "id": "bendicion",
+    "label": "bendiciones",
+    "mix": {
+     "Esperanza": 0.4,
+     "Gratitud": 0.3,
+     "Calma": 0.3
+    },
+    "words": [
+     "bendicion*",
+     "bendig*",
+     "dios te bendiga",
+     "gracias a dios",
+     "que dios te acompane",
+     "en manos de dios"
+    ]
+   },
+   {
+    "id": "para-mi",
+    "label": "un regalo para ti",
+    "self": true,
+    "negate": [],
+    "mix": {
+     "Alegría": 0.4,
+     "Calma": 0.35,
+     "Admiración": 0.25
+    },
+    "words": [
+     "amor propio",
+     "autocuidado",
+     "regalarme",
+     "me lo regalo",
+     "me regalo",
+     "para consentirme",
+     "consentirme",
+     "darme un gusto",
+     "mimarme",
+     "autorregalo",
+     "para mi misma",
+     "para mi mismo"
+    ]
+   }
+  ],
+  "recipients": [
+   {
+    "id": "pareja",
+    "group": "pareja",
+    "mix": {
+     "Amor": 0.8,
+     "Alegría": 0.1,
+     "Admiración": 0.1
+    },
+    "words": [
+     "novia",
+     "novio",
+     "novias",
+     "novios",
+     "pareja",
+     "esposa",
+     "esposo",
+     "mi mujer",
+     "mi marido",
+     "mi senora",
+     "polola",
+     "pololo",
+     "prometida",
+     "prometido",
+     "mi vida",
+     "mi cielo",
+     "mi reina",
+     "mi rey",
+     "mi amorcito",
+     "mi gordo",
+     "mi gorda"
+    ]
+   },
+   {
+    "id": "madre",
+    "group": "familia",
+    "day": "dia-madre",
+    "mix": {
+     "Gratitud": 0.55,
+     "Amor": 0.3,
+     "Admiración": 0.15
+    },
+    "words": [
+     "mama",
+     "mamas",
+     "mami",
+     "mamita",
+     "madre",
+     "madrecita",
+     "mi vieja"
+    ]
+   },
+   {
+    "id": "padre",
+    "group": "familia",
+    "day": "dia-padre",
+    "mix": {
+     "Gratitud": 0.5,
+     "Admiración": 0.35,
+     "Amor": 0.15
+    },
+    "words": [
+     "papa",
+     "papas",
+     "papi",
+     "papis",
+     "papito",
+     "padre",
+     "mi viejo"
+    ]
+   },
+   {
+    "id": "abuelos",
+    "group": "familia",
+    "mix": {
+     "Gratitud": 0.5,
+     "Amor": 0.35,
+     "Calma": 0.15
+    },
+    "words": [
+     "abuel*",
+     "abu",
+     "tata",
+     "nona",
+     "nono",
+     "yaya",
+     "lela",
+     "lelo"
+    ]
+   },
+   {
+    "id": "hermanos",
+    "group": "familia",
+    "mix": {
+     "Amistad": 0.6,
+     "Alegría": 0.25,
+     "Amor": 0.15
+    },
+    "words": [
+     "herman*"
+    ]
+   },
+   {
+    "id": "hijos",
+    "group": "familia",
+    "mix": {
+     "Amor": 0.45,
+     "Admiración": 0.3,
+     "Alegría": 0.25
+    },
+    "words": [
+     "hija",
+     "hijo",
+     "hijas",
+     "hijos",
+     "hijit*",
+     "mi nena",
+     "mi nene"
+    ]
+   },
+   {
+    "id": "familia",
+    "group": "familia",
+    "mix": {
+     "Gratitud": 0.4,
+     "Alegría": 0.35,
+     "Amor": 0.25
+    },
+    "words": [
+     "tia",
+     "tio",
+     "tias",
+     "tios",
+     "prima",
+     "primo",
+     "primas",
+     "primos",
+     "sobrin*",
+     "suegr*",
+     "cunad*",
+     "madrina",
+     "padrino",
+     "nuera",
+     "yerno",
+     "nieta",
+     "nieto",
+     "nietas",
+     "nietos",
+     "viuda",
+     "viudo",
+     "familia",
+     "familiares"
+    ]
+   },
+   {
+    "id": "amigos",
+    "group": "amistad",
+    "day": "amistad",
+    "mix": {
+     "Amistad": 0.75,
+     "Alegría": 0.25
+    },
+    "words": [
+     "amiga",
+     "amigo",
+     "amigas",
+     "amigos",
+     "amiguit*",
+     "mejor amiga",
+     "mejor amigo",
+     "amiga del alma",
+     "bff",
+     "compa",
+     "comadre",
+     "compadre",
+     "parcero",
+     "parcera",
+     "pana",
+     "companer*"
+    ]
+   },
+   {
+    "id": "vecinos",
+    "group": "amistad",
+    "mix": {
+     "Amistad": 0.5,
+     "Gratitud": 0.3,
+     "Alegría": 0.2
+    },
+    "words": [
+     "vecin*"
+    ]
+   },
+   {
+    "id": "jefe",
+    "group": "trabajo",
+    "avoid": [
+     "Amor"
+    ],
+    "sober": true,
+    "mix": {
+     "Gratitud": 0.45,
+     "Admiración": 0.45,
+     "Nuevos comienzos": 0.1
+    },
+    "words": [
+     "jefe",
+     "jefa",
+     "jefes",
+     "jefas",
+     "jefatura",
+     "supervisor*",
+     "gerente",
+     "gerentes",
+     "director*",
+     "cliente*",
+     "socio",
+     "socia",
+     "socios",
+     "socias"
+    ]
+   },
+   {
+    "id": "colega",
+    "group": "trabajo",
+    "avoid": [
+     "Amor"
+    ],
+    "mix": {
+     "Gratitud": 0.4,
+     "Amistad": 0.3,
+     "Admiración": 0.3
+    },
+    "words": [
+     "colega*",
+     "companero de trabajo",
+     "companera de trabajo",
+     "companeros de trabajo",
+     "companeras de trabajo",
+     "companero de pega",
+     "companera de pega",
+     "companeros de pega",
+     "companero de oficina",
+     "companera de oficina",
+     "mi equipo",
+     "el equipo",
+     "la oficina"
+    ]
+   },
+   {
+    "id": "profes",
+    "group": "escuela",
+    "avoid": [
+     "Amor"
+    ],
+    "day": "dia-profesor",
+    "mix": {
+     "Gratitud": 0.6,
+     "Admiración": 0.4
+    },
+    "words": [
+     "profe",
+     "profes",
+     "profesor*",
+     "maestro*",
+     "maestra*",
+     "miss",
+     "tutor*",
+     "mentor*",
+     "educador*",
+     "parvularia*",
+     "docente*",
+     "tia del jardin"
+    ]
+   },
+   {
+    "id": "salud",
+    "group": "trabajo",
+    "avoid": [
+     "Amor"
+    ],
+    "mix": {
+     "Gratitud": 0.7,
+     "Admiración": 0.3
+    },
+    "words": [
+     "doctor*",
+     "medico",
+     "medica",
+     "medicos",
+     "medicas",
+     "enfermer*",
+     "matron*",
+     "terapeut*",
+     "psicolog*",
+     "kine",
+     "kinesiolog*",
+     "dentista",
+     "cuidador*"
+    ]
+   },
+   {
+    "id": "mujeres",
+    "group": "otros",
+    "day": "dia-mujer",
+    "mix": {
+     "Admiración": 0.6,
+     "Gratitud": 0.4
+    },
+    "words": [
+     "mujeres",
+     "las mujeres"
     ]
    }
   ],
@@ -2675,7 +4574,11 @@ window.FL.data = {
      "Nuevos comienzos",
      "Recuerdo"
     ],
+    "mourning": [
+     "Recuerdo"
+    ],
     "text": "El blanco dice respeto, pureza y comienzo; en parte de Asia oriental también es color de luto.",
+    "mourningText": "En un duelo, el blanco es el color sobrio y sereno con que se acostumbra despedir y recordar.",
     "words": [
      "blanc*",
      "marfil"
@@ -2926,7 +4829,12 @@ window.FL.data = {
     "note": "Segundo domingo de mayo en Chile, Estados Unidos y muchos otros países; en España es el primer domingo de mayo y en México, el 10 de mayo.",
     "words": [
      "dia de las madres",
-     "dia de mama"
+     "dia de mama",
+     "dia de la mama",
+     "dia de la mami",
+     "mama en su dia",
+     "madre en su dia",
+     "mami en su dia"
     ]
    },
    {
@@ -2944,7 +4852,11 @@ window.FL.data = {
     "note": "Tercer domingo de junio en Chile y muchos otros países.",
     "words": [
      "dia de los padres",
-     "dia de papa"
+     "dia de papa",
+     "dia del papa",
+     "dia del papi",
+     "papa en su dia",
+     "padre en su dia"
     ]
    },
    {
@@ -2978,6 +4890,9 @@ window.FL.data = {
     "words": [
      "dia de la profesora",
      "dia de los profesores",
+     "dia del profe",
+     "dia de la profe",
+     "dia de los profes",
      "dia del maestro",
      "dia de la maestra"
     ]
@@ -3039,7 +4954,11 @@ window.FL.data = {
      "meses juntos",
      "anos de casad*",
      "bodas de oro",
-     "bodas de plata"
+     "bodas de plata",
+     "un ano desde que nos conocimos",
+     "cumplimos un ano",
+     "un ano de pololeo",
+     "un ano de novios"
     ]
    },
    {
@@ -3071,7 +4990,11 @@ window.FL.data = {
      "nacio",
      "bebe*",
      "recien nacid*",
-     "baby shower"
+     "baby shower",
+     "dio a luz",
+     "dar a luz",
+     "guagua",
+     "guaguita"
     ]
    },
    {
@@ -3084,7 +5007,11 @@ window.FL.data = {
     "words": [
      "gradu*",
      "titul*",
-     "egres*"
+     "egres*",
+     "cuarto medio",
+     "licenciatura",
+     "se recibe",
+     "se recibio"
     ]
    },
    {
@@ -3106,7 +5033,22 @@ window.FL.data = {
      "luto",
      "descanse en paz",
      "se nos fue",
-     "partio"
+     "tu perdida",
+     "su perdida",
+     "sentido pesame",
+     "te acompano en el sentimiento",
+     "qepd",
+     "q e p d",
+     "en paz descanse",
+     "que en paz descanse",
+     "que ya no esta",
+     "ya no esta con nosotros",
+     "desde el cielo",
+     "cumpleanos en el cielo",
+     "se fue al cielo",
+     "partio al cielo",
+     "lo siento por tu abuel*",
+     "lo siento mucho por tu abuel*"
     ]
    },
    {
@@ -3126,7 +5068,18 @@ window.FL.data = {
      "cirugia",
      "enfermo",
      "enferma",
-     "enfermedad"
+     "enfermedad",
+     "cancer",
+     "quimio*",
+     "diagnostic*",
+     "licencia medica",
+     "con licencia",
+     "clinica",
+     "q te mejores",
+     "operar*",
+     "se opero",
+     "uci",
+     "cuidados intensivos"
     ]
    },
    {
