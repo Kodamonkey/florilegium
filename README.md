@@ -10,7 +10,7 @@ Incluye una sección especial, **«Esos días que no hubo»**, para quien alguna
 
 La página no necesita instalación ni compilación:
 
-1. **Directo:** abre `index.html` con doble clic en cualquier navegador moderno. Funciona todo salvo el agente de IA.
+1. **Directo:** abre `index.html` con doble clic en cualquier navegador moderno. Funciona todo.
 2. **Con servidor local** (útil para probar en otros dispositivos de la misma red):
 
    ```bash
@@ -18,17 +18,6 @@ La página no necesita instalación ni compilación:
    ```
 
    Luego visita <http://localhost:5173>. Es igual a `python -m http.server`, pero sin caché, así cada recarga usa los archivos recién editados.
-
-3. **Con el agente de IA** (opcional). Requiere Python 3.10+ y una clave de la API de Anthropic:
-
-   ```bash
-   python -m venv .venv
-   .venv/Scripts/python -m pip install -r requirements.txt   # en macOS/Linux: .venv/bin/python
-   cp .env.example .env                                      # y completa ANTHROPIC_API_KEY
-   .venv/Scripts/python -m uvicorn server.app:app --port 5173
-   ```
-
-   El mismo servidor entrega la página y la API en <http://localhost:5173>. Si no hay clave, los botones de IA no aparecen y la página usa la lectura local.
 
 Las tipografías (Cormorant, Newsreader y Jost) vienen en `fonts/`, servidas desde el mismo sitio: no hay que esperar a otro servidor y funcionan sin conexión. Son fuentes variables de Google Fonts (licencia OFL, en `fonts/OFL.txt`).
 
@@ -39,11 +28,11 @@ Las tipografías (Cormorant, Newsreader y Jost) vienen en `fonts/`, servidas des
 - **Una animación por especie:** la rosa abre sus anillos, el girasol sigue al cursor, el tulipán se inclina antes de abrirse, la margarita se deshoja, el diente de león suelta semillas, la hortensia cambia de color según la acidez del suelo, la fresia abre sus flores de la base a la punta, la anémona se recoge y se vuelve a abrir, entre otras.
 - **Ficha de cada flor:** significado poético, cultural (con notas cuando cambia según la cultura), mirada científica y **cuidados**: cuánto dura en florero, cuánta agua quiere, pasos específicos y toxicidad para gatos y perros. Desde la ficha se puede agregar la flor a un ramo.
 - **Taller de ramos** (`#armar`): elige flores, rellenos y follajes tallo por tallo, o escribe lo que quieres decir y pide una propuesta. Elige envoltorio y cinta, escribe una tarjeta y lee en vivo qué dice el ramo: significados ponderados, notas culturales y advertencias (mascotas, números pares, flores de luto en algunas culturas). Los ramos se guardan en **Mis ramos** y se comparten con un enlace.
-- **Descargar el ramo** como imagen (PNG) o PDF, con todos los detalles: el dibujo, la tarjeta, de qué está hecho, qué dice (con la lectura de la IA si la hay) y cómo cuidarlo. La imagen es una sola lámina larga, para guardar o enviar por mensaje; el PDF reparte lo mismo en páginas A4, listo para imprimir. Está en el taller y en la vista de un ramo recibido. Se arma en el navegador, sin enviar nada a ningún servidor, y siempre en papel claro, aunque la página esté en modo oscuro.
+- **Descargar el ramo** como imagen (PNG) o PDF, con todos los detalles: el dibujo, la tarjeta, de qué está hecho, qué dice y cómo cuidarlo. La imagen es una sola lámina larga, para guardar o enviar por mensaje; el PDF reparte lo mismo en páginas A4, listo para imprimir. Está en el taller y en la vista de un ramo recibido. Se arma en el navegador, sin enviar nada a ningún servidor, y siempre en papel claro, aunque la página esté en modo oscuro.
 - **Mostrador** (`#ramos`): veinte ramos tradicionales de Occidente por temporada y por temática (San Valentín, Día de la Madre, bodas, condolencias…). La temporada se calcula según el hemisferio, detectado por la zona horaria (Chile, Argentina, Australia… → sur) y ajustable a mano. Muestra las próximas fechas del calendario. Cada ramo se puede personalizar en el taller.
 - **Un ramo recibido** (`#ramo=…`): quien abre el enlace ve el ramo, la tarjeta, lo que dice cada flor y cómo cuidarlo, con un calendario `.ics` de recordatorios para cambiar el agua.
 - **Receta para la florería:** desde el taller, el ramo se convierte en una lista para pedirlo en una florería: cuántos tallos de cada flor (y de qué color, cuando la flor se vende en varios), envoltorio, cinta, total y el texto de la tarjeta. Se copia o se envía por mensaje con el enlace al dibujo, y avisa cuando una flor casi nunca se encuentra en florerías. Quien recibe un ramo también ve la receta, sin la tarjeta. El botón «Florerías cerca» abre Google Maps con la búsqueda «florería»: Maps pide la ubicación por su cuenta y la página no envía nada más.
-- **Agente de IA** (opcional): interpreta un ramo y propone uno a partir de lo que sientes, siempre con flores del catálogo. Sin servidor, un motor local (`js/meaning.js`) hace ambas cosas con reglas.
+- **Propuesta desde lo que sientes:** lee lo que escribes (palabras completas, negaciones, emociones, para quién es y la ocasión) y busca entre todas las combinaciones del catálogo el ramo cuya lectura dice lo mismo; explica qué entendió y por qué eligió cada flor. «Otra opción» busca otra flor principal para lo mismo. La ocasión que se elige a mano manda sobre la del texto; la que dejó una propuesta anterior en el selector no: si el texto cambia, se vuelve a leer (un «falleció» no queda como cumpleaños). Todo en el navegador, sin servidor ni IA.
 - **Propuesta desde lo que escribes:** además de los sentimientos y la ocasión, el motor local entiende el tamaño («un ramo grande», «algo pequeño», «una sola flor»), la cantidad («unas 15 flores», «una docena de rosas»), las flores que se piden o se rechazan («le encantan los tulipanes», «sin rosas», «nada de lirios ni claveles»), los colores («algo amarillo», «nada rojo») y un estilo sobrio. El duelo manda sobre lo demás, y los nombres propios («mi amiga Margarita») no se leen como flores. La propuesta dice qué tomó en cuenta.
 - **Explorar:** búsqueda y filtros por significado, color y estación. Las flores coincidentes se resaltan en el jardín.
 - **Modo oscuro** automático (jardín nocturno), según la preferencia del sistema.
@@ -64,13 +53,14 @@ css/fonts.css           Tipografías propias (@font-face de fonts/)
 fonts/                  Cormorant, Jost y Newsreader en woff2 (alfabetos latinos) y su licencia
 data/flowers.json       Fichas de las flores (fuente única de datos)
 data/fillers.json       Rellenos y follajes de ramo
-data/taxonomy.json      Significados y su léxico, colores, estaciones por hemisferio, ocasiones,
-                        envoltorios, cintas, cuidados generales, límites y el vocabulario con que
-                        se lee lo que se escribe (alias de flores, palabras de ocasiones y colores)
+data/taxonomy.json      Significados, colores, estaciones por hemisferio, ocasiones, envoltorios,
+                        cintas, cuidados generales, límites y el vocabulario con que se lee lo que
+                        se escribe (intenciones, destinatarios, alias de flores, ocasiones y colores)
 data/popular.json       Ramos tradicionales del mostrador
 data/schema/            Esquemas JSON: ramo, catálogo y proveedores (este último, solo diseño)
 tools/build_data.py     Valida los JSON y genera js/gen/data.js
 tools/serve.py          Servidor estático de desarrollo sin caché
+tools/audit.cjs         Qué sentimientos y temporadas cubre el catálogo
 js/gen/data.js          Datos generados (no editar a mano)
 js/core.js              Utilidades y primitivas de dibujo (pétalos, hojas, degradados)
 js/catalog.js           Conecta los datos con la página; hemisferio, estaciones y fechas
@@ -87,25 +77,25 @@ js/explore.js           Buscador y filtros
 js/days.js              Sección «Esos días que no hubo»
 js/bouquet-model.js     Modelo de ramo: normalizar, validar, enlaces y «Mis ramos»
 js/bouquet-art.js       Dibujo de un ramo: cúpula, tallos, envoltorio y cinta
-js/meaning.js           Lectura local: qué dice un ramo y qué ramo dice lo que sientes
-js/ai.js                Cliente del agente de IA
+js/meaning.js           Qué dice un ramo (lectura local)
+js/intent.js            Qué siente y qué pide el texto
+js/compose.js           Qué ramo lo dice: búsqueda entre todas las combinaciones
 js/plate.js             Lámina descargable de un ramo: imagen (PNG) y PDF hecho a mano, sin bibliotecas
 js/atelier.js           Taller de ramos
 js/showcase.js          Mostrador de ramos populares
 js/gift.js              Vista de un ramo recibido
 js/main.js              Arranque, bucle de animación, teclado y enlaces directos
-server/                 API opcional (FastAPI) con el agente de IA
 tests/                  Pruebas (Node y navegador) y páginas de revisión visual
 ```
 
-Los scripts son clásicos (sin módulos) y comparten el espacio de nombres `window.FL`, por eso la página funciona también desde `file://`. Los datos viven en JSON y se envuelven en `js/gen/data.js` porque un navegador no puede leer JSON desde `file://`; el servidor lee los mismos JSON.
+Los scripts son clásicos (sin módulos) y comparten el espacio de nombres `window.FL`, por eso la página funciona también desde `file://`. Los datos viven en JSON y se envuelven en `js/gen/data.js` porque un navegador no puede leer JSON desde `file://`.
 
 ## Datos y personalizaciones
 
 Un ramo se guarda como una receta, no como una imagen (`data/schema/bouquet.schema.json`, versión 1): qué ítems del catálogo lleva y cuántos tallos de cada uno, envoltorio, cinta, tarjeta, ocasión, la intención escrita y una semilla que hace que el dibujo salga siempre igual. `js/bouquet-model.js` normaliza cualquier ramo que llegue de afuera (ítems desconocidos, límites de 12 tipos, 24 tallos por tipo y 48 en total, textos largos) y deja lugar a migraciones futuras.
 
 - **Mis ramos** se guarda solo en el navegador (`localStorage`); no viaja a ningún servidor.
-- **Los enlaces** llevan el ramo comprimido en el fragmento `#ramo=…`, que el navegador no envía a los servidores. Quien tenga el enlace puede leer la tarjeta. La lectura de la IA y la intención escrita no viajan en el enlace: quien lo recibe ve la lectura local.
+- **Los enlaces** llevan el ramo comprimido en el fragmento `#ramo=…`, que el navegador no envía a los servidores. Quien tenga el enlace puede leer la tarjeta. La lectura y la intención escrita no viajan en el enlace: quien lo recibe ve la lectura local.
 - **Proveedores:** `data/schema/provider.schema.json` describe cómo se conectarán florerías (ítems, precios en CLP, disponibilidad por mes, zonas de despacho y cotizaciones). Aún no hay código.
 
 ## Agregar una flor
@@ -125,28 +115,30 @@ El taller reconoce el nombre de cada flor cuando alguien lo escribe, también en
 ```bash
 python tools/build_data.py --check      # datos válidos y js/gen/data.js al día
 node tests/run.cjs                      # lógica: layout, modelo de ramo, lectura, cuidados
-.venv/Scripts/python -m pytest server/tests -q   # API con un cliente de Claude simulado
+node tools/audit.cjs                    # cobertura del catálogo por sentimiento, temporada y mascotas
 ```
 
 Con el servidor andando, `tests/index.html` corre las mismas pruebas en el navegador y además revisa la visibilidad del jardín en seis tamaños de pantalla. `tests/gallery.html` y `tests/bouquets.html` muestran todos los dibujos y los ramos del mostrador para revisarlos a ojo.
 
-## Agente de IA
+## Cómo se arma la propuesta
 
-`server/` expone `GET /api/health`, `POST /api/bouquet/interpret` y `POST /api/bouquet/compose`. Cada pedido es una sola llamada a Claude con salida estructurada: los ítems quedan restringidos a los ids del catálogo, así que el modelo no puede inventar flores, y el servidor vuelve a validar límites, mascotas, exclusiones y totales antes de responder. El catálogo va en un prompt de sistema estable y cacheado; el texto que escribe quien usa la página se trata como descripción de sentimientos, nunca como instrucciones.
+Cada flor suma a un vector de diez significados, el mismo que muestra «Qué dice tu ramo». El texto, los sentimientos marcados y la ocasión se convierten en una mezcla objetivo de esos significados con el vocabulario de `data/taxonomy.json`:
 
-Variables (ver `.env.example`):
+- `intents`: lo que se quiere decir. Cada una tiene su etiqueta, un sustantivo que se lee después de «Leí en lo que escribiste…» («arrepentimiento», «un logro», «nostalgia»), su mezcla de significados (`mix`, pesos que suman 1), a veces otra mezcla según para quién sea (`with`) y sus señales: `strong` (pesan el doble), `words` y `emoji`. `mourning`, `romance` y `self` marcan duelo, romance y un regalo para uno mismo.
+- `recipients`: para quién es («mama», «jefa», «abuel*»), con su grupo, su mezcla y, si tiene, su día del calendario (`day`).
+- `occasions[].words`: cómo se nombra cada ocasión en el texto («14 de febrero», «gradu*»).
+- `neutral` (frases que no dicen nada por sí solas, como «vale la pena»), `names` (nombres propios que también son palabras, como Paz o Luz) y `modifiers`: intensificadores («muy», «de corazón»), atenuantes («un poco») y frases que parecen negar pero no niegan («no sabes cuánto», «no hay palabras»).
 
-- `ANTHROPIC_API_KEY`: clave de la API. También sirve un perfil de `ant auth login` con `FLORILEGIO_AI=1`.
-- `FLORILEGIO_MODEL`: modelo, `claude-opus-5` por defecto.
-- `FLORILEGIO_EFFORT`: esfuerzo de razonamiento (`low`, `medium`, `high`…), `medium` por defecto.
-- `FLORILEGIO_AI=0`: apaga el agente aunque haya clave.
-- `FLORILEGIO_FALLBACKS=0`: apaga el modelo de respaldo. Por defecto, si el modelo declina un pedido, la API lo reintenta en el modelo que Anthropic recomienda para ese caso (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`).
-- `FLORILEGIO_HOSTS`: nombres de host extra permitidos; por defecto solo `localhost`, `127.0.0.1` y `[::1]`.
-- `FLORILEGIO_RATE`: pedidos a la IA por cliente cada 10 minutos, 30 por defecto.
+La búsqueda prueba todas las combinaciones de flor principal × acompañantes × relleno × follaje × cantidades y se queda con la que, al leerla, pone primero el mismo significado.
 
-El servidor solo atiende pedidos dirigidos a este computador y rechaza los POST que no son JSON o que vienen de otro origen, para que una página ajena no pueda gastar la clave (por ejemplo, con «DNS rebinding»). `tools/serve.py` tampoco entrega `.env`, `.git`, `server/` ni `tools/`.
+### Agregar palabras al vocabulario
 
-Si toda la cadena de modelos rechaza un pedido o la respuesta llega cortada, la API responde con un error y la página usa la lectura local. Al usar el agente se envían a la API de Anthropic el ramo, la intención escrita y el mensaje de la tarjeta; los nombres de «Para» y «De» no se envían.
+1. Busca la intención, el destinatario o la ocasión que corresponde en `data/taxonomy.json` y agrega la palabra o frase a su lista (`words`, o `strong` si por sí sola dice claramente esa intención).
+2. Escríbela en minúsculas, sin tildes y con «n» en lugar de «ñ» («companero», «te extranare»): el texto se compara así.
+3. Cada forma cuenta por separado: «abrazo» no calza «abrazos». Agrega el plural o usa una raíz con «*» al final de la palabra, que acepta cualquier terminación («abraz*»). Una raíz suelta necesita al menos cuatro letras antes del «*», y conviene probar que no calce palabras ajenas («cari*» calzaría «caribe»).
+4. No uses nombres de flores, sus alias ni palabras de color: esas las lee la parte que entiende qué flores y colores se piden.
+5. Ejecuta `python tools/build_data.py`: valida y regenera `js/gen/data.js` (nunca lo edites a mano). Rechaza formatos inválidos, raíces cortas, palabras de flores o colores y señales repetidas entre intenciones o `neutral`, o entre destinatarios.
+6. Corre `node tests/run.cjs` y prueba la frase en el taller: la propuesta dice qué leyó y por qué palabra («Leí en lo que escribiste … («…»)»).
 
 ## Navegadores compatibles
 

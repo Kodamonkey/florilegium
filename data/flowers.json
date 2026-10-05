@@ -799,7 +799,8 @@
       "bouquet": {
         "role": "secondary",
         "florist": true,
-        "caution": "En gran parte de Europa y Latinoamérica se asocia a los cementerios y al Día de Todos los Santos."
+        "caution": "En gran parte de Europa y Latinoamérica se asocia a los cementerios y al Día de Todos los Santos.",
+        "mourningOnly": true
       }
     },
     {

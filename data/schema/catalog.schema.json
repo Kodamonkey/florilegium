@@ -41,7 +41,8 @@
       "properties": {
         "role": { "enum": ["focal", "secondary", "spike", "filler", "greenery"] },
         "florist": { "type": "boolean", "description": "false si casi nunca se usa en ramos" },
-        "caution": { "type": "string", "minLength": 1 }
+        "caution": { "type": "string", "minLength": 1 },
+        "mourningOnly": { "type": "boolean", "description": "solo se propone en un duelo o si alguien la pide por su nombre" }
       }
     },
     "flower": {
