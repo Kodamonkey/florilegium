@@ -88,6 +88,7 @@
     panel.hidden = false;
     scrim.hidden = false;
     btn.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('explore-open');
     requestAnimationFrame(() => { panel.classList.add('on'); scrim.classList.add('on'); });
     setTimeout(() => { if (window.innerWidth > 700) search.focus({ preventScroll: true }); }, 250);
   };
@@ -96,7 +97,7 @@
     panel.classList.remove('on');
     scrim.classList.remove('on');
     btn.setAttribute('aria-expanded', 'false');
-    const done = () => { panel.hidden = true; scrim.hidden = true; };
+    const done = () => { panel.hidden = true; scrim.hidden = true; document.body.classList.remove('explore-open'); };
     if (instant) done(); else setTimeout(done, 380);
   };
   E.isOpen = () => !panel.hidden;

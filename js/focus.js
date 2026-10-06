@@ -51,7 +51,7 @@
 
   function trap(e) {
     if (e.key !== 'Tab') return;
-    const els = Array.from(root.querySelectorAll('button, [href], input, [tabindex]:not([tabindex="-1"])')).filter((x) => x.offsetParent !== null);
+    const els = FL.u.withNearby(Array.from(root.querySelectorAll('button, [href], input, [tabindex]:not([tabindex="-1"])')).filter((x) => x.offsetParent !== null));
     if (!els.length) return;
     const first = els[0], last = els[els.length - 1];
     if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -66,17 +66,17 @@
         '<p class="eyebrow">' + fl.family + ' · ' + seasonText(fl.seasons) + '</p>' +
         '<h2 id="focusName">' + fl.name + '</h2>' +
         '<p class="sci">' + fl.sci + '</p>' +
+        '<p class="card-says">' + fl.meanings.join(' · ') + '</p>' +
+        '<button type="button" class="pillbtn pillbtn--solid card-add" data-add="' + fl.id + '">Agregar a un ramo</button>' +
         '<div class="card-tabs" role="group" aria-label="Ir a una lectura">' +
           '<button type="button" data-go="c-poe">Poética</button><button type="button" data-go="c-cul">Cultural</button><button type="button" data-go="c-sci">Científica</button><button type="button" data-go="c-care">Cuidados</button>' +
         '</div>' +
       '</header>' +
-      '<section class="c-poe" id="c-poe"><p class="label">Significado poético</p><blockquote>' + fl.poetic + '</blockquote></section>' +
-      '<section class="c-cul" id="c-cul"><p class="label">Significado cultural</p><p>' + c.symbol + '</p><p>' + c.history + '</p>' +
-        (c.note ? '<p class="note">' + c.note + '</p>' : '') +
+      '<section class="c-poe" id="c-poe"><p class="label">Significado poético</p><blockquote>' + fl.poetic + '</blockquote>' +
         '<div class="gift"><p class="mini">Al regalarla</p><p>' + c.gift + '</p></div></section>' +
+      '<section class="c-cul" id="c-cul"><p class="label">Significado cultural</p><p>' + c.symbol + '</p><p>' + c.history + '</p>' +
+        (c.note ? '<p class="note">' + c.note + '</p>' : '') + '</section>' +
       '<section class="c-sci" id="c-sci"><p class="label">Mirada científica</p><dl>' +
-        '<div><dt>Nombre científico</dt><dd>' + fl.sci + '</dd></div>' +
-        '<div><dt>Familia</dt><dd>' + fl.family + '</dd></div>' +
         '<div><dt>Origen</dt><dd>' + s.origin + '</dd></div>' +
         '<div><dt>Cómo crece</dt><dd>' + s.growth + '</dd></div>' +
         '<div><dt>Polinización</dt><dd>' + s.pollination + '</dd></div>' +
@@ -84,7 +84,7 @@
       FL.care.section(fl) +
       '<footer class="card-foot"><p class="mini">Buscar otras flores que hablan de</p><div class="chips">' +
         fl.meanings.map((m) => '<button type="button" class="chip" data-m="' + m + '">' + m + '</button>').join('') +
-      '</div><button type="button" class="pillbtn" data-add="' + fl.id + '">Agregar a un ramo</button></footer>';
+      '</div></footer>';
     card.scrollTop = 0;
   }
 
@@ -120,6 +120,7 @@
     lastFocus = document.activeElement;
     F.cur = fl;
     FL.explore.close(true);
+    if (FL.calendar && FL.calendar.isOpen()) FL.calendar.close(true);
     root.hidden = false;
     document.body.classList.add('focus-open');
     fillCard(fl);

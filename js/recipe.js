@@ -1,13 +1,145 @@
 /* Florilegio — receta para la florería: qué pedir y cuánto, para mostrar en el mostrador o enviar por mensaje,
-   y un enlace a Google Maps para buscar florerías cerca. */
+   y un acceso persistente para buscar florerías cerca. El destino no está atado a la página:
+   R.providers guarda los posibles; R.useProvider elige cuál usa el botón. */
 (function () {
   'use strict';
   const FL = window.FL;
   const R = (FL.recipe = {});
   const ROLES = ['focal', 'secondary', 'spike', 'filler', 'greenery'];
 
-  // Solo la palabra «florería»: Maps busca cerca de quien la abre y la página no le pasa nada más.
-  R.mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('florería');
+  // Sin ubicación, el enlace lleva solo la palabra «florería» y Maps decide dónde buscar.
+  const MAPS = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('florería');
+  // Con la ubicación que el navegador entrega (solo si la persona acepta), el mapa se centra donde está.
+  R.mapsAt = (lat, lng) => 'https://www.google.com/maps/search/' + encodeURIComponent('florería') + '/@' + (+lat).toFixed(3) + ',' + (+lng).toFixed(3) + ',15z';
+  R.providers = {
+    maps: {
+      id: 'maps',
+      label: 'Florerías cerca',
+      hint: 'Abre Google Maps con las florerías cerca de ti. Tu navegador te pedirá la ubicación; Florilegio solo la usa para centrar el mapa y no la guarda.',
+      url: MAPS,
+      at: R.mapsAt
+    }
+  };
+  R.providerId = 'maps';
+  R.provider = () => R.providers[R.providerId];
+  R.nearbyUrl = (c) => { const p = R.provider(); return c && p.at ? p.at(c.lat, c.lng) : p.url; };
+  R.mapsUrl = MAPS;
+
+  /*
+   * La ubicación se pide solo al tocar «Florerías cerca» y solo sirve para centrar el mapa: se redondea a unos
+   * cien metros, vive en memoria mientras la página está abierta y no se guarda ni se envía a ningún otro lado.
+   */
+  R.coords = null;
+  R.denied = false;
+  R.locate = () => new Promise((ok, no) => {
+    if (R.coords) { ok(R.coords); return; }
+    const g = typeof navigator !== 'undefined' && navigator.geolocation;
+    if (!g) { no(new Error('sin geolocalización')); return; }
+    g.getCurrentPosition((p) => {
+      R.coords = { lat: +p.coords.latitude.toFixed(3), lng: +p.coords.longitude.toFixed(3) };
+      ok(R.coords);
+    }, (err) => { R.denied = true; no(err); }, { enableHighAccuracy: false, timeout: 9000, maximumAge: 600000 });
+  });
+
+  // true si la apertura la resolvió la app (Maps o el navegador de fuera) y el enlace no debe seguir su curso.
+  R.openNearby = function (url) {
+    url = url || R.nearbyUrl(R.coords);
+    const cap = window.Capacitor;
+    const native = !!(cap && (typeof cap.isNativePlatform === 'function' ? cap.isNativePlatform() : cap.isNative));
+    const browser = cap && cap.Plugins && cap.Plugins.Browser;
+    if (native && browser && typeof browser.open === 'function') {
+      browser.open({ url: url });
+      return true;
+    }
+    const ua = typeof navigator !== 'undefined' ? navigator.userAgent || '' : '';
+    if (/\bAndroid\b/i.test(ua) && /\bwv\b/.test(ua) && typeof location !== 'undefined') {
+      const q = encodeURIComponent('florería'), c = R.coords;
+      location.href = 'intent://maps.google.com/maps?q=' + q + (c ? '&sll=' + c.lat + ',' + c.lng : '') +
+        '#Intent;scheme=https;package=com.google.android.apps.maps;S.browser_fallback_url=' + encodeURIComponent(url) + ';end';
+      return true;
+    }
+    return false;
+  };
+
+  // Lo que dicen los botones de florerías mientras se busca la ubicación y después.
+  function label(state) {
+    const p = R.provider();
+    const text = { idle: p.label, busy: 'Buscando tu ubicación…', near: 'Florerías cerca de ti', ready: 'Abrir el mapa' }[state];
+    document.querySelectorAll('[data-nearby]').forEach((el) => {
+      const l = el.querySelector('[data-nearby-label]');
+      if (l) l.textContent = text;
+      el.classList.toggle('busy', state === 'busy');
+      el.setAttribute('aria-busy', String(state === 'busy'));
+      if (el.tagName === 'A') el.href = R.nearbyUrl(R.coords);
+    });
+  }
+
+  /*
+   * Un toque: con la ubicación ya conocida (o sin geolocalización), el mapa se abre al instante. Si no, se pide,
+   * y al llegar se abre el mapa centrado ahí; si la persona no la da, se abre igual, sin ubicación. Si el navegador
+   * bloquea la ventana porque la respuesta tardó, el botón queda listo para abrirlo con un segundo toque.
+   */
+  R.goNearby = function (e, el) {
+    const geo = typeof navigator !== 'undefined' && navigator.geolocation;
+    // Ya se sabe dónde está, o no hay cómo saberlo (sin geolocalización, o la persona dijo que no): enlace directo.
+    if (R.coords || R.denied || !geo) {
+      const url = R.nearbyUrl(R.coords);
+      if (R.openNearby(url)) { e.preventDefault(); return; }
+      if (el.tagName === 'A') { el.href = url; return; }
+      e.preventDefault();
+      window.open(url, '_blank', 'noopener');
+      return;
+    }
+    e.preventDefault();
+    if (el.classList.contains('busy')) return;
+    label('busy');
+    R.locate().catch(() => null).then(() => {
+      label(R.coords ? 'near' : 'idle');
+      const url = R.nearbyUrl(R.coords);
+      if (R.openNearby(url)) return;
+      const w = window.open(url, '_blank');
+      if (w) w.opener = null;
+      else label('ready');
+    });
+  };
+
+  R.useProvider = function (id) {
+    const p = R.providers[id];
+    if (!p) return false;
+    R.providerId = id;
+    if (typeof document === 'undefined') return true;
+    const a = document.getElementById('nearby');
+    if (!a) return true;
+    a.href = R.nearbyUrl(R.coords);
+    a.title = p.hint;
+    a.querySelector('[data-nearby-label]').textContent = p.label;
+    a.querySelector('.sr').textContent = p.hint;
+    return true;
+  };
+
+  // Un solo botón flotante en el jardín y la ficha; en el taller, la receta y el regalo hay uno en su lugar.
+  function mountNearby() {
+    const p = R.provider();
+    const a = document.createElement('a');
+    a.id = 'nearby';
+    a.className = 'nearby';
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.href = p.url;
+    a.title = p.hint;
+    a.setAttribute('data-nearby', '');
+    a.innerHTML = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17.5s5.5-4.8 5.5-8.7a5.5 5.5 0 0 0-11 0c0 3.9 5.5 8.7 5.5 8.7z"/><circle cx="10" cy="8.6" r="1.7"/></svg>' +
+      '<span data-nearby-label></span><span class="sr"></span>';
+    a.querySelector('[data-nearby-label]').textContent = p.label;
+    a.querySelector('.sr').textContent = p.hint;
+    document.body.appendChild(a);
+    // Todos los botones de florerías (el flotante y los de cada vista) pasan por el mismo camino.
+    document.addEventListener('click', (e) => {
+      const el = e.target.closest('[data-nearby]');
+      if (el) R.goNearby(e, el);
+    });
+  }
+  if (typeof document !== 'undefined' && document.getElementById('garden')) mountNearby();
 
   const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
   // De los colores en que se vende la flor, el más cercano al que tiene en el dibujo.

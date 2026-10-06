@@ -49,6 +49,7 @@ body.sheet-open { overflow: hidden; }
 /* ---------- Hojas a pantalla completa ---------- */
 .sheet {
   position: fixed; inset: 0; z-index: 78; overflow-y: auto; overscroll-behavior: contain;
+  scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 92px);
   background: radial-gradient(70vmax 50vmax at 85% -10%, var(--sun), transparent 70%), var(--paper);
   opacity: 0; translate: 0 14px; transition: opacity 0.4s ease, translate 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -62,7 +63,7 @@ body.sheet-open { overflow: hidden; }
 }
 .sheet-head h2 { margin: 0.1rem 0 0; font-family: var(--f-display); font-weight: 500; font-style: italic; font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1; }
 .sheet .label { color: color-mix(in srgb, var(--hue) 40%, var(--ink)); }
-.sheet .mini, .field span, .at-count, .sc-when, .at-nm small, .at-info, .muted, .sc-upcoming .mini, .ex-count { color: var(--ink-2); }
+.sheet .mini, .field span, .at-count, .sc-when, .at-nm small, .at-info, .muted, .ex-count { color: var(--ink-2); }
 .sheet-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; }
 
 /* ---------- Taller ---------- */
@@ -80,6 +81,7 @@ body.sheet-open { overflow: hidden; }
 .at-row select { flex: 1 1 12rem; width: auto; }
 .at-rationale:empty { display: none; }
 .at-rationale { font-size: 0.95rem; line-height: 1.5; color: var(--ink-2); border-left: 2px solid var(--sage); padding-left: 0.8rem; }
+.at-rationale p { margin: 0; }
 .at-rationale ul { margin: 0.4rem 0 0; padding-left: 1.1rem; }
 .at-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; max-height: 58vh; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
 .at-item {
@@ -121,6 +123,68 @@ body.sheet-open { overflow: hidden; }
 #atReading { display: grid; gap: 0.6rem; }
 #atReading .mini { margin-top: 0.65rem; }
 .at-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+/* Qué hacer con el ramo: compartir arriba y destacado; el resto, filas con icono y una línea que dice para qué sirve. */
+.at-share { width: 100%; min-height: 48px; }
+.pillbtn svg, .at-tool svg {
+  flex: none; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;
+}
+.at-tools { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--card-line); }
+.at-tools li { border-bottom: 1px solid var(--card-line); }
+.at-tool {
+  display: flex; align-items: center; gap: 0.85rem; width: 100%; min-height: 56px; padding: 0.55rem 0.4rem; cursor: pointer;
+  background: none; border: 0; border-radius: 12px; text-align: left; color: var(--ink); transition: background-color 0.2s;
+}
+.at-tool:hover { background: color-mix(in srgb, var(--sage) 10%, transparent); }
+.at-tool:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; }
+.at-tool svg { width: 20px; height: 20px; color: color-mix(in srgb, var(--hue) 45%, var(--ink-2)); }
+.at-tool span { display: grid; gap: 0.1rem; min-width: 0; }
+.at-tool b { font-family: var(--f-display); font-size: 1.15rem; font-weight: 500; line-height: 1.1; }
+.at-tool small { font-size: 0.84rem; color: var(--ink-3); }
+.at-tool::after {
+  content: ""; flex: none; margin-left: auto; width: 0.42rem; height: 0.42rem;
+  border-top: 1.5px solid var(--ink-3); border-right: 1.5px solid var(--ink-3); rotate: 45deg;
+}
+.at-dl { display: grid; gap: 0.45rem; padding-top: 0.2rem; }
+.at-dl-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.at-side details.at-card { background: var(--card); border: 1px solid var(--card-line); border-radius: 18px; }
+.at-card summary {
+  display: flex; align-items: center; gap: 0.6rem; padding: 14px 16px; min-height: 48px; cursor: pointer; list-style: none; border-radius: 18px;
+}
+.at-card summary::-webkit-details-marker { display: none; }
+.at-card summary:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; }
+.at-card summary .label { margin: 0; }
+.at-opt { flex: 1; min-width: 0; font-size: 0.86rem; font-style: italic; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.at-card[open] .at-opt { visibility: hidden; }
+.at-chev { flex: none; width: 16px; height: 16px; fill: none; stroke: var(--ink-3); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: rotate 0.3s; }
+.at-card[open] .at-chev { rotate: 180deg; }
+.at-card-body { display: grid; gap: 0.7rem; padding: 0 16px 16px; }
+/* Plegables del taller: el nombre, un resumen de lo elegido y la flecha. Dentro de una tarjeta o sueltos. */
+.at-fold > summary {
+  display: flex; align-items: center; gap: 0.6rem; min-height: 44px; cursor: pointer; list-style: none; border-radius: 12px;
+}
+.at-fold > summary::-webkit-details-marker { display: none; }
+.at-fold > summary:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; }
+.at-fold > summary .label { margin: 0; }
+.at-fold-name { font-family: var(--f-ui); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); }
+.at-fold-sum {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.35rem;
+  font-size: 0.86rem; font-style: italic; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.at-fold[open] > summary .at-chev { rotate: 180deg; }
+.at-fold-body { display: grid; gap: 0.7rem; padding-top: 0.5rem; }
+.at-fine { border-block: 1px solid var(--card-line); }
+.at-fine .at-fold-body { padding-bottom: 0.8rem; }
+/* La paleta como tarjeta plegable, igual que las secciones de al lado. */
+.at-palette details.at-card-fold { background: var(--card); border: 1px solid var(--card-line); border-radius: 18px; padding: 6px 16px; }
+.at-card-fold[open] { padding-bottom: 16px; }
+.at-dress-fold { width: 100%; max-width: 440px; border-top: 1px solid var(--line); }
+.at-dress-fold > summary { justify-content: center; }
+.at-dress-fold .at-fold-sum { flex: 0 1 auto; }
+.at-dot { display: inline-block; flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
+.at-why summary { cursor: pointer; margin-top: 0.4rem; font-family: var(--f-ui); font-size: 0.78rem; color: var(--ink-2); }
+.rd-more summary { cursor: pointer; margin-top: 0.3rem; font-family: var(--f-ui); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); }
+.rd-more[open] { display: grid; gap: 0.6rem; }
+.nearby.busy, .at-tool.busy { cursor: progress; opacity: 0.75; }
 /* Descargar la lámina del ramo (imagen o PDF): el rótulo arriba, los dos formatos lado a lado. */
 .dl-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
 .dl-row .mini { flex-basis: 100%; color: var(--ink-2); }
@@ -137,8 +201,10 @@ body.sheet-open { overflow: hidden; }
   background: var(--paper-2); border-left: 1px solid var(--line); box-shadow: -30px 0 80px -50px rgba(40, 40, 20, 0.5);
   padding: calc(env(safe-area-inset-top, 0px) + 18px) 18px 32px;
 }
-.at-mine-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+/* El acceso a florerías queda fijo en la esquina: este aire deja el cierre del panel a su lado. */
+.at-mine-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding-right: 76px; }
 .at-mine-head h3 { margin: 0; font-family: var(--f-display); font-style: italic; font-weight: 500; font-size: 1.8rem; }
+#atNew { margin-bottom: 1rem; }
 .mine-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.8rem; }
 .mine-list .empty { font-style: italic; color: var(--ink-3); }
 .mine-card { display: grid; grid-template-columns: 96px 1fr; gap: 0.8rem; align-items: center; padding: 10px; border: 1px solid var(--card-line); border-radius: 16px; background: var(--card); }
@@ -147,9 +213,33 @@ body.sheet-open { overflow: hidden; }
 .mine-actions .pillbtn { min-height: 32px; padding: 0.4rem 0.75rem; font-size: 0.66rem; }
 
 /* ---------- Mostrador ---------- */
-.sc-filters { display: grid; gap: 0.6rem; padding: 18px clamp(16px, 3vw, 40px) 0; }
-.sc-upcoming { margin: 0.2rem 0 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0; }
-.sc-upcoming .mini { margin-right: 0.8rem; }
+/* Tres desplegables con su nombre a la vista: ocasión, temporada y hemisferio. */
+.sc-filters {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.7rem 0.8rem;
+  padding: 16px clamp(16px, 3vw, 40px) 0;
+}
+.sc-field { display: grid; gap: 0.3rem; }
+/* El buscador va primero y ocupa lo que sobra de la fila: escribir es lo más rápido. */
+.sheet .sc-search { flex: 1 1 240px; min-height: 42px; padding: 0.45rem 1rem; border-radius: 999px; background: var(--card); }
+.sc-field > span {
+  padding-left: 0.95rem; font-family: var(--f-ui); font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3);
+}
+.sheet .sc-field select {
+  width: auto; min-width: 10.5rem; min-height: 42px; padding: 0.45rem 2.4rem 0.45rem 0.95rem; border-radius: 999px; cursor: pointer;
+  font-family: var(--f-ui); font-size: 0.86rem; color: var(--ink); background-color: var(--card);
+  -webkit-appearance: none; appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-2) 50%), linear-gradient(135deg, var(--ink-2) 50%, transparent 50%);
+  background-position: right 1.15rem center, right 0.82rem center; background-size: 0.34rem 0.34rem; background-repeat: no-repeat;
+  transition: border-color 0.25s;
+}
+.sheet .sc-field select:hover { border-color: var(--sage); }
+.sc-count { margin: 0 0 0 auto; align-self: center; white-space: nowrap; font-family: var(--f-ui); font-size: 0.82rem; color: var(--ink-2); }
+@media (max-width: 760px) {
+  .sc-filters { display: grid; grid-template-columns: 1fr 1fr; }
+  .sc-search, .sc-field:nth-child(2) { grid-column: 1 / -1; }
+  .sheet .sc-field select { width: 100%; min-width: 0; }
+  .sc-count { grid-column: 1 / -1; margin: 0; }
+}
 .sc-grid {
   list-style: none; margin: 0; display: grid; gap: clamp(14px, 2vw, 24px);
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
@@ -167,14 +257,119 @@ body.sheet-open { overflow: hidden; }
 .sc-says span { font-family: var(--f-ui); font-size: 0.72rem; padding: 0.15rem 0.55rem; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-2); }
 .sc-meta .pillbtn { justify-self: start; margin-top: 0.3rem; }
 
+/* ---------- Cuándo regalar flores ---------- */
+/* La próxima fecha arriba, grande; el resto del año en una columna de días que se abren; al final, las ocasiones sin día. */
+.cal-body {
+  max-width: 880px; margin: 0 auto;
+  padding: 22px clamp(16px, 3vw, 40px) calc(env(safe-area-inset-bottom, 0px) + 56px);
+}
+/* Buscar una fecha: arriba, del mismo ancho que la lista. */
+.cal-find { max-width: 880px; margin: 0 auto; padding: 18px clamp(16px, 3vw, 40px) 0; }
+.cal-find + .cal-body { padding-top: 14px; }
+.sheet .cal-find .ex-search { border-radius: 999px; background: var(--card); }
+.cal-empty { margin: 1.4rem 0; font-family: var(--f-display); font-style: italic; font-size: 1.2rem; color: var(--ink-2); }
+.cal-next {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(150px, 230px); gap: 1.4rem; align-items: center;
+  padding: clamp(20px, 3vw, 30px); border-radius: 4px 30px 4px 30px; overflow: hidden;
+  background: radial-gradient(60% 90% at 88% 40%, color-mix(in srgb, var(--sun) 80%, transparent), transparent 70%), var(--card);
+  border: 1px solid var(--card-line); box-shadow: 0 30px 70px -50px rgba(40, 40, 20, 0.5);
+}
+.cal-next-body { display: grid; gap: 0.6rem; justify-items: start; min-width: 0; }
+.cal-kicker {
+  margin: 0; font-family: var(--f-ui); font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3);
+}
+.cal-kicker span { font-size: 0.8rem; letter-spacing: 0.04em; text-transform: none; color: var(--moss); }
+.cal-next h3 {
+  margin: 0.1rem 0 0; font-family: var(--f-display); font-style: italic; font-weight: 500;
+  font-size: clamp(2.3rem, 4.6vw, 3.2rem); line-height: 0.98; letter-spacing: -0.01em; text-wrap: balance;
+}
+.cal-fulldate { margin: -0.2rem 0 0.2rem; font-family: var(--f-display); font-size: 1.2rem; color: var(--ink-2); }
+/* Las flores de la fecha, en un pequeño ramillete que respira detrás del texto. */
+.cal-next-art { position: relative; aspect-ratio: 1; align-self: center; }
+.cal-next-art i { position: absolute; aspect-ratio: 1; }
+.cal-next-art i:nth-child(1) { left: 14%; top: 2%; width: 70%; z-index: 2; }
+.cal-next-art i:nth-child(2) { left: -2%; bottom: 0; width: 48%; z-index: 1; }
+.cal-next-art i:nth-child(3) { right: -4%; bottom: 6%; width: 44%; z-index: 3; }
+.cal-next-art i:only-child { left: 4%; top: 4%; width: 92%; }
+
+.cal-group {
+  display: flex; align-items: center; gap: 0.9rem; margin: 2.2rem 0 0.6rem;
+  font-family: var(--f-ui); font-weight: 400; font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3);
+}
+.cal-group::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.cal-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.cal-list--grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); column-gap: 1.6rem; align-items: start; }
+.cal-year {
+  margin: 1rem 0 0.2rem; font-family: var(--f-display); font-style: italic; font-size: 1.35rem; color: var(--ink-3);
+}
+.cal-item { border-bottom: 1px solid var(--card-line); }
+.cal-item summary {
+  display: flex; align-items: center; gap: 0.9rem; min-height: 64px; padding: 0.55rem 0.2rem; cursor: pointer;
+  list-style: none; border-radius: 12px; transition: background-color 0.25s;
+}
+.cal-item summary::-webkit-details-marker { display: none; }
+.cal-item summary:hover { background: color-mix(in srgb, var(--card) 70%, transparent); }
+.cal-item summary:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; }
+.cal-date {
+  flex: none; display: grid; justify-items: center; width: 3.1rem; line-height: 1;
+  font-family: var(--f-ui); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+}
+.cal-date b { font-family: var(--f-display); font-weight: 500; font-size: 1.9rem; letter-spacing: 0; color: var(--ink); margin-bottom: 0.1rem; }
+.cal-item-main { flex: 1; min-width: 0; display: grid; gap: 0.1rem; }
+.cal-item-name { font-family: var(--f-display); font-size: 1.32rem; font-weight: 500; line-height: 1.15; color: var(--ink); }
+.cal-item-soon { font-family: var(--f-ui); font-size: 0.76rem; color: var(--moss); }
+.cal-heads { flex: none; display: flex; }
+.cal-heads i { position: relative; width: 34px; height: 34px; margin-left: -10px; }
+.cal-heads i:first-child { margin-left: 0; }
+.cal-chev {
+  flex: none; width: 16px; height: 16px; fill: none; stroke: var(--ink-3); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+  transition: rotate 0.3s ease;
+}
+.cal-item details[open] .cal-chev { rotate: 180deg; }
+.cal-item details[open] summary .cal-heads { opacity: 0; }
+.cal-heads { transition: opacity 0.3s ease; }
+.cal-item-body {
+  display: grid; gap: 0.7rem; justify-items: start; padding: 0.2rem 0.2rem 1.2rem calc(3.1rem + 0.9rem + 0.2rem);
+  animation: calopen 0.35s ease both;
+}
+.cal-list--grid .cal-item-body { padding-left: 0.2rem; }
+@keyframes calopen { from { opacity: 0; translate: 0 -4px; } }
+.cal-why { margin: 0; max-width: 62ch; font-size: 0.98rem; line-height: 1.6; color: var(--ink-2); text-wrap: pretty; }
+.cal-note { margin: 0; max-width: 62ch; font-size: 0.9rem; font-style: italic; line-height: 1.45; color: var(--ink-3); }
+.cal-flowers { list-style: none; margin: 0.1rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.cal-flowers button, .cal-static {
+  display: inline-flex; align-items: center; gap: 0.35rem; min-height: 44px;
+  padding: 0.15rem 0.85rem 0.15rem 0.2rem; border-radius: 999px; border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper) 60%, transparent); color: var(--ink); font-family: var(--f-ui); font-size: 0.84rem;
+}
+.cal-flowers button { cursor: pointer; transition: border-color 0.25s; }
+.cal-flowers button:hover { border-color: var(--sage); }
+.cal-flowers button:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; }
+.cal-head { position: relative; width: 36px; height: 36px; flex: none; overflow: hidden; }
+.cal-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.3rem; }
+@media (max-width: 640px) {
+  .cal-next { grid-template-columns: 1fr; gap: 0.4rem; }
+  .cal-next-art { order: -1; width: 150px; justify-self: center; margin: -6px 0 0; }
+  .cal-next-body { justify-items: center; text-align: center; }
+  .cal-next .cal-flowers, .cal-next .cal-actions { justify-content: center; }
+  .cal-item-body { padding-left: 0.2rem; }
+  .cal-heads i { width: 28px; height: 28px; margin-left: -9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cal-item-body { animation: none; }
+  .cal-chev, .cal-heads { transition: none; }
+}
+
 /* ---------- Un ramo recibido ---------- */
-.gift-view { z-index: 88; background: radial-gradient(85vmax 70vmax at 50% 20%, color-mix(in srgb, var(--days-a) 80%, var(--paper)), var(--paper) 75%); scroll-timeline: --giftscroll block; }
+.gift-view { z-index: 88; background: radial-gradient(85vmax 70vmax at 50% 20%, color-mix(in srgb, var(--gift-a) 80%, var(--paper)), var(--paper) 75%); scroll-timeline: --giftscroll block; }
 /* Los pétalos que celebran el ramo se desvanecen al bajar hacia la lectura y los cuidados: detrás del texto,
    un pétalo oscuro se comía letras enteras (sobre todo en celulares, donde el texto va de borde a borde). */
 @supports (animation-timeline: scroll()) {
   .gift-view .days-fx { animation: fxfade linear both; animation-timeline: --giftscroll; animation-range: 0px 420px; }
 }
 @keyframes fxfade { to { opacity: 0.12; } }
+/* Cerrar siempre a mano, arriba: antes solo se podía volver desde el final de la página. */
+.gift-close { position: fixed; z-index: 6; top: calc(env(safe-area-inset-top, 0px) + 14px); left: clamp(16px, 3vw, 40px); }
 .gift-inner { position: relative; max-width: 40rem; margin: 0 auto; display: grid; justify-items: center; text-align: center; gap: 1rem;
   padding: calc(env(safe-area-inset-top, 0px) + 7vh) 16px calc(env(safe-area-inset-bottom, 0px) + 60px); }
 .gift-inner h2 { margin: 0; font-family: var(--f-display); font-weight: 400; font-style: italic; font-size: clamp(2.4rem, 6vw, 3.6rem); line-height: 1; text-wrap: balance; }
@@ -239,7 +434,7 @@ a.pillbtn { text-decoration: none; }
 .gift-recipe .recipe { margin-top: 0.8rem; }
 .gift-recipe .pillbtn { margin-top: 1rem; }
 
-/* ---------- Navegación con cuatro secciones ---------- */
+/* ---------- Navegación ---------- */
 .navbtn .navlong { display: inline; }
 
 @media (max-width: 1100px) {
@@ -262,14 +457,7 @@ a.pillbtn { text-decoration: none; }
   .sheet-head .eyebrow { display: none; }
   .sheet-head h2 { font-size: 1.5rem; white-space: nowrap; }
   .at-grid { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
-  /* Filtros del mostrador en filas que se deslizan de lado: así los ramos asoman en la primera pantalla. */
-  .sc-filters .chips {
-    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding-inline: 16px;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 28px), transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 28px), transparent);
-  }
-  .sc-filters .chips::-webkit-scrollbar { display: none; }
-  .sc-filters .chip { flex: none; }
+  /* La temporada sigue en una sola fila deslizable; las ocasiones, al abrirse, se acomodan en varias líneas. */
   /* A todo el ancho, cada ramo llenaba la pantalla: más contenido, asoma el texto y el siguiente. */
   .sc-bq { width: 74%; justify-self: center; padding: 14px 0 0; }
   .sc-card { background: radial-gradient(70% 34% at 50% 22%, color-mix(in srgb, var(--sun) 70%, transparent), transparent), var(--card); }
@@ -301,8 +489,17 @@ a.pillbtn { text-decoration: none; }
 .at-dock-txt { flex: 1; display: grid; min-width: 0; font-family: var(--f-display); font-size: 1.15rem; line-height: 1.15; }
 .at-dock-txt small { font-family: var(--f-ui); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
 .at-dock svg { flex: none; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-@media (max-width: 900px) {
+@media (max-width: 1500px) {
   .navbtn .navlong { display: none; }
+}
+@media (max-width: 640px) {
+  .topnav {
+    left: 8px; right: 8px; translate: none; width: auto; max-width: none; justify-content: center;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .topnav::-webkit-scrollbar { display: none; }
+  /* Cinco secciones: sin icono caben en el ancho del celular. */
+  .navbtn svg, .navbtn .days-dot { display: none; }
 }
 @media (max-width: 700px) {
   .topnav { gap: 0.3rem; }

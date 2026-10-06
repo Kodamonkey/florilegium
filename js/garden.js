@@ -73,7 +73,7 @@
     const zones = [];
     // En celulares el nombre de la flor (al filtrar) aparece sobre la cabeza: se deja lugar para que no pise el subtítulo.
     const tag = document.documentElement.clientWidth < 700 ? 30 : 10;
-    document.querySelectorAll('.brand, .topnav').forEach((el) => {
+    document.querySelectorAll('.brand, .topnav, .nearby').forEach((el) => {
       const rc = el.getBoundingClientRect();
       if (!rc.width || rc.top > window.innerHeight / 2) return;
       // La navegación es fija: su zona es la de la pantalla sin desplazar, aunque se reconstruya con scroll.

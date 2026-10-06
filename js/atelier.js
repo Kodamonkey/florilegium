@@ -6,7 +6,7 @@
   const A = (FL.atelier = {});
   const $ = (id) => document.getElementById(id);
   const DRAFT = 'fl.draft';
-  let root, dock, cur = null, role = '', query = '', lastFocus = null, renderT = 0, toastT = 0, itemsDone = false, lastKey = '', leads = [], occPicked = null;
+  let root, dock, cur = null, role = '', query = '', lastFocus = null, renderT = 0, toastT = 0, itemsDone = false, lastKey = '', leads = [], occPicked = null, moreOpen = false;
   const narrow = window.matchMedia ? window.matchMedia('(max-width: 760px)') : { matches: false };
 
   const esc = U.esc;
@@ -26,6 +26,10 @@
     if (mq && mq.addEventListener) mq.addEventListener('change', () => { if (itemsDone) renderItems(); });
 
     root.addEventListener('click', onClick);
+    // Cada plegable resume lo elegido, para saber qué hay dentro sin abrirlo.
+    root.addEventListener('click', () => requestAnimationFrame(summaries));
+    root.addEventListener('change', () => requestAnimationFrame(summaries));
+    root.addEventListener('toggle', (e) => { if (e.target.classList && e.target.classList.contains('rd-more')) moreOpen = e.target.open; }, true);
     $('atSearch').addEventListener('input', (e) => { query = U.norm(e.target.value.trim()); renderItems(); });
     // La ocasión cambia lo que el ramo dice. Elegida aquí, manda sobre la que se lea en el texto.
     $('atOccasion').addEventListener('change', (e) => { occPicked = !!e.target.value; if (!cur) return; if (e.target.value) cur.occasion = e.target.value; else delete cur.occasion; changed(); });
@@ -50,7 +54,6 @@
     }
     $('atelierBtn').addEventListener('click', () => A.open());
     FL.plate.bind($('atPng'), $('atPdf'), () => cur, toast);
-    $('atMaps').href = FL.recipe.mapsUrl;
     if (canShare()) $('atRecipeSend').textContent = 'Enviar la receta';
   };
 
@@ -60,43 +63,62 @@
     (kind === 'ribbon' ? 'Cinta ' : 'Envoltorio ') + FL.swatchName(c) + '"></button>';
 
   /* ---------- Abrir y cerrar ---------- */
-  // opts: { bouquet } para editar una copia, { add: id } para sumar una flor, o nada para retomar el borrador.
+  // opts: { bouquet } para editar una copia, { add: id } para sumar una flor,
+  // { mine: true } para abrir directo «Mis ramos», o nada para retomar el borrador.
   A.open = function (opts = {}) {
     if (FL.focus.isOpen()) FL.focus.close();
     FL.explore.close(true);
+    if (FL.calendar && FL.calendar.isOpen()) FL.calendar.close(true);
     if (FL.showcase && FL.showcase.isOpen()) FL.showcase.close(true);
     if (!cur) cur = loadDraft() || FL.bouquet.create();
     if (opts.bouquet) replace(FL.bouquet.normalize(opts.bouquet).bouquet);
+    // Desde el calendario: un ramo nuevo (el anterior queda en «Mis ramos») y, si hay ocasión, propuesto de inmediato.
+    if (opts.fresh || opts.occasion) replace(FL.bouquet.create());
+    if (opts.occasion) { cur.occasion = opts.occasion; occPicked = true; setTimeout(() => propose(false), 0); }
     if (opts.add && !FL.bouquet.add(cur, opts.add, 1)) setTimeout(() => toast('El ramo ya está en el máximo de tallos o de tipos: quita algo para sumar ' + FL.item(opts.add).name.toLowerCase() + '.'), 400);
-    if (!root.hidden) { sync(true); return; }
+    if (!root.hidden) {
+      sync(true);
+      if (opts.mine) { try { history.replaceState(null, '', '#mis-ramos'); } catch (e) { /* sin historial */ } toggleMine(true); }
+      return;
+    }
     lastFocus = document.activeElement;
     root.hidden = false;
-    if (!itemsDone) renderItems();
+    if (!itemsDone) {
+      // Plegables, la primera vez: en pantallas anchas la paleta y el envoltorio parten abiertos; en el celular, cerrados.
+      const wide = window.matchMedia && window.matchMedia('(min-width: 1100px)').matches;
+      $('atPickFold').open = !!wide;
+      $('atDressFold').open = !!wide;
+      renderItems();
+    }
     U.syncSheets();
     requestAnimationFrame(() => root.classList.add('on'));
     sync(true);
     // El léxico se compila mientras el navegador descansa: la primera propuesta no espera.
     if (FL.intent && FL.intent.warm) (window.requestIdleCallback || setTimeout)(() => FL.intent.warm());
-    try { history.replaceState(null, '', '#armar'); } catch (e) { /* sin historial */ }
-    setTimeout(() => $('atClose').focus({ preventScroll: true }), 60);
+    try { history.replaceState(null, '', opts.mine ? '#mis-ramos' : '#armar'); } catch (e) { /* sin historial */ }
+    setTimeout(() => { if (opts.mine) toggleMine(true); else $('atClose').focus({ preventScroll: true }); }, 60);
   };
 
-  A.close = function () {
+  A.close = function (instant) {
     if (root.hidden) return;
-    if (!$('atMineList').hidden) { toggleMine(false); return; }
-    if (!$('atRecipeBox').hidden) { toggleRecipe(false); return; }
+    if (!instant && !$('atMineList').hidden) { toggleMine(false); return; }
+    if (!instant && !$('atRecipeBox').hidden) { toggleRecipe(false); return; }
+    $('atMineList').hidden = true;
+    $('atRecipeBox').hidden = true;
     root.classList.remove('on');
-    setTimeout(() => {
+    const done = () => {
       root.hidden = true;
       U.syncSheets();
-      if (location.hash === '#armar') { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* sin historial */ } }
-      U.refocus(lastFocus, $('atelierBtn'));
-    }, FL.reduce ? 20 : 380);
+      if (location.hash === '#armar' || location.hash === '#mis-ramos') { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* sin historial */ } }
+      if (!instant) U.refocus(lastFocus, $('atelierBtn'));
+    };
+    if (instant || FL.reduce) done(); else setTimeout(done, 380);
   };
   A.isOpen = () => root && !root.hidden;
   A.current = () => cur;
   // Desde una ficha abierta en el taller: filtra la paleta por un sentimiento.
   A.search = function (text) {
+    $('atPickFold').open = true;
     $('atSearch').value = text;
     query = U.norm(text);
     renderItems();
@@ -107,10 +129,11 @@
   function trap(e) {
     if (e.key !== 'Tab') return;
     const scope = [$('atMineList'), $('atRecipeBox')].find((d) => !d.hidden) || root;
-    const els = Array.from(scope.querySelectorAll('button, [href], input, select, textarea, summary')).filter((x) => x.offsetParent !== null && !x.disabled);
+    const els = U.withNearby(Array.from(scope.querySelectorAll('button, [href], input, select, textarea, summary')).filter((x) => x.offsetParent !== null && !x.disabled));
     if (!els.length) return;
     const first = els[0], last = els[els.length - 1], at = document.activeElement;
-    if (!scope.contains(at)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+    const near = document.getElementById('nearby');
+    if (!scope.contains(at) && at !== near) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
     else if (e.shiftKey && at === first) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
   }
@@ -217,7 +240,7 @@
         break;
       case 'atShare': if (cur.stems.length) share(cur); else toast('El ramo está vacío.'); break;
       case 'atGift': if (cur.stems.length) FL.gift.open(FL.bouquet.clone(cur), { preview: true }); else toast('El ramo está vacío.'); break;
-      case 'atNew': replace(FL.bouquet.create()); sync(true); break;
+      case 'atNew': replace(FL.bouquet.create()); toggleMine(false); sync(true); break;
       case 'atRecipe': if (cur.stems.length) toggleRecipe(true); else toast('El ramo está vacío.'); break;
       case 'atRecipeClose': toggleRecipe(false); break;
       case 'atRecipeSend': sendRecipe(); break;
@@ -250,8 +273,10 @@
       if (req.occasion && !occPicked) lastKey = JSON.stringify(Object.assign({}, req, { occasion: undefined, avoidLeads: undefined }));
       const keep = { name: cur.name, card: cur.card };
       cur = FL.bouquet.normalize(Object.assign({}, res.bouquet, keep, { id: cur.id })).bouquet;
-      $('atRationale').innerHTML = '<strong>' + esc(res.rationale.lead) + '</strong>' +
-        '<ul>' + res.rationale.items.map((x) => '<li>' + esc(x.n + ' × ' + x.name) + ': ' + esc(x.why) + '</li>').join('') + '</ul>';
+      // Por qué este ramo, en una frase; flor por flor, a un toque.
+      $('atRationale').innerHTML = '<p>' + esc(res.rationale.lead) + '</p>' +
+        '<details class="at-why"><summary>Flor por flor</summary><ul>' +
+        res.rationale.items.map((x) => '<li>' + esc(x.n + ' × ' + x.name) + ': ' + esc(x.why) + '</li>').join('') + '</ul></details>';
       $('atAnother').hidden = false;
       sync(true);
     }, 0);
@@ -292,6 +317,7 @@
   /* ---------- Receta para la florería ---------- */
   function toggleRecipe(on) {
     $('atRecipeBox').hidden = !on;
+    U.syncSheets();
     if (on) { $('atMineList').hidden = true; renderRecipe(); $('atRecipeClose').focus({ preventScroll: true }); }
     else $('atRecipe').focus({ preventScroll: true });
   }
@@ -352,10 +378,14 @@
       $('atTo').value = cur.card.to || '';
       $('atMsg').value = cur.card.message || '';
       $('atFrom').value = cur.card.from || '';
+      // La tarjeta se abre sola si ya tiene algo escrito; vacía, queda plegada y no pesa.
+      if (cur.name || cur.card.to || cur.card.message || cur.card.from) $('atCardFold').open = true;
       $('atOccasion').value = cur.occasion || '';
     }
+    summaries();
     const total = FL.bouquet.total(cur), L = FL.limits;
-    $('atCount').textContent = total ? countText() + ' (máximo ' + L.stems + ')' : 'Toca una flor para empezar.';
+    // El tope se avisa solo cuando ya se acerca.
+    $('atCount').textContent = total ? countText() + (total >= L.stems * 0.8 ? ' (máximo ' + L.stems + ')' : '') : 'Toca una flor para empezar.';
     clearTimeout(renderT);
     renderT = setTimeout(() => {
       $('atCanvas').innerHTML = FL.bouquetArt.render(cur, { cls: full ? 'enter' : '' }).svg;
@@ -394,14 +424,28 @@
     if (!cur.stems.length) { box.innerHTML = '<p class="muted">Cuando agregues flores, aquí aparecerá lo que tu ramo dice.</p>'; return; }
     const r = FL.reading.display(cur, { petSafe: $('atPetSafe').checked });
     const maxW = Math.max(...r.meanings.map((m) => m.weight), 0.01);
-    box.innerHTML = '<p class="rd-summary">' + esc(r.summary) + '</p>' +
-      '<ul class="rd-bars">' + r.meanings.map((m) => '<li><span>' + esc(m.id) + '</span><i style="--w:' + Math.round((m.weight / maxW) * 100) + '%"></i></li>').join('') + '</ul>' +
-      listBlock('Notas culturales', r.notes) +
-      listBlock('Ten en cuenta', r.warnings, 'rd-warn', 8) +
+    // Lo que dice y los avisos quedan a la vista; las notas culturales y las sugerencias, plegadas.
+    const more = listBlock('Notas culturales', r.notes) +
       (r.suggestions.length ? '<p class="mini">Sugerencias</p><div class="rd-sugg">' + r.suggestions.map((s) =>
         '<button type="button" class="chip" data-suggest="' + s.item + '" data-sn="' + (s.n || 3) + '">+ ' + esc(FL.item(s.item).name) + '</button><span>' + esc(s.why) + '</span>').join('') + '</div>' : '');
+    const n = (r.notes || []).slice(0, 5).length + r.suggestions.length;
+    box.innerHTML = '<p class="rd-summary">' + esc(r.summary) + '</p>' +
+      '<ul class="rd-bars">' + r.meanings.map((m) => '<li><span>' + esc(m.id) + '</span><i style="--w:' + Math.round((m.weight / maxW) * 100) + '%"></i></li>').join('') + '</ul>' +
+      listBlock('Ten en cuenta', r.warnings, 'rd-warn', 8) +
+      (n ? '<details class="rd-more"' + (moreOpen ? ' open' : '') + '><summary>Notas y sugerencias · ' + n + '</summary>' + more + '</details>' : '');
   }
   const listBlock = (title, arr, cls, max) => (arr && arr.length ? '<p class="mini">' + title + '</p><ul class="rd-list ' + (cls || '') + '">' + arr.slice(0, max || 5).map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '');
+
+  // Resúmenes de los plegables: «Gratitud · Cumpleaños · sin tóxicas» y «Papel kraft · ●●».
+  function summaries() {
+    if (!cur) return;
+    const fine = feelings().concat($('atOccasion').value ? [$('atOccasion').selectedOptions[0].text] : [])
+      .concat($('atPetSafe').checked ? ['sin tóxicas'] : []);
+    $('atFineSum').textContent = fine.length ? fine.join(' · ') : 'sentimientos, ocasión y mascotas';
+    const w = FL.taxonomy.wraps.find((x) => x.id === cur.wrap.style);
+    const dot = (c) => '<i class="at-dot" style="--c:' + c + '"></i>';
+    $('atDressSum').innerHTML = esc(w ? w.name : '') + (w && w.colors.length && cur.wrap.color ? dot(cur.wrap.color) : '') + dot(cur.ribbon.color);
+  }
 
   function toast(msg) {
     const t = $('atToast');

@@ -33,10 +33,19 @@
   U.lerp = (a, b, t) => a + (b - a) * t;
   U.rad = (d) => (d * Math.PI) / 180;
   U.norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  // Búsqueda de los buscadores: todas las palabras deben estar en el texto (ya normalizado), sin tildes ni
+  // mayúsculas, y una palabra en plural también encuentra su singular («rosas» → rosa, «girasoles» → girasol).
+  U.matches = function (hay, q) {
+    const words = U.norm(String(q || '')).split(/\s+/).filter(Boolean);
+    return words.every((w) => hay.includes(w) || (w.length > 3 && /s$/.test(w) &&
+      (hay.includes(w.slice(0, -1)) || (/es$/.test(w) && hay.includes(w.slice(0, -2))))));
+  };
   // Con una hoja a pantalla completa abierta (taller, mostrador, regalo), el jardín queda inerte para teclado y lectores.
   U.syncSheets = function () {
     const on = !!document.querySelector('.sheet:not([hidden])');
     document.body.classList.toggle('sheet-open', on);
+    // «Florerías cerca» solo acompaña las hojas donde hay algo que pedir: la receta del taller y el ramo recibido.
+    document.body.classList.toggle('sheet-shop', on && !!document.querySelector('#gift:not([hidden]), #atRecipeBox:not([hidden])'));
     document.querySelectorAll('#garden, .brand, .topnav, .colophon, #filterPill').forEach((el) => { el.inert = on; });
   };
   // Devuelve el foco a donde estaba, o a un respaldo si aquel control ya no se ve (quedó en una hoja cerrada).
@@ -58,6 +67,12 @@
   };
   // Texto escrito por personas, listo para insertar en HTML.
   U.esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  // «Florerías cerca» es fijo y a veces no tiene offsetParent: igual cierra el ciclo de Tab de la vista abierta.
+  U.withNearby = function (els) {
+    const near = document.getElementById('nearby');
+    if (near && els.indexOf(near) < 0 && near.getClientRects().length) els.push(near);
+    return els;
+  };
 
   // Curva suave (Catmull-Rom a Bézier) que pasa por todos los puntos.
   U.smooth = function (pts, closed = true, k = 1) {

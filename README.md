@@ -4,7 +4,7 @@ Florilegio nace para todas las personas que quieren regalar flores o un ramo y n
 
 Es un jardín digital interactivo: treinta y una flores ilustradas a mano en SVG, cada una con su propia animación y cuatro lecturas: poética, cultural, científica y de cuidados. Además, un taller para armar ramos propios y leer lo que dicen, un mostrador de ramos tradicionales de Occidente y una vista para quien recibe un ramo por enlace.
 
-Incluye una sección especial, **«Esos días que no hubo»**, para quien alguna vez esperó algo que nunca llegó: lo que se desea y no se tiene, lo que se anhela aunque quizá no llegue. Una sola rosa amarilla se abre despacio con un texto breve que le dice que no desespere, que todo saldrá bien, y cierra con una dedicatoria de Rainer Maria Rilke sobre el amor: la flor nunca fue lo importante, lo importante es el gesto.
+Incluye una sección especial, **«Esos días que no hubo»**, sobre los ramos que no se dieron a tiempo: el amor que no se entregó cuando se podía y las flores que llegan cuando ya no hay quien las vea. Una rosa blanca se abre despacio y deja un relato breve, escrito a mano, contra la costumbre de intelectualizar lo que se siente: las flores no se explican, se dan.
 
 ## Cómo abrirlo
 
@@ -29,9 +29,10 @@ Las tipografías (Cormorant, Newsreader y Jost) vienen en `fonts/`, servidas des
 - **Ficha de cada flor:** significado poético, cultural (con notas cuando cambia según la cultura), mirada científica y **cuidados**: cuánto dura en florero, cuánta agua quiere, pasos específicos y toxicidad para gatos y perros. Desde la ficha se puede agregar la flor a un ramo.
 - **Taller de ramos** (`#armar`): elige flores, rellenos y follajes tallo por tallo, o escribe lo que quieres decir y pide una propuesta. Elige envoltorio y cinta, escribe una tarjeta y lee en vivo qué dice el ramo: significados ponderados, notas culturales y advertencias (mascotas, números pares, flores de luto en algunas culturas). Los ramos se guardan en **Mis ramos** y se comparten con un enlace.
 - **Descargar el ramo** como imagen (PNG) o PDF, con todos los detalles: el dibujo, la tarjeta, de qué está hecho, qué dice y cómo cuidarlo. La imagen es una sola lámina larga, para guardar o enviar por mensaje; el PDF reparte lo mismo en páginas A4, listo para imprimir. Está en el taller y en la vista de un ramo recibido. Se arma en el navegador, sin enviar nada a ningún servidor, y siempre en papel claro, aunque la página esté en modo oscuro.
-- **Mostrador** (`#ramos`): veinte ramos tradicionales de Occidente por temporada y por temática (San Valentín, Día de la Madre, bodas, condolencias…). La temporada se calcula según el hemisferio, detectado por la zona horaria (Chile, Argentina, Australia… → sur) y ajustable a mano. Muestra las próximas fechas del calendario. Cada ramo se puede personalizar en el taller.
+- **Fechas** (`#fechas`): cuándo se regalan flores, por qué y con qué especies del jardín. Las fechas fijas (San Valentín, Día de la Madre, Sant Jordi, flores amarillas, Todos los Santos…) se calculan desde hoy; si un país las mueve, se dice junto a la fecha. Un buscador arriba encuentra por mes, ocasión o flor («mayo», «mamá», «rosas rojas»). La próxima va destacada; el resto del año, en una lista de días que se abren. Las ocasiones sin día marcado (cumpleaños, boda, condolencias…) van aparte. Cada flor abre su ficha, «Armar un ramo» abre el taller con un ramo propuesto para esa ocasión y, si hay ramos de esa ocasión, «Ver ramos» pasa al mostrador.
+- **Mostrador** (`#ramos`): veinte ramos tradicionales de Occidente por temporada y por temática (San Valentín, Día de la Madre, bodas, condolencias…). La temporada se calcula según el hemisferio, detectado por la zona horaria (Chile, Argentina, Australia… → sur) y ajustable a mano. Un buscador encuentra por nombre, ocasión o flor, y ocasión, temporada y hemisferio se eligen en tres desplegables con su nombre a la vista; si una búsqueda no da nada en esta temporada, se ofrece verla en todas. Cada ramo se puede personalizar en el taller.
 - **Un ramo recibido** (`#ramo=…`): quien abre el enlace ve el ramo, la tarjeta, lo que dice cada flor y cómo cuidarlo, con un calendario `.ics` de recordatorios para cambiar el agua.
-- **Receta para la florería:** desde el taller, el ramo se convierte en una lista para pedirlo en una florería: cuántos tallos de cada flor (y de qué color, cuando la flor se vende en varios), envoltorio, cinta, total y el texto de la tarjeta. Se copia o se envía por mensaje con el enlace al dibujo, y avisa cuando una flor casi nunca se encuentra en florerías. Quien recibe un ramo también ve la receta, sin la tarjeta. El botón «Florerías cerca» abre Google Maps con la búsqueda «florería»: Maps pide la ubicación por su cuenta y la página no envía nada más.
+- **Receta para la florería:** desde el taller, el ramo se convierte en una lista para pedirlo en una florería: cuántos tallos de cada flor (y de qué color, cuando la flor se vende en varios), envoltorio, cinta, total y el texto de la tarjeta. Se copia o se envía por mensaje con el enlace al dibujo, y avisa cuando una flor casi nunca se encuentra en florerías. Quien recibe un ramo también ve la receta, sin la tarjeta. «Florerías cerca» está en el jardín, la ficha de cada flor, el taller («Cuando esté listo»), la receta y la vista de regalo (no en Ramos, Fechas ni «Esos días que no hubo»). Al tocarlo, el navegador pide la ubicación; si se acepta, se redondea a unos cien metros y abre Google Maps centrado ahí, y si no, abre la búsqueda «florería» sin ubicación. La ubicación vive solo en memoria mientras la página está abierta. El destino del botón se cambia en `js/recipe.js` (`FL.recipe.providers`).
 - **Propuesta desde lo que sientes:** lee lo que escribes (palabras completas, negaciones, emociones, para quién es y la ocasión) y busca entre todas las combinaciones del catálogo el ramo cuya lectura dice lo mismo; explica qué entendió y por qué eligió cada flor. «Otra opción» busca otra flor principal para lo mismo. La ocasión que se elige a mano manda sobre la del texto; la que dejó una propuesta anterior en el selector no: si el texto cambia, se vuelve a leer (un «falleció» no queda como cumpleaños). Todo en el navegador, sin servidor ni IA.
 - **Propuesta desde lo que escribes:** además de los sentimientos y la ocasión, el motor local entiende el tamaño («un ramo grande», «algo pequeño», «una sola flor»), la cantidad («unas 15 flores», «una docena de rosas»), las flores que se piden o se rechazan («le encantan los tulipanes», «sin rosas», «nada de lirios ni claveles»), los colores («algo amarillo», «nada rojo») y un estilo sobrio. El duelo manda sobre lo demás, y los nombres propios («mi amiga Margarita») no se leen como flores. La propuesta dice qué tomó en cuenta.
 - **Explorar:** búsqueda y filtros por significado, color y estación. Las flores coincidentes se resaltan en el jardín.
@@ -41,12 +42,13 @@ Las tipografías (Cormorant, Newsreader y Jost) vienen en `fonts/`, servidas des
 
 ## Enlaces directos
 
-`index.html#girasol` abre esa flor; `#esos-dias`, la sección especial; `#armar`, el taller; `#ramos`, el mostrador; `#ramo=…`, un ramo compartido.
+`index.html#girasol` abre esa flor; `#esos-dias`, la sección especial; `#armar`, el taller; `#ramos`, el mostrador; `#fechas`, el calendario de regalo; `#ramo=…`, un ramo compartido.
 
 ## Estructura
 
 ```
 index.html              Estructura de la página
+privacidad.html         Qué se guarda en el dispositivo y qué lleva un enlace #ramo=
 css/styles.css          Estilos, temas claro/oscuro y animaciones de cada especie
 css/atelier.css         Taller, mostrador, vista de regalo, cuidados y dibujo de ramos
 css/fonts.css           Tipografías propias (@font-face de fonts/)
@@ -75,6 +77,7 @@ js/recipe.js            Receta para la florería y búsqueda de florerías cerca
 js/focus.js             Vista en primer plano, comportamiento de cada especie y ficha
 js/explore.js           Buscador y filtros
 js/days.js              Sección «Esos días que no hubo»
+js/fechas.js            Calendario: cuándo se regalan flores, por qué y con cuáles
 js/bouquet-model.js     Modelo de ramo: normalizar, validar, enlaces y «Mis ramos»
 js/bouquet-art.js       Dibujo de un ramo: cúpula, tallos, envoltorio y cinta
 js/meaning.js           Qué dice un ramo (lectura local)
