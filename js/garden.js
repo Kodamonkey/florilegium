@@ -87,7 +87,7 @@
    * Planifica sin tocar el DOM: tamaño y fila de cada flor, posición inicial escalonada entre filas
    * y luego FL.layout.relax, para que ninguna cabeza tape a otra más de la cuenta.
    */
-  function plan(W, VH, extra, avoid, drawn) {
+  function plan(W, VH, extra, avoid, drawn, span = {}) {
     const { tall, lists, mobile } = bandsFor(W, VH, extra);
     const r = U.rng(20260928 + extra);
     const nb = lists.length;
@@ -113,7 +113,9 @@
     const ek = tall ? 0.48 : 0.44;
     const items = [];
     lists.forEach((ids, b) => {
-      const slot = W / ids.length;
+      // Tramo de ancho de la fila: todo el jardín, salvo que la fila no quepa bajo el título (ver crowded).
+      const [xa, xb] = span[b] || [0, W];
+      const slot = (xb - xa) / ids.length;
       ids.forEach((id, i) => {
         const fl = FL.byId(id);
         if (!fl) return;
@@ -125,7 +127,7 @@
         const ground = grounds[b] + (r() - 0.5) * 26;
         const bend = (r() - 0.5) * hw * 0.3;
         const stag = ((b % 2) - 0.5) * slot * 0.5;
-        const hx = U.clamp(slot * (i + 0.5) + stag + (r() - 0.5) * slot * 0.24, hw * 0.5 + 4, W - hw * 0.5 - 4);
+        const hx = U.clamp(xa + slot * (i + 0.5) + stag + (r() - 0.5) * slot * 0.24, xa + hw * 0.5 + 4, xb - hw * 0.5 - 4);
         // Centro de la cabeza según el largo del tallo, y el rango de alturas que el tallo permite.
         const cy = (stem) => ground - stem - hh * ay + hh / 2;
         const minStem = Math.max(36, stem0 * 0.6), maxStem = Math.max(minStem, stem0 * 1.7);
@@ -134,7 +136,7 @@
           fl, dr, b, depth, hw, hh, ax, ay, ground, bend, z, gd: tall ? 0.15 + r() * 0.45 : 0.25 + b * 0.35 + r() * 0.55,
           node: {
             x: hx, y: cy(stem0), rx: hw * ek, ry: hh * ek, band: b, z,
-            minX: hw * 0.46 + 4, maxX: W - hw * 0.46 - 4, minY: Math.max(cy(maxStem), hh * 0.46 + 8), maxY: cy(minStem)
+            minX: xa + hw * 0.46 + 4, maxX: xb - hw * 0.46 - 4, minY: Math.max(cy(maxStem), hh * 0.46 + 8), maxY: cy(minStem)
           }
         });
       });
@@ -148,6 +150,32 @@
       it.x = it.node.x - it.bend - it.hw * (0.5 - it.ax);
     });
     return { tall, lists, H, grounds, items, minVis: Math.min(...vis) };
+  }
+
+  /*
+   * Filas que siguen pisando una zona reservada después de relax. Pasa en ventanas anchas y bajas (1366×768):
+   * la fila de atrás nace tan cerca del título que ni con el tallo más corto la lavanda o el cerezo caben debajo.
+   * Esas filas se reparten en el ancho que queda al lado de la zona. Se mide con la caja entera del dibujo, no con
+   * la elipse de relax: la espiga de la lavanda sobresale de su elipse y era la que tapaba el subtítulo.
+   */
+  function crowded(pl, avoid, W, span) {
+    let more = false;
+    const next = Object.assign({}, span);
+    pl.items.forEach((it) => {
+      const n = it.node;
+      avoid.forEach((z) => {
+        const ox = Math.min(n.x + it.hw / 2, z.x1) - Math.max(n.x - it.hw / 2, z.x0);
+        const oy = Math.min(n.y + it.hh / 2, z.y1) - Math.max(n.y - it.hh / 2, z.y0);
+        if (ox <= 6 || oy <= 6) return;
+        const [xa, xb] = next[it.b] || [0, W];
+        const cut = z.x0 < W / 2 ? [Math.max(xa, z.x1), xb] : [xa, Math.min(xb, z.x0)];
+        // En un celular el título ocupa casi todo el ancho: ahí no hay lado al que mover la fila.
+        if ((cut[0] === xa && cut[1] === xb) || cut[1] - cut[0] < W * 0.5) return;
+        next[it.b] = cut;
+        more = true;
+      });
+    });
+    return more ? next : null;
   }
 
   G.build = function () {
@@ -165,7 +193,12 @@
     G.avoid = avoid;
     let best = null;
     for (let extra = 0; extra < 3; extra++) {
-      const pl = plan(W, VH, extra, avoid, drawn);
+      let pl = plan(W, VH, extra, avoid, drawn);
+      for (let k = 0, span = {}; k < 2; k++) {
+        span = crowded(pl, avoid, W, span);
+        if (!span) break;
+        pl = plan(W, VH, extra, avoid, drawn, span);
+      }
       if (!best || pl.minVis > best.minVis + 0.02) best = pl;
       if (pl.minVis >= 0.85) break;
     }
