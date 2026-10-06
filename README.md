@@ -49,7 +49,7 @@ Las tipografías (Cormorant, Newsreader y Jost) vienen en `fonts/`, servidas des
 ```
 index.html              Estructura de la página
 privacidad.html         Qué se guarda en el dispositivo y qué lleva un enlace #ramo=
-favicon.svg, .png       Ícono de la pestaña: una flor de Tabler Icons (MIT) con los colores del jardín
+favicon.svg, .png       Ícono de la pestaña: una nomeolvides, la flor del recuerdo, con los colores del jardín
 apple-touch-icon.png    El mismo ícono, 180×180, para la pantalla de inicio del celular
 css/styles.css          Estilos, temas claro/oscuro y animaciones de cada especie
 css/atelier.css         Taller, mostrador, vista de regalo, cuidados y dibujo de ramos
