@@ -51,8 +51,6 @@ index.html              Estructura de la página
 privacidad.html         Qué se guarda en el dispositivo y qué lleva un enlace #ramo=
 favicon.svg, .png       Ícono de la pestaña: una nomeolvides, la flor del recuerdo, con los colores del jardín
 apple-touch-icon.png    El mismo ícono, 180×180, para la pantalla de inicio del celular
-og-image.jpg            Vista previa al compartir el enlace (1200×630): el jardín con el título al centro.
-                        Las etiquetas og: de index.html la piden por dirección absoluta
 css/styles.css          Estilos, temas claro/oscuro y animaciones de cada especie
 css/atelier.css         Taller, mostrador, vista de regalo, cuidados y dibujo de ramos
 css/fonts.css           Tipografías propias (@font-face de fonts/)
