@@ -4,7 +4,7 @@
   const FL = window.FL;
 
   // #girasol abre esa flor; #esos-dias, la sección especial; #armar, el taller;
-  // #ramos, el mostrador; #ramo=… un ramo compartido.
+  // #mis-ramos, los ramos guardados; #ramos, el mostrador; #fechas, el calendario; #ramo=… un ramo compartido.
   function route() {
     const raw = location.hash.slice(1);
     if (!raw) return;
@@ -12,7 +12,9 @@
     const h = decodeURIComponent(raw);
     if (h === 'esos-dias') { FL.days.open(); return; }
     if (h === 'armar') { FL.atelier.open(); return; }
+    if (h === 'mis-ramos') { FL.atelier.open({ mine: true }); return; }
     if (h === 'ramos') { FL.showcase.open(); return; }
+    if (h === 'fechas') { FL.calendar.open(); return; }
     const fl = FL.byId(h);
     if (fl && (!FL.focus.cur || FL.focus.cur.id !== h)) {
       const head = FL.garden.headOf(h);
@@ -28,9 +30,12 @@
     FL.focus.init();
     FL.explore.init();
     FL.days.init();
+    FL.calendar.init();
     FL.atelier.init();
     FL.showcase.init();
     FL.gift.init();
+    const foot = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
+    foot('footMine', () => FL.atelier.open({ mine: true }));
 
     const G = FL.garden;
     window.addEventListener('pointermove', (e) => { G.onPointer(e); if (G.mouse.active) FL.wake(); }, { passive: true });
@@ -62,6 +67,7 @@
         else if (FL.gift.isOpen()) FL.gift.close();
         else if (FL.focus.isOpen()) FL.focus.close();
         else if (FL.atelier.isOpen()) FL.atelier.close();
+        else if (FL.calendar.isOpen()) FL.calendar.close();
         else if (FL.showcase.isOpen()) FL.showcase.close();
         else if (FL.explore.isOpen()) FL.explore.close();
       } else if (FL.focus.isOpen() && !e.target.closest('input, textarea, select')) {

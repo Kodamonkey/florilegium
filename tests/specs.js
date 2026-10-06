@@ -149,6 +149,16 @@
     eq(FL.countWords(120), '120');
   });
 
+  test('buscadores: todas las palabras, sin tildes y con plurales', () => {
+    const h = FL.u.norm('Día de la Madre · Rosa roja · Girasol');
+    ok(FL.u.matches(h, ''), 'sin texto, todo');
+    ok(FL.u.matches(h, 'DIA madre'), 'sin tildes ni mayúsculas');
+    ok(FL.u.matches(h, 'rosas rojas'), 'plural en -s');
+    ok(FL.u.matches(h, 'girasoles'), 'plural en -es');
+    ok(!FL.u.matches(h, 'rosa blanca'), 'todas las palabras');
+    ok(!FL.u.matches(h, 'tulipanes'), 'lo que no está');
+  });
+
   test('catálogo: seasonOf según hemisferio', () => {
     eq(FL.seasonOf(new Date(2026, 8, 28), 'S'), 'primavera');
     eq(FL.seasonOf(new Date(2026, 8, 28), 'N'), 'otoño');
@@ -412,6 +422,32 @@
     });
   });
 
+  test('fechas: cada ocasión dice por qué y nombra flores del catálogo', () => {
+    if (!FL.calendar || !FL.calendar.list) skip('FL.calendar no está cargado');
+    const list = FL.calendar.list(new Date(2026, 0, 1));
+    const ids = list.map((o) => o.id);
+    FL.taxonomy.occasions.forEach((o) => ok(ids.includes(o.id), 'falta ' + o.id));
+    ok(ids.includes('sant-jordi'), 'Sant Jordi');
+    eq(new Set(ids).size, ids.length, 'sin repetidos');
+    const firstOpen = list.findIndex((o) => !o.when);
+    ok(firstOpen > 0 && list.slice(0, firstOpen).every((o) => o.when), 'primero las fechas');
+    for (let i = 1; i < firstOpen; i++) ok(list[i].when >= list[i - 1].when, 'orden cronológico');
+    const iso = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    eq(iso(list.find((o) => o.id === 'san-valentin').when), '2026-02-14');
+    eq(iso(list.find((o) => o.id === 'sant-jordi').when), '2026-04-23');
+    eq(iso(list.find((o) => o.id === 'dia-madre').when), '2026-05-10');
+    eq(list.find((o) => o.id === 'cumpleanos').when, null);
+    list.forEach((o) => {
+      ok(o.why && o.why.length > 40, o.id + ': por qué');
+      ok(o.flowers.length > 0, o.id + ': flores');
+      o.flowers.forEach((id) => ok(FL.item(id), o.id + ': ' + id));
+      if (o.theme) ok(FL.popular.some((p) => p.occasions.includes(o.id)), o.id + ': ramo');
+    });
+    ok(list.find((o) => o.id === 'san-valentin').flowers.includes('rosa-roja'));
+    ok(list.find((o) => o.id === 'todos-santos').flowers.includes('crisantemo'));
+    ok(!list.find((o) => o.id === 'sant-jordi').theme, 'Sant Jordi no abre el mostrador');
+  });
+
   test('populares: filtro del mostrador (solo navegador)', () => {
     if (!FL.showcase || !FL.showcase.filter) skip('FL.showcase no está cargado');
     const S = FL.showcase, date = new Date(2026, 8, 28);
@@ -609,7 +645,7 @@
       if (!r.detected.ask.include.length && !isDozen(r) && !r.detected.fallback) {
         ok(FL.item(r.bouquet.stems[0].item).meanings.includes(r.detected.top), tag + ': la protagonista dice ' + r.detected.top);
       }
-      const m = r.rationale.lead.match(/en su lectura, (.+?) queda en primer lugar/);
+      const m = r.rationale.lead.match(/lo dice: (.+?) queda en primer lugar/);
       if (m) eq(m[1], R.phraseFor(r.bouquet, r.detected.top), tag + ': frase');
     });
   });
@@ -1808,7 +1844,21 @@
     ok(!/Rosa blanca: poco habitual/.test(FL.recipe.text(b)), 'la rosa sí se consigue');
   });
 
-  test('receta: Maps recibe solo la palabra «florería»', () => {
+  test('receta: florerías cerca, sin ubicación salvo que se dé, redondeada; el destino se puede cambiar', () => {
     eq(FL.recipe.mapsUrl, 'https://www.google.com/maps/search/?api=1&query=florer%C3%ADa');
+    eq(FL.recipe.nearbyUrl(), FL.recipe.mapsUrl);
+    eq(FL.recipe.nearbyUrl(null), FL.recipe.mapsUrl);
+    // Con ubicación: el mapa se centra ahí, con tres decimales (unos cien metros) y sin más datos.
+    eq(FL.recipe.nearbyUrl({ lat: -33.456789, lng: -70.648123 }), 'https://www.google.com/maps/search/florer%C3%ADa/@-33.457,-70.648,15z');
+    eq(FL.recipe.provider().id, 'maps');
+    ok(!/[?&](ll|sll|center|lat|lng|location)=/i.test(FL.recipe.nearbyUrl()), FL.recipe.nearbyUrl());
+    eq(FL.recipe.openNearby(), false);
+    FL.recipe.providers.echo = { id: 'echo', label: 'Eco', hint: 'nada', url: 'https://example.test/buscar' };
+    ok(FL.recipe.useProvider('echo'));
+    eq(FL.recipe.nearbyUrl(), 'https://example.test/buscar');
+    ok(FL.recipe.useProvider('maps'));
+    eq(FL.recipe.providerId, 'maps');
+    delete FL.recipe.providers.echo;
+    ok(!FL.recipe.useProvider('no-existe'));
   });
 })(typeof window !== 'undefined' ? window : globalThis);

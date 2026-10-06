@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Privacidad · Florilegio</title>
+<meta name="description" content="Qué guarda Florilegio en tu dispositivo, qué viaja en un enlace de ramo y qué no se envía a ningún servidor.">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .legal {
+    max-width: 40rem; margin: 0 auto;
+    padding: calc(env(safe-area-inset-top, 0px) + 48px) 22px calc(env(safe-area-inset-bottom, 0px) + 72px);
+  }
+  .legal .eyebrow { margin-bottom: 0.8rem; }
+  .legal h1 {
+    margin: 0; font-family: var(--f-display); font-weight: 500; font-style: italic;
+    font-size: clamp(2.6rem, 7vw, 3.6rem); line-height: 0.95; letter-spacing: -0.02em;
+  }
+  .legal .updated { margin: 0.9rem 0 0; color: var(--ink-3); font-size: 0.95rem; }
+  .legal h2 {
+    margin: 2.2rem 0 0.6rem; font-family: var(--f-display); font-weight: 500; font-style: italic;
+    font-size: 1.7rem; line-height: 1.15;
+  }
+  .legal p, .legal li { font-size: 1.05rem; line-height: 1.6; }
+  .legal ul { margin: 0.4rem 0 0; padding-left: 1.2rem; }
+  .legal li { margin: 0.45rem 0; }
+  .legal code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 0.86em; }
+  .legal a { color: var(--moss); }
+  .legal .back { margin-top: 2.4rem; }
+</style>
+</head>
+<body>
+<article class="legal">
+  <p class="eyebrow">Florilegio</p>
+  <h1>Privacidad</h1>
+  <p class="updated">Última actualización: 6 de octubre de 2026.</p>
+  <p>Florilegio funciona en tu dispositivo. No hay cuenta, ni servidor de Florilegio, ni publicidad, ni medición de visitas.</p>
+
+  <h2>Qué no sale de aquí</h2>
+  <ul>
+    <li>No pedimos tu nombre para usar la aplicación.</li>
+    <li>La ubicación se pide solo si tocas «Florerías cerca», y la pide tu navegador: puedes decir que no. Si la das, se redondea a unos cien metros y se usa una sola vez para centrar Google Maps. Florilegio no la guarda ni la envía a ningún otro lugar.</li>
+    <li>El hemisferio, norte o sur, se calcula con la zona horaria del dispositivo para saber qué flores están de temporada. El cálculo se queda en el dispositivo.</li>
+    <li>Las propuestas de ramo se calculan en el navegador. El texto de «lo que sientes» no se envía a un servicio de inteligencia artificial.</li>
+  </ul>
+
+  <h2>Qué queda en este dispositivo</h2>
+  <p>Solo en el almacenamiento local del navegador o de la aplicación, en este aparato:</p>
+  <ul>
+    <li><code>fl.bouquets</code> — «Mis ramos», hasta 60. Cada uno puede incluir el nombre, la ocasión, las flores y las cantidades, el envoltorio, la cinta, la tarjeta (para quién, el mensaje y de quién), el texto de lo que querías decir, los sentimientos marcados y una lectura calculada aquí.</li>
+    <li><code>fl.draft</code> — el ramo que estás armando, con los mismos datos, para no perderlo si cierras la página.</li>
+    <li><code>fl.hemisphere</code> — <code>N</code> o <code>S</code>, si cambias el hemisferio a mano.</li>
+  </ul>
+  <p>Eso no se copia a un servidor de Florilegio. Se borra si borras los datos del sitio o de la aplicación en tu dispositivo.</p>
+
+  <h2>Qué lleva un enlace de ramo</h2>
+  <p>Un ramo compartido viaja en el fragmento <code>#ramo=</code> de la dirección. El navegador no envía ese fragmento al servidor. Quien tenga el enlace puede ver:</p>
+  <ul>
+    <li>las flores y cuántos tallos lleva;</li>
+    <li>el envoltorio y la cinta;</li>
+    <li>el nombre del ramo y la ocasión, si los escribiste;</li>
+    <li>la tarjeta: para quién, el mensaje y de quién.</li>
+  </ul>
+  <p>No viajan en el enlace el texto de «lo que sientes» ni la lectura del ramo. Quien lo abre ve una lectura calculada de nuevo en su dispositivo. La tarjeta es un mensaje: compártela solo con quien quieras que la lea.</p>
+
+  <h2>Florerías</h2>
+  <p>El botón «Florerías cerca» abre un buscador externo, hoy Google Maps, con la consulta «florería». Si aceptas compartir tu ubicación, el enlace lleva además tus coordenadas redondeadas a unos cien metros, para que el mapa se abra donde estás; si no, va sin ellas. No se envían el ramo ni la tarjeta. Si más adelante el botón apunta a florerías integradas, esta página lo dirá. A partir del salto rige la política de quien recibe la visita.</p>
+
+  <h2>Si más adelante hay un asistente</h2>
+  <p>Hoy no lo hay. Si Florilegio llega a enviar texto a un proveedor de inteligencia artificial, esta política se actualizará antes. Dirá qué texto sale, para qué, cuánto tiempo lo retiene el proveedor, y que una tarjeta o un mensaje pueden contener datos personales. Hasta entonces, nada de lo que escribes se envía.</p>
+
+  <h2>Para una ficha de tienda</h2>
+  <p>El comportamiento actual, el que corresponde declarar, es este:</p>
+  <ul>
+    <li>la aplicación se usa entera sin cuenta;</li>
+    <li>Florilegio no muestra anuncios;</li>
+    <li>Florilegio no recoge datos para sí ni los comparte con un servidor propio;</li>
+    <li>lo que se guarda —ramos, borrador y hemisferio— permanece en el dispositivo;</li>
+    <li>la ubicación aproximada se pide solo al buscar florerías cerca, se usa para abrir el mapa y no se guarda ni se recoge.</li>
+  </ul>
+
+  <h2>Cambios</h2>
+  <p>Si esto cambia, se actualiza esta página y la fecha de arriba.</p>
+  <p class="back"><a href="index.html">Volver al jardín</a></p>
+</article>
+</body>
+</html>

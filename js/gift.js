@@ -18,6 +18,7 @@
     root = $('gift');
     sys = new FL.Particles($('giftFx'));
     $('giftBack').addEventListener('click', () => Gf.close());
+    $('giftClose').addEventListener('click', () => Gf.close());
     $('giftCopy').addEventListener('click', () => {
       if (!cur) return;
       if (preview) { Gf.close(); return; }
@@ -28,11 +29,10 @@
       FL.atelier.open({ bouquet: copy });
     });
     $('giftIcs').addEventListener('click', () => cur && FL.care.download(cur));
-    $('giftMaps').href = FL.recipe.mapsUrl;
     FL.plate.bind($('giftPng'), $('giftPdf'), () => cur, toast);
     root.addEventListener('keydown', (e) => {
       if (e.key !== 'Tab') return;
-      const els = Array.from(root.querySelectorAll('button, summary, [href]')).filter((x) => x.offsetParent !== null);
+      const els = U.withNearby(Array.from(root.querySelectorAll('button, summary, [href]')).filter((x) => x.offsetParent !== null));
       if (!els.length) return;
       const at = document.activeElement, first = els[0], last = els[els.length - 1];
       // El foco puede estar en la hoja misma (tabindex -1): Tab o Mayús+Tab no deben escaparse hacia el taller de atrás.
@@ -56,6 +56,7 @@
     preview = !!opts.preview;
     cur = b;
     if (FL.focus.isOpen()) FL.focus.close();
+    if (FL.calendar && FL.calendar.isOpen()) FL.calendar.close(true);
     lastFocus = document.activeElement;
     const esc = U.esc;
     if (!b) {
@@ -71,7 +72,9 @@
       $('giftCopy').hidden = true;
     } else {
       const c = b.card || {};
-      $('giftEyebrow').textContent = preview ? 'Así lo verá quien lo reciba' : c.to ? 'Para ' + c.to : 'Un ramo para ti';
+      // En la vista previa se ve lo mismo que verá quien lo reciba, con el aviso de que es una vista previa.
+      const to = c.to ? 'Para ' + c.to : 'Un ramo para ti';
+      $('giftEyebrow').textContent = preview ? 'Vista previa · ' + to : to;
       $('giftTitle').textContent = b.name || (b.occasion ? FL.occasion(b.occasion).name : 'Flores que dicen algo');
       $('giftBq').innerHTML = FL.bouquetArt.render(b, { cls: 'enter' }).svg;
       $('giftCard').innerHTML = c.message || c.from
@@ -79,8 +82,10 @@
         : '';
       const r = FL.reading.interpret(b);
       const summary = r.summary;
+      // Lo que la protagonista dice ya está en el resumen: en la lista no se repite.
+      const said = (t) => summary.toLowerCase().includes(String(t || '').toLowerCase().replace(/\.$/, ''));
       $('giftReading').innerHTML = '<h3>Qué dice este ramo</h3><p class="rd-summary">' + esc(summary) + '</p>' +
-        '<ul class="gift-items">' + r.perItem.map((x) => '<li><strong>' + esc(x.n + ' ' + x.name.toLowerCase()) + '</strong> — ' + esc(x.says) + '</li>').join('') + '</ul>' +
+        '<ul class="gift-items">' + r.perItem.map((x) => '<li><strong>' + esc(x.n + ' ' + x.name.toLowerCase()) + '</strong>' + (said(x.says) ? '' : ' — ' + esc(x.says)) + '</li>').join('') + '</ul>' +
         (r.notes.length ? '<p class="note">' + esc(r.notes[0]) + '</p>' : '');
       $('giftCare').innerHTML = FL.care.planHTML(b);
       $('giftIcs').hidden = !FL.care.plan(b).cut;
@@ -94,6 +99,7 @@
     }
     // En la vista previa, el taller sigue detrás: no hay jardín al que volver desde aquí.
     $('giftBack').hidden = preview;
+    $('giftClose').setAttribute('aria-label', preview ? 'Volver al taller' : 'Ir al jardín');
     root.hidden = false;
     root.scrollTop = 0;
     U.syncSheets();

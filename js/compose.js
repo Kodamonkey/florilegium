@@ -21,7 +21,6 @@
   const inSeason = (it, s) => !it.seasons.length || it.seasons.includes(s) || it.seasons.length >= 4;
   // Hasta que el catálogo traiga la marca, el crisantemo es la flor reservada al duelo.
   const mourningOnly = (it) => (it.bouquet.mourningOnly != null ? !!it.bouquet.mourningOnly : it.id === 'crisantemo');
-  const fmtInt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   const tones = (c) => c + (/[aeiou]$/.test(c) ? 's' : 'es');
   // «a, b ni c» para lo que se niega o se deja fuera.
   const listNi = (arr) => (arr.length < 2 ? arr.join('') : arr.slice(0, -1).join(', ') + ' ni ' + arr[arr.length - 1]);
@@ -753,7 +752,8 @@
     // 7. Cómo se eligió, sin porcentajes: qué queda primero en la lectura del ramo (y nunca se dice que aparece lo que no está).
     const RT = rd[0] ? rd[0].id : T, R2 = rd[1] ? rd[1].id : null;
     const stems = bouquet.stems.map((s) => ({ it: FL.item(s.item), n: s.n })).filter((s) => s.it);
-    const among = x.combos >= 100 ? ' Entre ' + fmtInt(x.combos) + ' combinaciones posibles elegí la' : ' Elegí la combinación';
+    // Cuántas combinaciones se revisaron no le sirve a quien regala: basta decir qué se eligió.
+    const among = ' Elegí el ramo';
     if (!stems.length) {
       const excluded = (req.exclude || []).length || ask.exclude.length || ask.avoidColors.length || x.petSafe;
       lead += excluded ? ' Con lo que quedó fuera no alcanzan las flores para armar un ramo: prueba sacar alguna exclusión.'
@@ -762,12 +762,12 @@
       const top3 = rd.slice(0, 3).map((m) => m.id);
       const second = x.agree && M.map((m) => ({ m, w: qOf(m) })).filter((o) => o.m !== T && o.w >= 0.15 && top3.includes(o.m)).sort((a, c) => c.w - a.w)[0];
       const tie = !x.agree && R2 ? ', a la par de ' + say(R2) : '';
-      lead += among + ' que mejor lo dice: en su lectura, ' + say(T) + queda(say(T)) + (tie ? ' primero' + tie : ' en primer lugar') +
+      lead += among + ' que mejor lo dice: ' + say(T) + queda(say(T)) + (tie ? ' primero' + tie : ' en primer lugar') +
         (x.combos >= 100 && second ? ' y también ' + aparece(say(second.m)) + ' ' + say(second.m) : '') + '.';
     } else {
       const tail = !inReading(T) ? '; no logré que dijera ' + ph(T)
         : ' y ' + say(T) + (R2 === T ? ' en segundo lugar' : ' también ' + aparece(say(T)));
-      lead += among + ' que más se acerca: en su lectura, ' + say(RT) + queda(say(RT)) + ' primero' + tail + '.';
+      lead += among + ' que más se acerca: ' + say(RT) + queda(say(RT)) + ' primero' + tail + '.';
     }
     // Lo que se marcó y el ramo no alcanzó a decir.
     const lost = chips.filter((m) => m !== (fallback && fallback.from) && !inReading(m));
@@ -796,9 +796,8 @@
     // 9–10. Lo que se tomó en cuenta del pedido y los avisos de siempre.
     if (heard.length) lead += ' Tomé en cuenta: ' + heard.join('; ') + '.';
     if (notes.length) lead += ' ' + notes.join(' ');
-    // Un párrafo largo se acorta por lo prescindible: primero el número de combinaciones, luego la lista de cercanos.
+    // Un párrafo largo se acorta por lo prescindible: primero la lista de cercanos.
     const LONG = 450;
-    if (lead.length > LONG && x.combos >= 100) lead = lead.replace(among, ' Elegí la combinación');
     if (lead.length > LONG) lead = lead.replace(/ Busqué flores de [^.]*, que van con ese gesto\./, ' Busqué flores que fueran con ese gesto.');
     // Si aún es largo y la ocasión salió del texto (ya está en lo que se leyó), no se repite; tampoco la temporada escasa.
     if (lead.length > LONG && det.occasion && det.occasionSource === 'text' && cues.length) lead = lead.replace(' Ocasión: ' + occName + '.', '');
